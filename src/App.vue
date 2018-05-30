@@ -5,19 +5,19 @@
 </template>
 
 <script>
-import Header from './components/Header.vue'
+import "normalize.css";
+import Header from "./components/Header.vue";
 
 export default {
-  name: 'app',
+  name: "app",
   components: {
     Header
   }
-}
+};
 </script>
 
 <style>
 * {
-            margin: 0 auto;
-        }
-
+  margin: 0 auto;
+}
 </style>
