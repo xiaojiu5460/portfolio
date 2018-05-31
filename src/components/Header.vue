@@ -1,20 +1,8 @@
 <template>
-<div id="deepBlue">
-  <div>
-    <div class="search">
-      <input/>
-    </div>
-    <div class="">
-      <span></span>
-      <ul>
-
-      </ul>
-    </div>
+  <div id="deepBlue">
+    <div class="serch" style="margin-top:15px"><input type="text" name="sock" placeholder="点击搜索股票/板块"></div>
+    <div class="more" style="margin-top:16.5px"><span>···</span></div>
   </div>
-            <label><input type="text" name="sock" placeholder="点击搜索股票/板块"></label>
-            <span class="more">···</span>
-            
-        </div>
 </template>
 
 <script>
@@ -22,43 +10,45 @@ export default {
   name: "Header",
   props: {}
 };
-
-
 </script>
 
 <style scoped>
 #deepBlue {
   background-color: #2d6bb1;
-  line-height: 110px;
+  height: 55px;
 }
 
-label input {
+.serch {
+  display: inline-block;
+}
+
+.serch input {
   background-color: #427ab8;
-  line-height: 52px;
-  width: 426px;
+  height: 26px;
+  width: 213px;
   border: 0;
   padding: 0;
   border-radius: 5px;
-  margin-left: 25px;
+  margin-left: 12px;
 }
 
 input::-webkit-input-placeholder {
   /* WebKit browsers */
   color: #b8cce3;
   text-align: center;
-  font-size: 22px;
   font-family: "Microsoft Yahei";
-  letter-spacing: 2px;
+  letter-spacing: 1px;
+  font-size: 11px;
+  line-height: 1em;
 }
 
 .more {
-  /* width: 22px; */
   float: right;
-  margin-right: 35px;
+  margin-right: 17px;
   color: #fff;
-  font-size: 22px;
+  font-size: 11px;
   font-weight: bold;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
 }
 
 ul {
