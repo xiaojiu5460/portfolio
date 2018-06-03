@@ -52,7 +52,6 @@ li {
   line-height: 26px;
   text-align: center;
   flex-shrink: 0;
-  overflow: scroll;
   margin-right: 16px;
 }
 </style>
