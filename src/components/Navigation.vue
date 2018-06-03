@@ -1,14 +1,14 @@
 <template>
   <div class="group">
-            <ul>
-                <li :class="{show:isActive,hide:hasError}">全部</li>
-                <li>沪深</li>
-                <li>港股</li>
-                <li>美股</li>
-                <li>场外基金</li>
-                <li>自定义</li>
-            </ul>
-        </div>
+    <ul>
+      <li :class="{show:isActive,hide:hasError}">全部</li>
+      <li>沪深</li>
+      <li>港股</li>
+      <li>美股</li>
+      <li>场外基金</li>
+      <li>自定义</li>
+    </ul>
+  </div>
 </template>
 
 <script>
@@ -38,9 +38,9 @@ export default {
 }
 ul {
   display: flex;
-
   align-items: center;
-  overflow: auto;
+  overflow-x: scroll;
+  overflow-y: hidden;
   padding-left: 12px;
   margin: 0;
 }
