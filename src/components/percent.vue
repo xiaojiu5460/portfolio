@@ -8,8 +8,8 @@
         </ul>
     </div>
     <div>
-        <ul v-for="(socks,index) in list" :key="index" class="allLists">
-            <li  class="lists">
+        <ul class="allLists">
+            <li  v-for="(socks,index) in list" :key="index"  class="lists">
                 <div class="socksName">{{socks.name}}<p>{{socks.code}}</p></div>
                 <div class="socksPrice">{{socks.newPrice}}</div>
                 <div class="socksPercent"><span>{{socks.limitPrice}}</span></div>
