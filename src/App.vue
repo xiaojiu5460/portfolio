@@ -2,7 +2,7 @@
   <div id="app">
     <Header></Header>
     <navigation></navigation>
-    <percent></percent>
+    <SockList></SockList>
   </div>
 </template>
 
@@ -10,14 +10,14 @@
 import "normalize.css";
 import Header from "./components/Header.vue";
 import navigation from "./components/Navigation.vue";
-import percent from "./components/percent.vue";
+import SockList from "./components/SockList.vue";
 
 export default {
   name: "app",
   components: {
     Header,
     navigation,
-    percent
+    SockList
   }
 };
 </script>

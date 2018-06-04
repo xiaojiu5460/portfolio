@@ -21,7 +21,7 @@
 
 <script>
 export default {
-  name: "percent",
+  name: "SockList",
   data() {
     return {
       list: [
@@ -100,9 +100,11 @@ export default {
 
 <style scoped>
 .allLists {
-  height: 40px;
   padding: 0;
   margin: 0;
+}
+.allLists li{
+  height: 40px;
 }
 .menu,
 .lists {
@@ -117,6 +119,7 @@ export default {
   margin: 0;
   font-size:14px;
   color:#a0abc3;
+  border-bottom:1px solid #f1f2f5;
 }
 .edit,
 .socksName {
@@ -128,6 +131,9 @@ export default {
   width: 22%;
   justify-content: flex-end;
   align-items: center;
+}
+.socksPrice{
+  font-weight: bold;
 }
 .limit,
 .socksPercent {
@@ -153,5 +159,6 @@ span{
 }
 li {
   list-style: none;
+  
 }
 </style>

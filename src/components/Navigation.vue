@@ -27,6 +27,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only 只应用于局部非全局--> 
 <style scoped>
 .show {
+  color:#0078ff;
   border-bottom: 2px #0078ff solid;
 }
 .hide {
@@ -48,10 +49,11 @@ li {
   display: flex;
   justify-content: center;
   list-style: none;
-  color: #0078ff;
   line-height: 26px;
   text-align: center;
   flex-shrink: 0;
   margin-right: 16px;
+  padding:0 3px;
+  font-size:15px;
 }
 </style>
