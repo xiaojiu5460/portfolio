@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <div class="search"><input type="text" name="sock" placeholder="点击搜索股票/板块"></div>
+    <div class="search">
+      <div><img src="../assets/img/search.png">点击搜索股票/板块</div>
+    </div>
     <div class="more"><span>···</span></div>
   </div>
 </template>
@@ -18,7 +20,11 @@ export default {
   height: 45px;
   display: flex;
 }
-
+img{
+  height: 15px;
+  width:15px;
+  padding-right: 5px;
+}
 .search {
   margin: 0;
   display: flex;
@@ -27,21 +33,28 @@ export default {
   padding: 0 12px;
 }
 
-.search input {
+.search div {
   background-color: #427ab8;
   height: 26px;
   border:0;
   border-radius: 5px;
   width: 100%;
+  color: #b8cce3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  font-family: "Microsoft Yahei";
+  letter-spacing: 1px;
 }
-input::-webkit-input-placeholder {
-  /* WebKit browsers */
+/* input::-webkit-input-placeholder {
+  /* WebKit browsers 
   color: #b8cce3;
   text-align: center;
   font-size: 12px;
   font-family: "Microsoft Yahei";
   letter-spacing: 1px;
-}
+} */
 
 .more {
   display: flex;

@@ -3,8 +3,8 @@
     <div>
         <ul class="menu">
           <li class="edit">编辑</li>
-          <li class="new">最新价</li>
-          <li class="limit">涨跌幅</li>
+          <li class="new">最新价<div><span class="up"></span><span class="down"></span></div></li>
+          <li class="limit">涨跌幅<div><span class="up"></span><span class="down"></span></div></li>
         </ul>
     </div>
     <div>
@@ -12,7 +12,7 @@
             <li  v-for="(socks,index) in list" :key="index"  class="lists">
                 <div class="socksName">{{socks.name}}<p>{{socks.code}}</p></div>
                 <div class="socksPrice">{{socks.newPrice}}</div>
-                <div class="socksPercent"><span>{{socks.limitPrice}}</span></div>
+                <div class="socksPercent"><span :class="{red:isActive,green:hasError}">{{socks.limitPrice}}</span></div>
             </li>
         </ul>
     </div>
@@ -91,7 +91,9 @@ export default {
           newPrice: "18.01",
           limitPrice: "+4.35%"
         }
-      ]
+      ],
+      isActive: true,
+      hasError: false
     };
   },
   props: {}
@@ -99,11 +101,36 @@ export default {
 </script>
 
 <style scoped>
+.new div,
+.limit div{
+  width:10px;
+  padding-left:5px;
+}
+.up{
+  border-left:4px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom:5px solid #abbfe2;
+  height: 0;
+  width: 0;
+  color:#abbfe2;
+  display: block;
+  margin-bottom: 4px;
+}
+.down{
+  border-left:4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top:5px solid #abbfe2;
+  height: 0;
+  width: 0;
+  color:#abbfe2;
+  display: block;
+  margin-top: 4px;
+}
 .allLists {
   padding: 0;
   margin: 0;
 }
-.allLists li{
+.allLists li {
   height: 40px;
 }
 .menu,
@@ -117,9 +144,9 @@ export default {
 .menu {
   height: 30px;
   margin: 0;
-  font-size:14px;
-  color:#a0abc3;
-  border-bottom:1px solid #f1f2f5;
+  font-size: 14px;
+  color: #a0abc3;
+  border-bottom: 1px solid #f1f2f5;
 }
 .edit,
 .socksName {
@@ -132,7 +159,7 @@ export default {
   justify-content: flex-end;
   align-items: center;
 }
-.socksPrice{
+.socksPrice {
   font-weight: bold;
 }
 .limit,
@@ -142,23 +169,32 @@ export default {
   justify-content: flex-end;
   align-items: center;
 }
-p {
+.socksName p {
   color: #686e71;
   font-size: 12px;
   margin: 0;
 }
-span{
-    width:68px;
-    height: 27px;
-    background-color:#bc4104;
-    color:#fff;
-    border-radius: 3px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.red {
+  width: 68px;
+  height: 27px;
+  background-color: #bc4104;
+  color: #fff;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.green {
+  width: 68px;
+  height: 27px;
+  background-color: #bc4104;
+  color: #fff;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 li {
   list-style: none;
-  
 }
 </style>
