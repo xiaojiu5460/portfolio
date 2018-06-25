@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>自选股</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="./dist/js/jquery-3.2.1.js"></script>
+</head>
+
+<body>
+  <script>
+
+    /*
+    股票行情 http://web.sqt.gtimg.cn/q=sz000729
+    相关股票 http://web.ifzq.gtimg.cn/stock/relate/data/relate?code=sz000729&_callback=jQuery112405924894893284809_1527495748016&_=1527495748017
+    所属板块 http://web.ifzq.gtimg.cn/stock/relate/data/plate?code=sz000729&_callback=jQuery112405924894893284809_1527495748018&_=1527495748019
+    个股分时 http://web.ifzq.gtimg.cn/appstock/app/minute/query?code=sz000729
+    "data": {
+      "data": [
+        "0930 9.02 6101", // 时间 价格 成交量
+        "0931 8.96 8405", // 每天242个分时数据，一分钟一个，上午下午各多一个，因为是从9：30到11：30 13：00到15：00 （4 * 60 + 2）
+        ...
+      ],
+      "date": "20180528" // 日期
+    },
+    日K线 http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz000729,day,2017-01-01,2018-05-28,20,qfq&r=0.4435589839614891
+    周K线 http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz000729,week,2017-01-01,2018-05-28,20,qfq&r=0.4435589839614891
+    月K线 http://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=sz000729,month,2017-01-01,2018-05-28,20,qfq&r=0.4435589839614891
+    [
+      "2018-05-25", // 日期
+      "8.820",      // 开盘价
+      "9.030",      // 收盘价
+      "9.280",      // 最高价
+      "8.800",      // 最低价
+      "483411.000"  // 成交量
+    ]
+    */
+
+    var stock = ['sh000001', 'sz300001', 'sh600180', 'sz000729', 'sz000001', 'sz300540', 'sh600150'];
+    var url = `http://web.sqt.gtimg.cn/q=${stock.join(',')}`;
+    var parse = (str) => {
+      return ('' + str).replace(/[;\s]+$/, '').split(';').map(item => {
+        let temp = {};
+        let values = ('' + item.split('="')[1]).split('~');
+        [
+          'X1', '名字', '代码', '当前价格', '昨收', '今开', '成交量', '外盘', '内盘',
+          '买一', '买一量', '买二', '买二量', '买三', '买三量', '买四', '买四量', '买五', '买五量',
+          '卖一', '卖一量', '卖二', '卖二量', '卖三', '卖三量', '卖四', '卖四量', '卖五', '卖五量',
+          '最近逐笔成交', '时间', '涨跌', '涨跌%', '最高', '最低', '价格/成交量/成交额', '成交量', '成交额',
+          '换手率', '市盈率', 'X2', '最高', '最低', '振幅', '流通市值', '总市值', '市净率', '涨停价', '跌停价'
+        ].forEach(name => {
+          temp[name] = values.shift() || '';
+        });
+        temp['最近逐笔成交'] = ('' + temp['最近逐笔成交']).split('|');
+        return temp;
+      });
+    };
+    $.get(url).done(res => {
+      console.log(res);
+      var data = parse(res);
+      console.log(data)
+    });
+  </script>
+</body>
+
+</html>
