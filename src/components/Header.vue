@@ -4,6 +4,12 @@
       <div><img src="../assets/img/search.png">点击搜索股票/板块</div>
     </div>
     <div class="more"><span>···</span></div>
+    <div class="skins">
+      <ul>
+        <li>分组管理</li>
+        <li>黑色皮肤</li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -15,6 +21,20 @@ export default {
 </script>
 
 <style scoped>
+.skins ul{
+  padding:0px;
+  margin: 0px;
+}
+.skins li{
+  list-style: none;
+  width:128px;
+  height: 44px;
+  line-height: 44px;
+  color:#353535;
+  border-bottom: 1px solid #f1f2f5;
+  background-color:#fff;
+  text-align: center;
+}
 .container {
   background-color: #2d6bb1;
   height: 45px;
