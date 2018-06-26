@@ -21,3 +21,10 @@
 - 配置SASS支持，接下来的CSS全部用SASS写
 - 股票列表里面，应该是整个列表一个ul，一行一个li，不应该是一行一个ul。dom结构极不合理。
 
+## 问题 2018年6月25日21:58:30
+- script 只能引用js脚本 复用的地方import进去
+- this在vue里指代vue唯一实例，会computed，methods，props，data里去查找
+- import Vue from "vue";import VueResource from "vue-resource";Vue.use(VueResource); 整个程序的入口，和顺序考虑。
+- stock
+- map
+- 取对象中key为中文的值时，格式为item['中文名']
