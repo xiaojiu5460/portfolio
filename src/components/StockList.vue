@@ -24,7 +24,6 @@ export default {
   name: "stockList",
   data() {
     return {
-      list: [],
       // isActive: true,
       // hasError: false
     };
@@ -41,7 +40,7 @@ export default {
       }
     },
   },
-  props: ["stocks"],
+  props: ["list"],
   created: function() {
     var stock = [
       "sh000001",
