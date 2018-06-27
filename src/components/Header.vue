@@ -3,12 +3,13 @@
     <div class="search">
       <div><img src="../assets/img/search.png">点击搜索股票/板块</div>
     </div>
-    <div class="more"><span>···</span></div>
-    <div class="skins">
-      <ul>
-        <li>分组管理</li>
-        <li>黑色皮肤</li>
-      </ul>
+    <div class="more"><span>···</span>
+      <div class="skins" v-show="isShow"><span class="up"></span>
+       <ul>
+         <li>分组管理</li>
+         <li>黑色皮肤</li>
+        </ul>
+     </div>
     </div>
   </div>
 </template>
@@ -16,23 +17,44 @@
 <script>
 export default {
   name: "Header",
+  data(){
+    return{
+      isShow:false,
+    }
+  },
   props: {}
 };
 </script>
 
 <style scoped>
-.skins ul{
-  padding:0px;
+.up {
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 9px solid #fff;
+  height: 0;
+  width: 0;
+  display: block;
+  position: absolute;
+  right:11px;
+  top:-9px;
+}
+.skins{
+  position: absolute;
+  top:45px;
+  right: 3px;;
+}
+.skins ul {
+  padding: 0px;
   margin: 0px;
 }
-.skins li{
+.skins li {
   list-style: none;
-  width:128px;
+  width: 128px;
   height: 44px;
   line-height: 44px;
-  color:#353535;
+  color: #353535;
   border-bottom: 1px solid #f1f2f5;
-  background-color:#fff;
+  background-color: #fff;
   text-align: center;
 }
 .container {
@@ -40,9 +62,9 @@ export default {
   height: 45px;
   display: flex;
 }
-img{
+img {
   height: 15px;
-  width:15px;
+  width: 15px;
   padding-right: 5px;
 }
 .search {
@@ -56,7 +78,7 @@ img{
 .search div {
   background-color: #427ab8;
   height: 26px;
-  border:0;
+  border: 0;
   border-radius: 5px;
   width: 100%;
   color: #b8cce3;

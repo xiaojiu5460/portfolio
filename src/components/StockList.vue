@@ -12,23 +12,34 @@
             <li  v-for="(stocks,index) in list" :key="index"  class="lists">
                 <div class="stocksName">{{stocks.name}}<p>{{stocks.code}}</p></div>
                 <div class="stocksPrice">{{stocks.newPrice}}</div>
-                <div class="stocksPercent"><span :class="{red:isActive,green:hasError}">{{stocks.limitPrice}}</span></div>
+                <div class="stocksPercent"><span v-bind:class="{red:isShow,green:isShow,grey:isShow}">{{stocks.limitPrice}}</span></div>
             </li>
         </ul>
     </div>
  </div>
 </template>
-<script src="../../stock-price.html"></script>
+
 <script>
 export default {
   name: "stockList",
   data() {
     return {
-      list: [
-      ],
-      isActive: true,
-      hasError: false
+      list: [],
+      // isActive: true,
+      // hasError: false
     };
+  },
+  computed: {
+    //如果parseInt("stocks.limitPrice",10)>0,<0,=0的三种情况
+    isShow:function(){
+      if(parseInt("this.limitPrice",10)>0){
+        return true;
+      }else if(parseInt("this.limitPrice",10)<0){
+        return true;
+      }else{
+        return true;
+      }
+    },
   },
   props: ["stocks"],
   created: function() {
@@ -39,7 +50,8 @@ export default {
       "sz000729",
       "sz000001",
       "sz300540",
-      "sh600150"
+      "sh600150",
+      "sz002053"
     ];
     var url = `http://web.sqt.gtimg.cn/q=${stock.join(",")}`;
     var parse = str => {
@@ -107,10 +119,11 @@ export default {
         });
     };
     this.$http.get(url).then(function(res) {
-      console.log(res);
+      // console.log(res);
       let data = parse(res.body);
-      console.log(data);
-      this.list = data.map(function(item) {  //map 从处理过的对象里取出需要的值，列入一个数组赋值给list
+      // console.log(data);
+      this.list = data.map(function(item) {
+        //map 从处理过的对象里取出需要的值，列入一个数组赋值给list
         return {
           name: item["名字"],
           code: item["代码"],
@@ -118,7 +131,6 @@ export default {
           limitPrice: item["涨跌%"] + "%"
         };
       });
-      
     });
   }
 };
@@ -211,7 +223,17 @@ export default {
 .green {
   width: 68px;
   height: 27px;
-  background-color: #bc4104;
+  background-color: #508d46;
+  color: #fff;
+  border-radius: 3px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.grey {
+  width: 68px;
+  height: 27px;
+  background-color: #abafba;
   color: #fff;
   border-radius: 3px;
   display: flex;
