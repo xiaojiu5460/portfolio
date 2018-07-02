@@ -3,8 +3,8 @@
     <div>
         <ul class="menu">
           <li class="edit">编辑</li>
-          <li class="new" @click="sortPrice('newPrice')">最新价<div><span class="up"></span><span class="down"></span></div></li>
-          <li class="limit" @click="sortPercent('percent')">涨跌幅<div><span class="up"></span><span class="down"></span></div></li>
+          <li class="new" @click="sort('newPrice')">最新价<div><span class="up"></span><span class="down"></span></div></li>
+          <li class="limit" @click="sort('percent')">涨跌幅<div><span class="up"></span><span class="down"></span></div></li>
         </ul>
     </div>
     <div>
@@ -24,7 +24,8 @@ export default {
   data() {
     return {
       list: [],
-      sortValue: ""
+      sortValue: "",
+      sortDir: 1
       // isActive: true,
       // hasError: false
     };
@@ -124,15 +125,22 @@ export default {
     });
   },
   methods: {
-    sortPrice: function(newPri) {
-      this.list.sort(function(p1, p2) {
-        return parseFloat(p1[newPri]) < parseFloat(p2[newPri]) ? 1 : -1;
-      });
-    },
-    sortPercent: function(per) {
-      this.list.sort(function(p1, p2) {
-        return parseFloat(p1[per]) < parseFloat(p2[per]) ? 1 : -1;
-      });
+    sort: function(field) {
+      if(field!==this.sortValue){
+        this.sortDir = 1;
+        this.sortValue=field;
+      }
+      if (this.sortDir === 1) {
+        this.sortDir = -1;
+        this.list.sort(function(p1, p2) {
+          return parseFloat(p1[field]) < parseFloat(p2[field]) ? 1 : -1;
+        });
+      } else {
+        this.sortDir = 1;
+        this.list.sort(function(p1, p2) {
+          return parseFloat(p1[field]) < parseFloat(p2[field]) ? -1 : 1;
+        });
+      }
     }
     //如果parseInt("stocks.percent",10)>0,<0,=0的三种情况
     // isShow: function() {
@@ -175,7 +183,8 @@ export default {
   display: block;
   margin-top: 4px;
 }
-.up.highLight,.down.highLight {
+.up.highLight,
+.down.highLight {
   color: #666b61;
 }
 .allLists {
