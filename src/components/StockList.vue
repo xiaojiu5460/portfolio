@@ -18,7 +18,6 @@
     </div>
  </div>
 </template>
-
 <script>
 export default {
   name: "stockList",
@@ -127,13 +126,13 @@ export default {
   methods: {
     sortPrice: function(newPri) {
       this.list.sort(function(p1, p2) {
-        return p1[newPri] < p2[newPri] ? 1 : -1;
+        return parseFloat(p1[newPri]) < parseFloat(p2[newPri]) ? 1 : -1;
       });
     },
-    sortPercent:function(per){
-      this.list.sort(function(p1,p2){
-        return parseFloat(p1[per])<parseFloat(p2[per])? 1 : -1;
-      })
+    sortPercent: function(per) {
+      this.list.sort(function(p1, p2) {
+        return parseFloat(p1[per]) < parseFloat(p2[per]) ? 1 : -1;
+      });
     }
     //如果parseInt("stocks.percent",10)>0,<0,=0的三种情况
     // isShow: function() {
@@ -159,7 +158,7 @@ export default {
 .up {
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
-  border-bottom: 5px solid #abbfe2;
+  border-bottom: 5px solid #abbfe6;
   height: 0;
   width: 0;
   color: #abbfe2;
@@ -175,6 +174,9 @@ export default {
   color: #abbfe2;
   display: block;
   margin-top: 4px;
+}
+.up.highLight,.down.highLight {
+  color: #666b61;
 }
 .allLists {
   padding: 0;
