@@ -2,7 +2,7 @@
   <div id="app">
     <Header></Header>
     <navigation></navigation>
-    <StockList></StockList>
+    <StockList :stocks-list="stocksList"></StockList>
     <!-- <CreatGroup></CreatGroup> -->
   </div>
 </template>
@@ -24,10 +24,19 @@ export default {
   },
   data() {
     return {
-      list: []
+      stocksList: [
+        "sh000001",
+        "sz300001",
+        "sh600180",
+        "sz000729",
+        "sz000001",
+        "sz300540",
+        "sh600150",
+        "sz002053"
+      ]
     };
   },
-  created:function(){}
+  created: function() {}
 };
 </script>
 

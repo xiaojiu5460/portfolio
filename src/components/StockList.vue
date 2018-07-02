@@ -3,8 +3,8 @@
     <div>
         <ul class="menu">
           <li class="edit">编辑</li>
-          <li class="new">最新价<div><span class="up"></span><span class="down"></span></div></li>
-          <li class="limit">涨跌幅<div><span class="up"></span><span class="down"></span></div></li>
+          <li class="new" @click="sortPrice('newPrice')">最新价<div><span class="up"></span><span class="down"></span></div></li>
+          <li class="limit" @click="sortPercent('percent')">涨跌幅<div><span class="up"></span><span class="down"></span></div></li>
         </ul>
     </div>
     <div>
@@ -12,7 +12,7 @@
             <li  v-for="(stocks,index) in list" :key="index"  class="lists">
                 <div class="stocksName">{{stocks.name}}<p>{{stocks.code}}</p></div>
                 <div class="stocksPrice">{{stocks.newPrice}}</div>
-                <div class="stocksPercent"><span v-bind:class="{red:isShow,green:isShow,grey:isShow}">{{stocks.limitPrice}}</span></div>
+                <div class="stocksPercent"><span v-bind:class="[stocks.colorState]">{{stocks.percent}}</span></div>
             </li>
         </ul>
     </div>
@@ -24,35 +24,18 @@ export default {
   name: "stockList",
   data() {
     return {
+      list: [],
+      sortValue: ""
       // isActive: true,
       // hasError: false
     };
   },
-  computed: {
-    //如果parseInt("stocks.limitPrice",10)>0,<0,=0的三种情况
-    isShow:function(){
-      if(parseInt("this.limitPrice",10)>0){
-        return true;
-      }else if(parseInt("this.limitPrice",10)<0){
-        return true;
-      }else{
-        return true;
-      }
-    },
-  },
-  props: ["list"],
+  props: ["stocks-list"],
   created: function() {
-    var stock = [
-      "sh000001",
-      "sz300001",
-      "sh600180",
-      "sz000729",
-      "sz000001",
-      "sz300540",
-      "sh600150",
-      "sz002053"
-    ];
-    var url = `http://web.sqt.gtimg.cn/q=${stock.join(",")}`;
+    // if(!this.stockList ||! this.stockList.length){ --当不传股票代码时列表不做处理。
+    //   return;
+    // }
+    var url = `http://web.sqt.gtimg.cn/q=${this.stocksList.join(",")}`;
     var parse = str => {
       return ("" + str)
         .replace(/[;\s]+$/, "")
@@ -123,14 +106,46 @@ export default {
       // console.log(data);
       this.list = data.map(function(item) {
         //map 从处理过的对象里取出需要的值，列入一个数组赋值给list
-        return {
+        let l = {
           name: item["名字"],
           code: item["代码"],
           newPrice: item["当前价格"],
-          limitPrice: item["涨跌%"] + "%"
+          percent: item["涨跌%"] + "%"
         };
+        let per = parseFloat(item["涨跌%"]);
+        if (per > 0) {
+          l.colorState = "red"; //给上面l列表添加多个属性，在模板里可以直接读取
+        } else if (per < 0) {
+          l.colorState = "green";
+        } else {
+          l.colorState = "grey";
+        }
+        return l;
       });
     });
+  },
+  methods: {
+    sortPrice: function(newPri) {
+      this.list.sort(function(p1, p2) {
+        return p1[newPri] < p2[newPri] ? 1 : -1;
+      });
+    },
+    sortPercent:function(per){
+      this.list.sort(function(p1,p2){
+        return parseFloat(p1[per])<parseFloat(p2[per])? 1 : -1;
+      })
+    }
+    //如果parseInt("stocks.percent",10)>0,<0,=0的三种情况
+    // isShow: function() {
+    //   var price=this.item["涨跌%"] ;
+    //   if (parseFloat(price) > 0) {
+    //     return 1;
+    //   } else if (parseFloat(price) < 0) {
+    //     return 2;
+    //   } else {
+    //     return 0;
+    //   }
+    // }
   }
 };
 </script>
@@ -172,8 +187,7 @@ export default {
 .lists {
   display: flex;
   align-items: center;
-  overflow-x: scroll;
-  overflow-y: hidden;
+  overflow: hidden;
   padding: 0 16px 0 12px;
 }
 .menu {
