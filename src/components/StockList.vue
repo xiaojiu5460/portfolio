@@ -2,20 +2,23 @@
  <div class="codeList">
   <div>
     <ul class="menu">
-      <li class="edit">编辑</li>
-      <li class="new" @click="sort('newPrice')">最新价<div><span :class="{up:isActive,upHighLight:upLight('newPrice')}"></span><span :class="{down:isActive,downHighLight:downLight('newPrice')}" ></span></div></li>
-      <li class="limit" @click="sort('percent')">涨跌幅<div><span :class="{up:isActive,upHighLight:upLight('percent')}"></span><span :class="{down:isActive,downHighLight:downLight('percent')}"></span></div></li>
+      <li class="edit" @click="onClick">编辑</li>
+      <li class="new" @click="sort('newPrice')">最新价<div><span :class="{up:true,upHighLight:upLight('newPrice')}"></span><span :class="{down:true,downHighLight:downLight('newPrice')}" ></span></div></li>
+      <li class="limit" @click="sort('percent')">涨跌幅<div><span :class="{up:true,upHighLight:upLight('percent')}"></span><span :class="{down:true,downHighLight:downLight('percent')}"></span></div></li>
     </ul>
   </div>
   <div>
     <ul class="allLists">
-            <li  v-for="(stocks,index) in list" :key="index"  class="lists">
-                <div class="stocksName">{{stocks.name}}<p>{{stocks.code}}</p></div>
-                <div class="stocksPrice">{{stocks.newPrice}}</div>
-                <div class="stocksPercent"><span v-bind:class="[stocks.colorState]">{{stocks.percent}}</span></div>
-            </li>
-        </ul>
+        <li  v-for="(stocks,index) in list" :key="index"  class="lists"><input v-show="isShow" type="checkbox" v-model="checkboxValue">
+          <div class="stocksName">{{stocks.name}}<p>{{stocks.code}}</p></div>
+          <div class="stocksPrice">{{stocks.newPrice}}</div>
+          <div class="stocksPercent"><span v-bind:class="[stocks.colorState]">{{stocks.percent}}</span></div>
+        </li>
+    </ul>
+    <div>
+      <button type="button" disabled="disabled">删除</button>
     </div>
+  </div>
  </div>
 </template>
 <script>
@@ -26,7 +29,9 @@ export default {
       list: [],
       sortValue: "", //保存上个被点击的字段
       sortDir: 1, //保存降序默认值为1，点击排降序为1后，调整升序为-1
-      isActive: true
+      isShow:false,//input默认不显示
+      checkboxValue: '',
+      // 
     };
   },
   props: ["stocks-list"],
@@ -125,6 +130,13 @@ export default {
   },
   computed: {},
   methods: {
+    onClick: function() {
+      return this.isShow=true;
+      // alert(this.checkboxValue);
+
+    },
+
+    //切换上下高亮颜色
     upLight: function(field) {
       if (this.sortDir === 1 && field === this.sortValue) {
         return true;
@@ -174,6 +186,20 @@ export default {
 </script>
 
 <style scoped>
+button {
+  background-color: #bc4104; /* Green */
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  width: 68px;
+  height: 27px;
+  border-radius: 3px;
+  padding: 0;
+  margin-left: 12px;
+}
 .new div,
 .limit div {
   width: 10px;
