@@ -15,10 +15,12 @@
           <div class="stocksPercent"><span v-bind:class="[stocks.colorState]">{{stocks.percent}}</span></div>
         </li>
     </ul>
-    <div>
-      <button type="button" disabled="disabled">删除</button>
-    </div>
   </div>
+  <div class="change">
+      <button class="delete" type="button" disabled="disabled"><span>删除</span></button>
+      <button class="selectAll" type="button">全选</button>
+      <button class="opposite" type="button">反选</button>
+    </div>
  </div>
 </template>
 <script>
@@ -29,9 +31,9 @@ export default {
       list: [],
       sortValue: "", //保存上个被点击的字段
       sortDir: 1, //保存降序默认值为1，点击排降序为1后，调整升序为-1
-      isShow:false,//input默认不显示
-      checkboxValue: '',
-      // 
+      isShow: false, //input默认不显示
+      checkboxValue: ""
+      //
     };
   },
   props: ["stocks-list"],
@@ -131,9 +133,8 @@ export default {
   computed: {},
   methods: {
     onClick: function() {
-      return this.isShow=true;
+      return (this.isShow = true);
       // alert(this.checkboxValue);
-
     },
 
     //切换上下高亮颜色
@@ -186,19 +187,43 @@ export default {
 </script>
 
 <style scoped>
+.codeList .change {
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  text-align: center;
+  width: 100%;
+  background-color:#000000;
+  background-color:rgba(0,0,0,0.2);
+  /* background-color:#000000;
+  opacity: 0.8; */
+}
+.selectAll,
+.opposite {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: #2d6bb1;
+  width:33%;
+}
+.delete {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: #ccc;
+  width:33%;
+}
 button {
-  background-color: #bc4104; /* Green */
   border: none;
-  color: white;
   text-align: center;
   text-decoration: none;
-  display: inline-block;
   font-size: 16px;
-  width: 68px;
   height: 27px;
   border-radius: 3px;
   padding: 0;
-  margin-left: 12px;
+  /* margin-left: 12px; */
 }
 .new div,
 .limit div {
