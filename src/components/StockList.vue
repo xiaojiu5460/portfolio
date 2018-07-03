@@ -1,14 +1,14 @@
 <template>
  <div class="codeList">
-    <div>
-        <ul class="menu">
-          <li class="edit">编辑</li>
-          <li class="new" @click="sort('newPrice')">最新价<div><span class="up"></span><span class="down"></span></div></li>
-          <li class="limit" @click="sort('percent')">涨跌幅<div><span class="up"></span><span class="down"></span></div></li>
-        </ul>
-    </div>
-    <div>
-        <ul class="allLists">
+  <div>
+    <ul class="menu">
+      <li class="edit">编辑</li>
+      <li class="new" @click="sort('newPrice')">最新价<div><span :class="{up:isActive,upHighLight:upLight('newPrice')}"></span><span :class="{down:isActive,downHighLight:downLight('newPrice')}" ></span></div></li>
+      <li class="limit" @click="sort('percent')">涨跌幅<div><span :class="{up:isActive,upHighLight:upLight('percent')}"></span><span :class="{down:isActive,downHighLight:downLight('percent')}"></span></div></li>
+    </ul>
+  </div>
+  <div>
+    <ul class="allLists">
             <li  v-for="(stocks,index) in list" :key="index"  class="lists">
                 <div class="stocksName">{{stocks.name}}<p>{{stocks.code}}</p></div>
                 <div class="stocksPrice">{{stocks.newPrice}}</div>
@@ -24,10 +24,9 @@ export default {
   data() {
     return {
       list: [],
-      sortValue: "",
-      sortDir: 1
-      // isActive: true,
-      // hasError: false
+      sortValue: "", //保存上个被点击的字段
+      sortDir: 1, //保存降序默认值为1，点击排降序为1后，调整升序为-1
+      isActive: true
     };
   },
   props: ["stocks-list"],
@@ -124,11 +123,23 @@ export default {
       });
     });
   },
+  computed: {},
   methods: {
+    upLight: function(field) {
+      if (this.sortDir === 1 && field === this.sortValue) {
+        return true;
+      }
+    },
+    downLight: function(field) {
+      if (this.sortDir === -1 && field === this.sortValue) {
+        return true;
+      }
+    },
     sort: function(field) {
-      if(field!==this.sortValue){
+      if (field !== this.sortValue) {
+        //当传进的字段和上一次被点击的字段相同时，走下面正常排序方式，当不等于上次字段，则修改默认值为降序，并保存上次点击字段。
         this.sortDir = 1;
-        this.sortValue=field;
+        this.sortValue = field;
       }
       if (this.sortDir === 1) {
         this.sortDir = -1;
@@ -141,6 +152,11 @@ export default {
           return parseFloat(p1[field]) < parseFloat(p2[field]) ? -1 : 1;
         });
       }
+      // else {
+      //   //默认排序
+      //   this.sortDir = 1;
+      //   return;
+      // }
     }
     //如果parseInt("stocks.percent",10)>0,<0,=0的三种情况
     // isShow: function() {
@@ -183,9 +199,12 @@ export default {
   display: block;
   margin-top: 4px;
 }
-.up.highLight,
-.down.highLight {
-  color: #666b61;
+.upHighLight {
+  border-bottom: 5px solid #666b61;
+  /* color: #666b61; */
+}
+.downHighLight {
+  border-top: 5px solid #666b61;
 }
 .allLists {
   padding: 0;
