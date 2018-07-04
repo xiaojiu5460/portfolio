@@ -9,7 +9,7 @@
   </div>
   <div>
     <ul class="allLists">
-        <li  v-for="(stocks,index) in list" :key="index"  class="lists"><input v-show="isShow" type="checkbox" v-model="checkboxValue">
+        <li  v-for="(stocks,index) in list" :key="index"  class="lists"><input v-show="isShow" type="checkbox" v-model="stocks.checkboxValue">
           <div class="stocksName">{{stocks.name}}<p>{{stocks.code}}</p></div>
           <div class="stocksPrice">{{stocks.newPrice}}</div>
           <div class="stocksPercent"><span v-bind:class="[stocks.colorState]">{{stocks.percent}}</span></div>
@@ -28,13 +28,11 @@ export default {
   name: "stockList",
   data() {
     return {
-      list: [],
+      list: [{ checkboxValue: false }],
       sortValue: "", //保存上个被点击的字段
       sortDir: 1, //保存降序默认值为1，点击排降序为1后，调整升序为-1
       isShow: false, //input默认不显示
-      checkboxValue: "",
       disabled: true
-      // deleteSock:false
     };
   },
   props: ["stocks-list"],
@@ -131,18 +129,20 @@ export default {
       });
     });
   },
-  computed: {},
+  computed: {
+    deleteSock: function() {
+      this.list.forEach(function() {
+        if (this.list.checkboxValue !== false) {
+          this.disabled = false;
+        }
+      });
+      return true;
+    }
+  },
   methods: {
     onClick: function() {
       this.isShow = true;
     },
-    deleteSock: function() {
-      if (this.checkboxValue !== "") {
-        this.disable = false;
-        this.disabled = false;
-      }
-    },
-
     //切换上下高亮颜色
     upLight: function(field) {
       if (this.sortDir === 1 && field === this.sortValue) {
@@ -224,7 +224,7 @@ export default {
   flex: 1;
   justify-content: center;
   align-items: center;
-  background-color: #ccc;
+  background-color: #2d6bb1;
   width: 33%;
 }
 button {
