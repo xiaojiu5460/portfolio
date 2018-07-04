@@ -17,7 +17,7 @@
     </ul>
   </div>
   <div class="change">
-      <button class="delete" type="button" disabled="disabled"><span>删除</span></button>
+      <button :class="{disable:true,delete:deleteSock}" type="button" :disabled="disabled"><span>删除</span></button>
       <button class="selectAll" type="button">全选</button>
       <button class="opposite" type="button">反选</button>
     </div>
@@ -32,8 +32,9 @@ export default {
       sortValue: "", //保存上个被点击的字段
       sortDir: 1, //保存降序默认值为1，点击排降序为1后，调整升序为-1
       isShow: false, //input默认不显示
-      checkboxValue: ""
-      //
+      checkboxValue: "",
+      disabled: true
+      // deleteSock:false
     };
   },
   props: ["stocks-list"],
@@ -133,8 +134,13 @@ export default {
   computed: {},
   methods: {
     onClick: function() {
-      return (this.isShow = true);
-      // alert(this.checkboxValue);
+      this.isShow = true;
+    },
+    deleteSock: function() {
+      if (this.checkboxValue !== "") {
+        this.disable = false;
+        this.disabled = false;
+      }
     },
 
     //切换上下高亮颜色
@@ -193,10 +199,8 @@ export default {
   display: flex;
   text-align: center;
   width: 100%;
-  background-color:#000000;
-  background-color:rgba(0,0,0,0.2);
-  /* background-color:#000000;
-  opacity: 0.8; */
+  background-color: #d4f6fc;
+  filter: Alpha(Opacity=10, Style=0);
 }
 .selectAll,
 .opposite {
@@ -205,7 +209,15 @@ export default {
   justify-content: center;
   align-items: center;
   background-color: #2d6bb1;
-  width:33%;
+  width: 33%;
+}
+.disable {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  background-color: #ccc;
+  width: 33%;
 }
 .delete {
   display: flex;
@@ -213,7 +225,7 @@ export default {
   justify-content: center;
   align-items: center;
   background-color: #ccc;
-  width:33%;
+  width: 33%;
 }
 button {
   border: none;
@@ -221,10 +233,11 @@ button {
   text-decoration: none;
   font-size: 16px;
   height: 27px;
-  border-radius: 3px;
+  border-radius: 10px;
   padding: 0;
   /* margin-left: 12px; */
 }
+
 .new div,
 .limit div {
   width: 10px;
