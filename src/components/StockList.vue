@@ -10,7 +10,7 @@
   <div>
     <ul class="allLists">
         <li  v-for="(stocks,index) in list" :key="index"  class="lists">
-          <div  v-show="isShow">
+          <div  v-show="isShow" class="check">
             <input type="checkbox" v-model="stocks.checkboxValue">
           </div>
           <div class="stocksName">{{stocks.name}}<p>{{stocks.code}}</p></div>
@@ -20,14 +20,15 @@
     </ul>
   </div>
   <div class="change">
+        <div><a :class="{disable:true,delete:deleteStock}"  :disabled="!deleteStock"><span>删除</span><span :class="{notCount:false,count:countStock}">{{total}}</span></a></div>
       <div>
-        <button :class="{disable:true,delete:deleteStock}" type="button" :disabled="!deleteStock"><span>删除</span></button>
+        <a class="selectAll"  @click="allSelect">全选</a>
       </div>
       <div>
-        <button class="selectAll" type="button" @click="allSelect">全选</button>
+        <a class="opposite"  @click="contrast">反选</a>
       </div>
       <div>
-        <button class="opposite" type="button" @click="contrast">反选</button>
+        <a class="cancel" @click="cancellation">取消</a>
       </div>
     </div>
  </div>
@@ -157,6 +158,21 @@ export default {
     }
   },
   methods: {
+    total: function() {
+      var sum = 0;
+      for (var index = 0; index < this.list.length; index++) {
+        var stock = this.list[index];
+        if (stock.checkboxValue) {
+          sum = sum + 1;
+        }
+        return sum;
+      }
+    },
+    countStock: function() {
+        if(this.total===0){
+          this.notCount=true;
+        }
+    },
     allSelect: function() {
       for (var index = 0; index < this.list.length; index++) {
         var stock = this.list[index];
@@ -171,6 +187,13 @@ export default {
         } else {
           stock.checkboxValue = true;
         }
+      }
+    },
+    cancellation: function() {
+      for (var index = 0; index < this.list.length; index++) {
+        var stock = this.list[index];
+        stock.checkboxValue = false;
+        this.isShow = false;
       }
     },
     onClick: function() {
@@ -226,19 +249,55 @@ export default {
 </script>
 
 <style scoped>
+.check {
+  padding: 0 5px 5px 0;
+}
+input[type="checkbox"] {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  position: relative;
+}
+input[type="checkbox"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #fff;
+  width: 100%;
+  height: 100%;
+  border: 1px solid #d9d9d9;
+  /* margin-right: 3px; */
+}
+input[type="checkbox"]:checked::before {
+  content: "\2713";
+  background-color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  border: 1px solid #2d6bb1;
+  color: #2d6bb1;
+  font-size: 12px;
+  font-weight: bold;
+  /* margin-right: 3px; */
+}
 .codeList .change {
   position: fixed;
   bottom: 0;
   display: flex;
   text-align: center;
   width: 100%;
-  background-color: rgb(0, 0, 0, 0.1);
+  background-color: #2d6bb1;
 }
 .change > div {
   flex: 1;
 }
 .selectAll,
-.opposite {
+.opposite,
+.cancel {
   display: flex;
   flex: 1;
   justify-content: center;
@@ -251,7 +310,8 @@ export default {
   flex: 1;
   justify-content: center;
   align-items: center;
-  background-color: #ccc;
+  color: #c0c0bf;
+  /* background-color: #ccc; */
 }
 .delete {
   display: flex;
@@ -261,13 +321,13 @@ export default {
   background-color: #2d6bb1;
   color: #f1f2f5;
 }
-button {
-  width: 80px;
+a {
+  width: 50px;
   border: none;
   text-align: center;
   text-decoration: none;
   font-size: 16px;
-  height: 27px;
+  height: 30px;
   border-radius: 5px;
   padding: 0;
   margin-left: 12px;
