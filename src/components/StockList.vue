@@ -9,7 +9,10 @@
   </div>
   <div>
     <ul class="allLists">
-        <li  v-for="(stocks,index) in list" :key="index"  class="lists"><input v-show="isShow" type="checkbox" v-model="stocks.checkboxValue">
+        <li  v-for="(stocks,index) in list" :key="index"  class="lists">
+          <div  v-show="isShow">
+            <input type="checkbox" v-model="stocks.checkboxValue">
+          </div>
           <div class="stocksName">{{stocks.name}}<p>{{stocks.code}}</p></div>
           <div class="stocksPrice">{{stocks.newPrice}}</div>
           <div class="stocksPercent"><span v-bind:class="[stocks.colorState]">{{stocks.percent}}</span></div>
@@ -17,9 +20,15 @@
     </ul>
   </div>
   <div class="change">
-      <button :class="{disable:true,delete:deleteSock}" type="button" :disabled="disabled"><span>删除</span></button>
-      <button class="selectAll" type="button">全选</button>
-      <button class="opposite" type="button">反选</button>
+      <div>
+        <button :class="{disable:true,delete:deleteStock}" type="button" :disabled="!deleteStock"><span>删除</span></button>
+      </div>
+      <div>
+        <button class="selectAll" type="button" @click="allSelect">全选</button>
+      </div>
+      <div>
+        <button class="opposite" type="button" @click="contrast">反选</button>
+      </div>
     </div>
  </div>
 </template>
@@ -28,11 +37,11 @@ export default {
   name: "stockList",
   data() {
     return {
-      list: [{ checkboxValue: false }],
+      list: [],
       sortValue: "", //保存上个被点击的字段
       sortDir: 1, //保存降序默认值为1，点击排降序为1后，调整升序为-1
-      isShow: false, //input默认不显示
-      disabled: true
+      isShow: false //input默认不显示
+      // disabled: true
     };
   },
   props: ["stocks-list"],
@@ -130,16 +139,40 @@ export default {
     });
   },
   computed: {
-    deleteSock: function() {
-      this.list.forEach(function() {
-        if (this.list.checkboxValue !== false) {
-          this.disabled = false;
+    deleteStock: function() {
+      // this.list.forEach(function() {
+      //   if (this.list.checkboxValue !== false) {
+      //     this.disabled = false;
+      //   }
+      // });
+      // return true;
+      for (var index = 0; index < this.list.length; index++) {
+        var stock = this.list[index];
+        if (stock.checkboxValue) {
+          // this.disabled = false;
+          return true;
         }
-      });
-      return true;
+      }
+      return false;
     }
   },
   methods: {
+    allSelect: function() {
+      for (var index = 0; index < this.list.length; index++) {
+        var stock = this.list[index];
+        stock.checkboxValue = true;
+      }
+    },
+    contrast: function() {
+      for (var index = 0; index < this.list.length; index++) {
+        var stock = this.list[index];
+        if (stock.checkboxValue) {
+          stock.checkboxValue = false;
+        } else {
+          stock.checkboxValue = true;
+        }
+      }
+    },
     onClick: function() {
       this.isShow = true;
     },
@@ -199,8 +232,10 @@ export default {
   display: flex;
   text-align: center;
   width: 100%;
-  background-color: #d4f6fc;
-  filter: Alpha(Opacity=10, Style=0);
+  background-color: rgb(0, 0, 0, 0.1);
+}
+.change > div {
+  flex: 1;
 }
 .selectAll,
 .opposite {
@@ -209,7 +244,7 @@ export default {
   justify-content: center;
   align-items: center;
   background-color: #2d6bb1;
-  width: 33%;
+  color: #f1f2f5;
 }
 .disable {
   display: flex;
@@ -217,7 +252,6 @@ export default {
   justify-content: center;
   align-items: center;
   background-color: #ccc;
-  width: 33%;
 }
 .delete {
   display: flex;
@@ -225,17 +259,18 @@ export default {
   justify-content: center;
   align-items: center;
   background-color: #2d6bb1;
-  width: 33%;
+  color: #f1f2f5;
 }
 button {
+  width: 80px;
   border: none;
   text-align: center;
   text-decoration: none;
   font-size: 16px;
   height: 27px;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 0;
-  /* margin-left: 12px; */
+  margin-left: 12px;
 }
 
 .new div,
@@ -265,7 +300,6 @@ button {
 }
 .upHighLight {
   border-bottom: 5px solid #666b61;
-  /* color: #666b61; */
 }
 .downHighLight {
   border-top: 5px solid #666b61;
@@ -273,6 +307,7 @@ button {
 .allLists {
   padding: 0;
   margin: 0;
+  margin-bottom: 33px;
 }
 .allLists li {
   height: 40px;
