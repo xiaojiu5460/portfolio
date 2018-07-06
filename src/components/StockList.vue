@@ -19,8 +19,10 @@
         </li>
     </ul>
   </div>
-  <div class="change">
-        <div><a :class="{disable:true,delete:deleteStock}"  :disabled="!deleteStock"><span>删除</span><span :class="{notCount:false,count:countStock}">{{total}}</span></a></div>
+  <div class="change" v-show="isShow">
+      <div>
+        <a :class="{disable:true,delete:deleteStock}"  :disabled="!deleteStock" @click="canDelete"><span>删除</span><span>{{total?'('+total+')':''}}</span></a>
+      </div>
       <div>
         <a class="selectAll"  @click="allSelect">全选</a>
       </div>
@@ -28,7 +30,17 @@
         <a class="opposite"  @click="contrast">反选</a>
       </div>
       <div>
-        <a class="cancel" @click="cancellation">取消</a>
+        <a class="cancel" @click="cancel">取消</a>
+      </div>
+    </div>
+    <div class="iosDialog" v-show="showSure">
+      <div class="weui-mask"></div>
+      <div class="weui-dialog">
+        <div class="weui-dialog_bd">确认从所有分组中删除已选股票？</div>
+        <div class="weui-dialog_ft">
+          <a><span class="unSure" @click="unSure">取消</span></a>
+          <a><span class="sure">确定</span></a>
+        </div>
       </div>
     </div>
  </div>
@@ -41,8 +53,8 @@ export default {
       list: [],
       sortValue: "", //保存上个被点击的字段
       sortDir: 1, //保存降序默认值为1，点击排降序为1后，调整升序为-1
-      isShow: false //input默认不显示
-      // disabled: true
+      isShow: false, //input默认不显示
+      showSure: false,
     };
   },
   props: ["stocks-list"],
@@ -155,9 +167,7 @@ export default {
         }
       }
       return false;
-    }
-  },
-  methods: {
+    },
     total: function() {
       var sum = 0;
       for (var index = 0; index < this.list.length; index++) {
@@ -165,13 +175,21 @@ export default {
         if (stock.checkboxValue) {
           sum = sum + 1;
         }
-        return sum;
       }
+      return sum;
+    }
+  },
+  methods: {
+    canDelete:function(){
+      this.showSure=true;
+    },
+    unSure:function(){
+      this.showSure=false;
     },
     countStock: function() {
-        if(this.total===0){
-          this.notCount=true;
-        }
+      if (this.total === 0) {
+        this.notCount = true;
+      }
     },
     allSelect: function() {
       for (var index = 0; index < this.list.length; index++) {
@@ -189,7 +207,7 @@ export default {
         }
       }
     },
-    cancellation: function() {
+    cancel: function() {
       for (var index = 0; index < this.list.length; index++) {
         var stock = this.list[index];
         stock.checkboxValue = false;
@@ -248,7 +266,58 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+$bgcolor: #2d6bb1;
+.weui-mask {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+.weui-dialog {
+  position: fixed;
+  z-index: 5000;
+  width: 80%;
+  max-width: 300px;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  text-align: center;
+  border-radius: 3px;
+  overflow: hidden;
+  height: 120px;
+  .weui-dialog_bd {
+    min-height: 40px;
+    font-size: 16px;
+    word-wrap: break-word;
+    word-break: break-all;
+    color: #808080;
+    height: 70px;
+    line-height: 70px;
+    border-bottom: 1px solid #d9d9d9;
+  }
+  .weui-dialog_ft {
+    position: relative;
+    font-size: 18px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    a {
+      flex: 1;
+      text-align: center;
+      letter-spacing: 2px;
+      border-left:1px solid #d9d9d9;
+      .sure{
+        color:#6db5fd;
+      }
+    }
+  }
+}
 .check {
   padding: 0 5px 5px 0;
 }
@@ -269,7 +338,6 @@ input[type="checkbox"]::before {
   width: 100%;
   height: 100%;
   border: 1px solid #d9d9d9;
-  /* margin-right: 3px; */
 }
 input[type="checkbox"]:checked::before {
   content: "\2713";
@@ -278,11 +346,10 @@ input[type="checkbox"]:checked::before {
   top: 0;
   left: 0;
   width: 100%;
-  border: 1px solid #2d6bb1;
-  color: #2d6bb1;
+  border: 1px solid $bgcolor;
+  color: $bgcolor;
   font-size: 12px;
   font-weight: bold;
-  /* margin-right: 3px; */
 }
 .codeList .change {
   position: fixed;
@@ -290,7 +357,8 @@ input[type="checkbox"]:checked::before {
   display: flex;
   text-align: center;
   width: 100%;
-  background-color: #2d6bb1;
+  height: 40px;
+  background-color: $bgcolor;
 }
 .change > div {
   flex: 1;
@@ -298,27 +366,27 @@ input[type="checkbox"]:checked::before {
 .selectAll,
 .opposite,
 .cancel {
-  display: flex;
-  flex: 1;
+  // display: flex;
+  // flex: 1;
   justify-content: center;
   align-items: center;
-  background-color: #2d6bb1;
+  background-color: $bgcolor;
   color: #f1f2f5;
 }
 .disable {
-  display: flex;
-  flex: 1;
+  // display: flex;
+  // flex: 1;
   justify-content: center;
   align-items: center;
   color: #c0c0bf;
   /* background-color: #ccc; */
 }
 .delete {
-  display: flex;
-  flex: 1;
+  // display: flex;
+  // flex: 1;
   justify-content: center;
   align-items: center;
-  background-color: #2d6bb1;
+  background-color: $bgcolor;
   color: #f1f2f5;
 }
 a {
@@ -327,10 +395,10 @@ a {
   text-align: center;
   text-decoration: none;
   font-size: 16px;
-  height: 30px;
   border-radius: 5px;
   padding: 0;
   margin-left: 12px;
+  line-height: 40px;
 }
 
 .new div,
@@ -367,7 +435,7 @@ a {
 .allLists {
   padding: 0;
   margin: 0;
-  margin-bottom: 33px;
+  margin-bottom: 40px;
 }
 .allLists li {
   height: 40px;
