@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <Header></Header>
-    <navigation></navigation>
-    <StockList :stocks-list="stocksList"></StockList>
+    <Navigation></Navigation>
+    <StockList :stocks-list="stocksList" v-on:child-mes="updateList"></StockList>
     <!-- <CreatGroup></CreatGroup> -->
   </div>
 </template>
@@ -10,7 +10,7 @@
 <script>
 import "normalize.css";
 import Header from "./components/Header.vue";
-import navigation from "./components/Navigation.vue";
+import Navigation from "./components/Navigation.vue";
 import StockList from "./components/StockList.vue";
 // import CreatGroup from "./components/CreatGroup.vue";
 
@@ -18,8 +18,8 @@ export default {
   name: "app",
   components: {
     Header,
-    navigation,
-    StockList
+    Navigation,
+    StockList,
     // CreatGroup
   },
   data() {
@@ -40,7 +40,27 @@ export default {
       ]
     };
   },
-  created: function() {}
+  created: function() {},
+  methods:{
+    updateList: function(data) {
+      // console.log(data)
+      //把勾选的股票删除
+      var newList=[];
+      var newData=data.map(function(item){
+          return item.code2;
+      })
+      //遍历list里和mes不同的加到新数组
+      for (var index = 0; index < this.stocksList.length; index++) {
+        var code = this.stocksList[index];
+        //判断code在不在data里
+        if(newData.indexOf(code)===-1){
+          newList.push(code)
+        }
+      }
+      this.stocksList=newList;
+      // console.log(this.stocksList);
+    },
+  }
 };
 </script>
 

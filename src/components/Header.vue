@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="search">
-      <div><img src="../assets/img/search.png">点击搜索股票/板块</div>
+      <div><i class="iconfont icon-fangdajing"></i>点击搜索股票/板块</div>
     </div>
     <div class="more"><span>···</span>
       <div class="skins" v-show="isShow"><span class="up"></span>
