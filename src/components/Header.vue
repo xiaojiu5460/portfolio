@@ -1,5 +1,5 @@
 <template>
-  <div :class="{container:true,blackSkin:false}">
+  <div :class="{container:true,blackSkin:notActive}">
     <div class="search">
       <div><i class="iconfont icon-fangdajing"></i>点击搜索股票/板块</div>
     </div>
@@ -16,7 +16,8 @@ export default {
   components: { Group },
   data() {
     return {
-      isShow: false
+      isShow: false,
+      notActive:false,
     };
   },
   props: {},
@@ -25,8 +26,7 @@ export default {
       this.isShow = true;
     },
     blackColor:function(){
-      this.container=false;
-      this.blackSkin=true;
+      this.notActive=true;
     }
   }
 };
