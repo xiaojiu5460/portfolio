@@ -1,5 +1,5 @@
 <template>
- <div class="codeList">
+ <div :class="{codeList:true,blackBg:blackColor}">
   <div>
     <ul class="menu">
       <li class="edit" @click="onClick"><i class="iconfont icon-iconfontzhizuobiaozhunbduan10"></i>编辑</li>
@@ -24,6 +24,7 @@
 </template>
 <script>
 import StockEdit from "./StockEdit.vue";
+import { EventBus } from "../utils/EventBus.js";
 export default {
   name: "StockList",
   components: {
@@ -35,7 +36,8 @@ export default {
       defaultList: [],
       sortValue: "", //保存上个被点击的字段
       sortDir: 0, //保存降序默认值为1，点击排降序为1后，调整升序为-1
-      isShow: false //input默认不显示
+      isShow: false, //input默认不显示
+      blackColor: false
     };
   },
   props: ["stocks-list"],
@@ -47,6 +49,17 @@ export default {
     }
   },
   created: function() {
+    let that = this;
+    EventBus.$on("changeSkin", function(data) {
+      switch (data) {
+        case "black":
+          that.blackColor = true;
+          break;
+        case "white":
+          that.blackColor = false;
+          break;
+      }
+    });
     this.updateData();
   },
   computed: {
@@ -202,7 +215,7 @@ export default {
           l.checkboxValue = false;
           return l;
         });
-        this.defaultList = Object.assign([], this.list)
+        this.defaultList = Object.assign([], this.list);
         // this.defaultList = JSON.stringify(this.list);
         // let a =1;
       });
@@ -239,7 +252,7 @@ export default {
         // 恢复 TODO
         // 把list的顺序恢复成stockList一样
         // this.list = JSON.parse(this.defaultList);
-        this.list = Object.assign([],this.defaultList);
+        this.list = Object.assign([], this.defaultList);
       } else {
         this.sortDir = 1;
         this.list.sort(function(p1, p2) {
@@ -253,44 +266,113 @@ export default {
 
 <style scoped lang="scss">
 $bgcolor: #2d6bb1;
-input[type="checkbox"] {
-  width: 12px;
-  height: 12px;
-  display: inline-block;
-  text-align: center;
-  vertical-align: middle;
-  position: relative;
-}
-input[type="checkbox"]::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: #fff;
-  width: 100%;
-  height: 100%;
-  border: 1px solid #d9d9d9;
-}
-input[type="checkbox"]:checked::before {
-  content: "\2713";
-  background-color: #fff;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  border: 1px solid $bgcolor;
-  color: $bgcolor;
-  font-size: 12px;
-  font-weight: bold;
-}
-.check {
-  padding: 0 5px 5px 0;
-}
-
-.new div,
-.limit div {
-  width: 10px;
-  padding-left: 5px;
+.codeList {
+  // min-height: 100%;
+  .allLists {
+    padding: 0;
+    margin: 0;
+    margin-bottom: 40px;
+    li {
+      height: 40px;
+      list-style: none;
+      .check {
+        padding: 0 5px 5px 0;
+      }
+      .stocksPrice {
+        font-weight: bold;
+      }
+      .stocksName p {
+        color: #686e71;
+        font-size: 12px;
+        margin: 0;
+      }
+    }
+  }
+  .menu {
+    height: 30px;
+    margin: 0;
+    font-size: 14px;
+    color: #a0abc3;
+    border-bottom: 1px solid #f1f2f5;
+  }
+  .menu,
+  .lists {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding: 0 16px 0 12px;
+  }
+  .edit,
+  .stocksName {
+    width: 48%;
+  }
+  .new,
+  .stocksPrice {
+    display: flex;
+    width: 22%;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .limit,
+  .stocksPercent {
+    display: flex;
+    width: 30%;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .new div,
+  .limit div {
+    width: 10px;
+    padding-left: 5px;
+  }
+  input[type="checkbox"] {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    position: relative;
+  }
+  input[type="checkbox"]::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #fff;
+    width: 100%;
+    height: 100%;
+    border: 1px solid #d9d9d9;
+  }
+  input[type="checkbox"]:checked::before {
+    content: "\2713";
+    background-color: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border: 1px solid $bgcolor;
+    color: $bgcolor;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  &.blackBg {
+    background-color: #101419;
+    .menu {
+      color: #676d79;
+      border-bottom: 1px solid #101419;
+    }
+    .stocksName,
+    .stocksPrice {
+      color: #fff;
+    }
+    input[type="checkbox"]::before {
+      background-color: #676d79;
+      border: 1px solid #676d79;
+    }
+    input[type="checkbox"]:checked::before {
+      background-color: #676d79;
+    }
+  }
 }
 .up {
   border-left: 4px solid transparent;
@@ -317,54 +399,6 @@ input[type="checkbox"]:checked::before {
 }
 .downHighLight {
   border-top: 5px solid #666b61;
-}
-.allLists {
-  padding: 0;
-  margin: 0;
-  margin-bottom: 40px;
-}
-.allLists li {
-  height: 40px;
-}
-.menu,
-.lists {
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  padding: 0 16px 0 12px;
-}
-.menu {
-  height: 30px;
-  margin: 0;
-  font-size: 14px;
-  color: #a0abc3;
-  border-bottom: 1px solid #f1f2f5;
-}
-.edit,
-.stocksName {
-  width: 48%;
-}
-.new,
-.stocksPrice {
-  display: flex;
-  width: 22%;
-  justify-content: flex-end;
-  align-items: center;
-}
-.stocksPrice {
-  font-weight: bold;
-}
-.limit,
-.stocksPercent {
-  display: flex;
-  width: 30%;
-  justify-content: flex-end;
-  align-items: center;
-}
-.stocksName p {
-  color: #686e71;
-  font-size: 12px;
-  margin: 0;
 }
 .red {
   width: 68px;
@@ -395,8 +429,5 @@ input[type="checkbox"]:checked::before {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-li {
-  list-style: none;
 }
 </style>

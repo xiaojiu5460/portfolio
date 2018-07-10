@@ -1,69 +1,44 @@
 <template>
   <div>
-    <div :class="{skins:true,black:notActive}" v-show="isShow"><span :class="{up:true,blackUp:notActive}"></span>
+    <div :class="{skins:true,black:blackSkin}" v-show="isShow"><span :class="{up:true,blackUp:blackSkin}"></span>
       <ul>
         <li><i class="iconfont icon-fenzu"></i><span>分组管理</span></li>
-        <li @click="blackColor"><i class="iconfont icon-iconset0454"></i><span>黑色皮肤</span></li>
+        <li  v-show="!showSkin" @click="blackColor"><i class="iconfont icon-iconset0454"></i><span>黑色皮肤</span></li>
+        <li v-show="showSkin" @click="whiteColor"><i class="iconfont icon-shezhi"></i><span>蓝白皮肤</span></li>
       </ul>
      </div>
   </div>
 </template>
 
 <script>
+import { EventBus } from "../utils/EventBus.js";
 export default {
   name: "Group",
   data() {
     return {
-      notActive: false
+      blackSkin: false
     };
   },
   props: ["isShow"],
+  computed: {
+    showSkin: function() {
+      return this.blackSkin;
+    }
+  },
   methods: {
     blackColor: function() {
-      this.notActive = true;
-      this.$emit("black");
+      this.blackSkin = true;
+      EventBus.$emit("changeSkin", "black");
+    },
+    whiteColor: function() {
+      this.blackSkin = false;
+      EventBus.$emit("changeSkin", "white");
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
-.blackUp {
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-bottom: 9px solid #1e232d;
-  height: 0;
-  width: 0;
-  display: block;
-  position: absolute;
-  right: 11px;
-  top: -9px;
-}
-.black {
-  position: absolute;
-  top: 45px;
-  right: 3px;
-  ul {
-    padding: 0px;
-    margin: 0px;
-    box-shadow: 2px 3px 5px #888888;
-  }
-  li {
-    list-style: none;
-    width: 128px;
-    height: 44px;
-    line-height: 44px;
-    color: #fafafa;
-    background-color: #1e232d;
-    border-bottom: 1px solid #101419;
-    text-align: center;
-    font-size: 14px;
-    font-weight: normal;
-    span {
-      padding-left: 5px;
-    }
-  }
-}
 .up {
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
@@ -74,6 +49,9 @@ export default {
   position: absolute;
   right: 11px;
   top: -9px;
+  &.blackUp {
+    border-bottom: 9px solid #1e232d;
+  }
 }
 .skins {
   position: absolute;
@@ -97,6 +75,18 @@ export default {
     font-weight: normal;
     span {
       padding-left: 5px;
+    }
+  }
+  &.black {
+    ul {
+      padding: 0px;
+      margin: 0px;
+      box-shadow: 2px 3px 5px #101419;
+    }
+    li {
+      color: #fafafa;
+      background-color: #1e232d;
+      border-bottom: 1px solid #101419;
     }
   }
 }

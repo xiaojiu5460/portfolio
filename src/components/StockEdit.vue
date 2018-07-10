@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="change" v-show="isShow">
+    <div :class="{change:true,blackBg:blackColor}" v-show="isShow">
       <div>
         <a :class="{disable:true,delete:deleteStock}"  :disabled="!deleteStock" @click="canDelete"><span>删除</span><span>{{total?'('+total+')':''}}</span></a>
       </div>
@@ -32,14 +32,29 @@
 </template>
 
 <script>
+import { EventBus } from "../utils/EventBus.js";
 export default {
   name: "StockEdit",
   data() {
     return {
-      showSure: false //模态框默认不显示
+      showSure: false, //模态框默认不显示
+      blackColor: false
     };
   },
   props: ["isShow", "total"],
+  created: function() {
+    let that = this;
+    EventBus.$on("changeSkin", function(data) {
+      switch (data) {
+        case "black":
+          that.blackColor = true;
+          break;
+        case "white":
+          that.blackColor = false;
+          break;
+      }
+    });
+  },
   computed: {
     deleteStock: function() {
       if (this.total > 0) {
@@ -84,7 +99,7 @@ export default {
 
 <style scoped lang="scss">
 $bgcolor: #2d6bb1;
-.codeList .change {
+.change {
   position: fixed;
   bottom: 0;
   display: flex;
@@ -92,19 +107,28 @@ $bgcolor: #2d6bb1;
   width: 100%;
   height: 40px;
   background-color: $bgcolor;
-}
-.change > div {
-  flex: 1;
-  a {
-    width: 50px;
-    border: none;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-    border-radius: 5px;
-    padding: 0;
-    margin-left: 12px;
-    line-height: 40px;
+  > div {
+    flex: 1;
+    a {
+      width: 50px;
+      border: none;
+      text-align: center;
+      text-decoration: none;
+      font-size: 16px;
+      border-radius: 5px;
+      padding: 0;
+      margin-left: 12px;
+      line-height: 40px;
+    }
+  }
+  &.blackBg {
+    background-color: #1d2127;
+    .selectAll,
+    .opposite,
+    .cancel,
+    .delete {
+      background-color: #1d2127;
+    }
   }
 }
 .weui-mask {
