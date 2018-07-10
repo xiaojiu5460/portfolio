@@ -4,7 +4,7 @@
       <div><i class="iconfont icon-fangdajing"></i>点击搜索股票/板块</div>
     </div>
     <div class="more"><span @click="showGroup">···</span>
-    <Group :isShow="isShow"></Group>
+    <Group :isShow="isShow" v-on:cancel="cancel"></Group>
     </div>
   </div>
 </template>
@@ -18,7 +18,7 @@ export default {
   data() {
     return {
       isShow: false,
-      blackSkin: false
+      blackSkin: false,
     };
   },
   props: {},
@@ -38,6 +38,9 @@ export default {
   methods: {
     showGroup: function() {
       this.isShow = true;
+    },
+    cancel:function(){
+      this.isShow=false;
     }
   }
 };
