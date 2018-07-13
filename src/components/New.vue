@@ -13,7 +13,7 @@
     <div class="announcement">
       <ul>
         <li>
-          <p class="title">7月11日重要公告集锦：美好置业拟不超2.4亿元回购股份</p>
+          <p class="Title">7月11日重要公告集锦：美好置业拟不超2.4亿元回购股份</p>
           <div class="date"><span>金融界</span><span>日期</span></div>
         </li>
       </ul>
@@ -33,12 +33,13 @@ export default {
 <style scoped lang="scss">
 .news .title {
   border-bottom: 1px solid #f1f2f5;
+  margin: 0 16px 0 12px;
   ul {
     display: flex;
     align-items: center;
     overflow-x: scroll;
     overflow-y: hidden;
-    padding-left: 15px;
+    padding:0;
     margin: 0;
     color: #888888;
     li {
@@ -46,12 +47,11 @@ export default {
       justify-content: center;
       list-style: none;
       line-height: 26px;
-      text-align: center;
       flex-shrink: 0;
-      margin-right: 16px;
       padding: 0 5px;
       font-size: 13px;
       letter-spacing: 1px;
+      width:13%;
     }
   }
   .show {
