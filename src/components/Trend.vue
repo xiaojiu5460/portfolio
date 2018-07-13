@@ -7,10 +7,11 @@
         <li>日K</li>
         <li>周K</li>
         <li>月K</li>
-        <li>分钟<span class="down"></span></li>
+        <li @click="showMinute">分钟<span class="down"></span></li>
         <li><i class="iconfont icon-shezhi"></i></li>
       </ul>
     </div>
+    <Minute :isShow="isShow" v-on:cancel="cancel"></Minute>
     <div class="information">
       <div class="chart">
       </div>
@@ -38,12 +39,24 @@ large">大单</span>
   </div>
 </template>
 <script>
+import Minute from "./Minute.vue";
 export default {
+  name: "Trend",
+  components: { Minute },
   data() {
     return {
+      isShow: false,
       isActive: true,
       hasError: false
     };
+  },
+  methods: {
+    showMinute: function() {
+      this.isShow = true;
+    },
+    cancel: function() {
+      this.isShow = false;
+    }
   }
 };
 </script>
@@ -55,26 +68,26 @@ export default {
     flex: 1;
   }
   .level1 {
-    width:110px;
+    width: 110px;
     margin-left: 5px;
     .sale {
       border-bottom: solid 1px #d7e0ea;
     }
-    .buy{
-      div{
+    .buy {
+      div {
         height: 20px;
         display: flex;
-        font-size:14px;
-        color:#888888;
-        span{
+        font-size: 14px;
+        color: #888888;
+        span {
           display: flex;
-          flex:1;
+          flex: 1;
           justify-content: center;
           align-items: center;
         }
-        .lv1{
-          color:#000;
-          background-color:#eee;
+        .lv1 {
+          color: #000;
+          background-color: #eee;
         }
       }
     }
@@ -97,7 +110,7 @@ export default {
       }
       span:first-child {
         color: #000;
-        justify-content:flex-start;
+        justify-content: flex-start;
       }
     }
   }
@@ -114,7 +127,7 @@ export default {
     color: #888888;
     li {
       display: flex;
-      flex:1;
+      flex: 1;
       justify-content: center;
       list-style: none;
       line-height: 26px;
