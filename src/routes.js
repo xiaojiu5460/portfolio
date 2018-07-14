@@ -1,20 +1,8 @@
-import Home from './pages/Home.vue'
-import Header from './components/Header.vue'
 // import GroupManage from './components/GroupManage.vue'
 import StockDetail from './pages/StockDetail.vue'
 
 
 const routes = [
-    {
-        path: '/',
-        component: Home,
-        children: [
-            {
-                path: 'header',
-                component: Header
-            }
-        ]
-    },
     // {
     //     path: '/GroupManage',
     //     name: 'GroupManage',
