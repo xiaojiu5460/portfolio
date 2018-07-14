@@ -13,11 +13,11 @@
 
 <script>
 import { EventBus } from "../utils/EventBus.js";
-import GroupManage from "./GroupManage.vue";
+// import GroupManage from "./GroupManage.vue";
 
 export default {
   name: "Group",
-  components: { GroupManage },
+  // components: { GroupManage },
   data() {
     return {
       // showManage:true,

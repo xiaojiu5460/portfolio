@@ -1,6 +1,6 @@
 import Home from './pages/Home.vue'
 import Header from './components/Header.vue'
-import GroupManage from './components/GroupManage.vue'
+// import GroupManage from './components/GroupManage.vue'
 import StockDetail from './pages/StockDetail.vue'
 
 
@@ -15,11 +15,11 @@ const routes = [
             }
         ]
     },
-    {
-        path: '/GroupManage',
-        name: 'GroupManage',
-        component: GroupManage
-    },
+    // {
+    //     path: '/GroupManage',
+    //     name: 'GroupManage',
+    //     component: GroupManage
+    // },
     {
         path: '/detail',
         name: 'StockDetail',

@@ -33,8 +33,8 @@ export default {
     background: rgba(0, 0, 0, 0.4);
   }
   .skins {
-      position: absolute;
-  right: 3px;
+    position: absolute;
+    right: 3px;
     .up {
       border-left: 5px solid transparent;
       border-right: 5px solid transparent;
