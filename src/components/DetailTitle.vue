@@ -4,7 +4,7 @@
       <span><i class="iconfont icon-back"></i></span>
     </div>
     <div class="stockCode">
-      <p class="code">特锐德(300001.SZ)</p>
+      <p class="code">{{list[0].name}}(300001.SZ)</p>
       <p class="time"><span>交易中</span>07-11 09:30:00</p>
     </div>
     <div class="icon">
@@ -16,10 +16,13 @@
 <script>
 export default {
   name: "DetailTitle",
-  props: [""],
-  components: {
-
-  }
+  props: ["list"],
+  components: {},
+  data(){
+    return{
+      
+    }
+  },
 };
 </script>
 
@@ -42,7 +45,7 @@ export default {
     p {
       text-align: center;
       margin: 3px 0;
-      span{
+      span {
         padding-right: 5px;
       }
     }
@@ -58,7 +61,7 @@ export default {
     width: 25px;
     margin-right: 12px;
     line-height: 45px;
-    font-size:18px;
+    font-size: 18px;
   }
   .pre,
   .code,

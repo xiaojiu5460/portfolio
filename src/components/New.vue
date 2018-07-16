@@ -22,6 +22,7 @@
 </template>
 <script>
 export default {
+  // props:["list"],
   data() {
     return {
       isActive: true,

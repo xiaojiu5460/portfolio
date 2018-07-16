@@ -1,8 +1,8 @@
 <template>
   <div >
-    <DetailTitle></DetailTitle>
-    <StockData></StockData>
-    <Trend></Trend>
+    <DetailTitle :list="list"></DetailTitle>
+    <StockData :list="list"></StockData>
+    <Trend :list="list"></Trend>
     <New></New>
   </div>
 </template>
@@ -26,12 +26,10 @@ export default {
     };
   },
   created() {
-    // console.log(this.$route.query.code)
-  },
-  methods: {
-    updateData: function() {
-      var url = `http://web.sqt.gtimg.cn/q=${this.$route.query.code.join(",")}`;
-      var parse = str => {
+    let code=this.$route.query.code.split(' ');
+    // console.log(code);
+      var url = `http://web.sqt.gtimg.cn/q=${code.join(",")}`;
+      var parse = function(str){
         return ("" + str)
           .replace(/[;\s]+$/, "")
           .split(";")
@@ -144,11 +142,17 @@ export default {
             boughtFour: item["买四量"],
             buyFour: item["买四"],
             boughtFive: item["买五量"],
-            buyFive: item["买五"]
+            buyFive: item["买五"],
+            time:item["时间"],
           };
           return l;
         });
+          console.log(this.list);
       });
+  },
+  methods: {
+    parseData: function() {
+
     }
   }
 };

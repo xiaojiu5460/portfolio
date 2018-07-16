@@ -71,6 +71,7 @@
 </template>
 <script>
 export default {
+  props: ["list"],
   data() {
     return {
       exchange: false,

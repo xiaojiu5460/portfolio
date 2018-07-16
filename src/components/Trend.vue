@@ -41,6 +41,7 @@ large">大单</span>
 <script>
 import Minute from "./Minute.vue";
 export default {
+  props: ["list"],
   name: "Trend",
   components: { Minute },
   data() {
