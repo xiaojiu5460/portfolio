@@ -9,13 +9,13 @@
   </div>
   <div>
     <ul class="allLists">
-        <li  v-for="(stocks,index) in list" :key="index"  class="lists">
+        <li  v-for="(stock,index) in list" :key="index"  class="lists" @click="getStockCode(stock)">
           <div  v-show="isShow" class="check">
-            <input type="checkbox" v-model="stocks.checkboxValue">
+            <input type="checkbox" v-model="stock.checkboxValue">
           </div>
-          <div class="stocksName">{{stocks.name}}<p>{{stocks.code}}</p></div>
-          <div class="stocksPrice">{{stocks.newPrice}}</div>
-          <div class="stocksPercent"><span v-bind:class="[stocks.colorState]">{{stocks.percent}}</span></div>
+          <div class="stocksName">{{stock.name}}<p>{{stock.code}}</p></div>
+          <div class="stocksPrice">{{stock.newPrice}}</div>
+          <div class="stocksPercent"><span v-bind:class="[stock.colorState]">{{stock.percent}}</span></div>
         </li>
     </ul>
   </div>
@@ -76,6 +76,14 @@ export default {
     }
   },
   methods: {
+    //获取当前被点击的股票代码
+    getStockCode: function(stock) {
+      this.$router.push({
+        path: "detail",
+        query: {code:stock.code2},
+      });
+      // console.log(stock.code2);
+    },
     editHandle: function(data) {
       // console.log(data)
       switch (data) {

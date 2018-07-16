@@ -110,7 +110,7 @@ export default {
   .exchange {
     position: absolute;
     background: #fff;
-    top: 115px;
+    top: 110px;
     right: 0;
     left: 0;
     border-top: solid 1px #f1f2f5;
