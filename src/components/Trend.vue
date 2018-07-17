@@ -17,18 +17,18 @@
       </div>
       <div class="level1">
         <div class="sale">
-          <p><span>卖5</span><span>12.17</span><span>24</span></p>
-          <p><span>卖4</span><span>12.16</span><span>62</span></p>
-          <p><span>卖3</span><span>12.15</span><span>838</span></p>
-          <p><span>卖2</span><span>12.14</span><span>47</span></p>
-          <p><span>卖1</span><span>12.13</span><span>66</span></p>
+          <p><span>卖5</span><span>{{stockInfo.sellFive}}</span><span>{{stockInfo.saleFive}}</span></p>
+          <p><span>卖4</span><span>{{stockInfo.sellFour}}</span><span>{{stockInfo.saleFour}}</span></p>
+          <p><span>卖3</span><span>{{stockInfo.sellThree}}</span><span>{{stockInfo.saleThree}}</span></p>
+          <p><span>卖2</span><span>{{stockInfo.sellTwo}}</span><span>{{stockInfo.saleTwo}}</span></p>
+          <p><span>卖1</span><span>{{stockInfo.sellOne}}</span><span>{{stockInfo.saleOne}}</span></p>
         </div>
         <div class="buy">
-          <p><span>买1</span><span>12.12</span><span>23</span></p>
-          <p><span>买2</span><span>12.11</span><span>237</span></p>
-          <p><span>买3</span><span>12.10</span><span>136</span></p>
-          <p><span>买4</span><span>12.09</span><span>80</span></p>
-          <p><span>买5</span><span>12.08</span><span>46</span></p>
+          <p><span>买1</span><span>{{stockInfo.buyOne}}</span><span>{{stockInfo.boughtOne}}</span></p>
+          <p><span>买2</span><span>{{stockInfo.buyTwo}}</span><span>{{stockInfo.boughtTwo}}</span></p>
+          <p><span>买3</span><span>{{stockInfo.buyThree}}</span><span>{{stockInfo.boughtThree}}</span></p>
+          <p><span>买4</span><span>{{stockInfo.buyFour}}</span><span>{{stockInfo.boughtFour}}</span></p>
+          <p><span>买5</span><span>{{stockInfo.buyFive}}</span><span>{{stockInfo.boughtFive}}</span></p>
           <div>
             <span class="lv1">五档</span><span class="details">详情</span><span class="
 large">大单</span>
@@ -41,7 +41,7 @@ large">大单</span>
 <script>
 import Minute from "./Minute.vue";
 export default {
-  props: ["list"],
+  props: ["stock-info"],
   name: "Trend",
   components: { Minute },
   data() {

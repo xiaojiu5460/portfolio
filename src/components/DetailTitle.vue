@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <div class="pre">
+    <div class="pre" @click="previous">
       <span><i class="iconfont icon-back"></i></span>
     </div>
     <div class="stockCode">
-      <p class="code">{{list[0].name}}(300001.SZ)</p>
+      <p class="code">{{stockInfo.name}}({{stockInfo.code}}.{{stockInfo.code2.slice(0,2)}})</p>
       <p class="time"><span>交易中</span>07-11 09:30:00</p>
     </div>
     <div class="icon">
@@ -16,13 +16,17 @@
 <script>
 export default {
   name: "DetailTitle",
-  props: ["list"],
+  props: ["stock-info"],
   components: {},
-  data(){
-    return{
-      
+  // data(){
+  // },
+  methods:{
+    previous:function(){
+      this.$router.push({
+        path:'/'
+      })
     }
-  },
+  }
 };
 </script>
 

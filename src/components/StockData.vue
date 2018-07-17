@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <div class="price">
-      <div>
-        <span :class="{priceRed:true,priceGreen:false}">12.13</span>
+      <div v-bind:class="[stockInfo.colorState]">
+        <span class="newPri">{{stockInfo.newPrice}}</span>
       </div>
       <div class="flag" @click="flagClick">
         <span><i class="iconfont icon-china"></i></span><span class="lvOne">L1</span><span><i class="iconfont icon-dotsvertical"></i></span>
@@ -22,44 +22,44 @@
       </div>
     </div>
     <div class="percent">
-      <span class="posNag">+0.20</span><span class="per">+1.68%</span><span>高低压设备 -1.62%<i class="iconfont icon-ln_qianjin_b"></i></span>
+      <span v-bind:class="[stockInfo.colorState]">{{differ}}</span><span v-bind:class="[stockInfo.colorState]">{{per}}</span><span>高低压设备 -1.62%<i class="iconfont icon-ln_qianjin_b"></i></span>
     </div>
     <div class="inform">
       <div class="upInform">
         <div class="left">
-          <p><span style="letter-spacing: 12px">今开</span><span>12.17</span></p>
-          <p><span style="letter-spacing: 12px">昨收</span><span>11.93</span></p>
-          <p><span>换手率</span><span>0.97%</span></p>
+          <p><span style="letter-spacing: 12px">今开</span><span>{{stockInfo.today}}</span></p>
+          <p><span style="letter-spacing: 12px">昨收</span><span>{{stockInfo.yesterday}}</span></p>
+          <p><span>换手率</span><span>{{stockInfo.turnoverRate}}</span></p>
         </div>
         <div class="middle">
-          <p><span style="letter-spacing: 12px">最高</span><span>12.45</span></p>
-          <p><span style="letter-spacing: 12px">最低</span><span>11.94</span></p>
-          <p><span>市盈TTM</span><span>43.17</span></p>
+          <p><span style="letter-spacing: 12px">最高</span><span>{{stockInfo.highest}}</span></p>
+          <p><span style="letter-spacing: 12px">最低</span><span>{{stockInfo.lowest}}</span></p>
+          <p><span>市盈TTM</span><span>{{stockInfo.PErate}}</span></p>
         </div>
         <div class="right">
-          <p><span>成交量</span><span>8.39万手</span></p>
-          <p><span>成交额</span><span>1.02亿</span></p>
-          <p><span style="letter-spacing: 12px">市值</span><span>121亿</span></p>
+          <p><span>成交量</span><span>{{(stockInfo.volume/10000).toFixed(2)}}万手</span></p>
+          <p><span>成交额</span><span>{{stockInfo.turnover}}万</span></p>
+          <p><span style="letter-spacing: 12px">市值</span><span>{{stockInfo.totalValue}}亿</span></p>
         </div>
       </div>
       <div class="downInform" v-show="active">
         <div>
           <p><span style="letter-spacing: 12px">量比</span><span>2.40</span></p>
           <p><span style="letter-spacing: 12px">委比</span><span>17.21%</span></p>
-          <p><span>涨停价</span><span>13.12</span></p>
-          <p><span>跌停价</span><span>10.74</span></p>
+          <p><span>涨停价</span><span>{{stockInfo.risePrice}}</span></p>
+          <p><span>跌停价</span><span>{{stockInfo.fallPrice}}</span></p>
         </div>
         <div>
           <p><span>市盈动</span><span>53.06</span></p>
           <p><span>市盈静</span><span>43.37</span></p>
           <p><span style="letter-spacing: 12px">均价</span><span>12.19</span></p>
-          <p><span style="letter-spacing: 12px">振幅</span><span>4.27%</span></p>
+          <p><span style="letter-spacing: 12px">振幅</span><span>{{stockInfo.amplitude}}</span></p>
         </div>
         <div>
-          <p><span>流通市值</span><span>105亿</span></p>
-          <p><span>市净率</span><span>3.98</span></p>
-          <p><span style="letter-spacing: 12px">内盘</span><span>3.88万</span></p>
-          <p><span style="letter-spacing: 12px">外盘</span><span>4.51万</span></p>
+          <p><span>流通市值</span><span>{{stockInfo.circulation}}亿</span></p>
+          <p><span>市净率</span><span>{{stockInfo.PBrate}}</span></p>
+          <p><span style="letter-spacing: 12px">内盘</span><span>{{(stockInfo.outerDisk/10000).toFixed(2)}}万</span></p>
+          <p><span style="letter-spacing: 12px">外盘</span><span>{{(stockInfo.innerDisk/10000).toFixed(2)}}万</span></p>
         </div>
       </div>
       <div class="icon">
@@ -71,12 +71,20 @@
 </template>
 <script>
 export default {
-  props: ["list"],
+  props: ["stock-info"],
   data() {
     return {
       exchange: false,
       active: false
     };
+  },
+  computed: {
+    differ: function() {
+      return (this.stockInfo.newPrice - this.stockInfo.yesterday).toFixed(2);
+    },
+    per: function() {
+      return (this.differ / this.stockInfo.newPrice * 100).toFixed(2) + "%";
+    }
   },
   methods: {
     flagClick: function() {
@@ -176,15 +184,16 @@ export default {
         color: #fff;
       }
       .icon-china {
+        display: flex;
         color: #cf3237;
-        line-height: 16px;
+        align-items: center;
+        justify-content: center;
       }
       .icon-dotsvertical {
         color: #dcdcdc;
       }
     }
-    .priceRed {
-      color: #dc0000;
+    .newPri {
       font-size: 30px;
     }
   }
@@ -193,23 +202,13 @@ export default {
     margin-left: 12px;
     height: 25px;
     display: flex;
-    .posNag,
-    .per {
-      display: flex;
-      align-items: center;
-      color: #dc0000;
-      width: 45px;
-      line-height: 20px;
-    }
-    .per {
-      padding-right: 25px;
-    }
     span:last-child {
       display: flex;
       flex: 1;
       align-items: center;
       color: #9198a6;
       font-size: 12px;
+      padding-left:25px;
       .iconfont {
         font-size: 10px;
       }
@@ -249,6 +248,24 @@ export default {
       }
     }
   }
+  .red {
+      display: flex;
+      align-items: center;
+      color: #dc0000;
+      width: 45px;
+    }
+    .green {
+      display: flex;
+      align-items: center;
+      color: #508d46;
+      width: 45px;
+    }
+    .grey {
+      display: flex;
+      align-items: center;
+      color: #abafba;
+      width: 45px;
+    }
 }
 </style>
 
