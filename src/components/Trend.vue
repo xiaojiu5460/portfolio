@@ -17,10 +17,10 @@
       </div>
       <div class="level1">
           <div class="sale">
-           <p v-for="(sell,index) in sellList" :key="'sell'+index"><span>{{sell[0]}}</span><span v-bind:class="[sellList[3].color]">{{sell[1]}}</span><span>{{sell[2]}}</span></p>
+           <p v-for="(sell,index) in sellList" :key="'sell'+index"><span>{{sell[0]}}</span><span v-bind:class="[sell[3].color]">{{sell[1]}}</span><span>{{sell[2]}}</span></p>
           </div>
          <div>
-           <p v-for="(buy,index) in buyList" :key="'buy'+index"><span>{{buy[0]}}</span><span v-bind:class="[buyList[3].color]">{{buy[1]}}</span><span>{{buy[2]}}</span></p>
+           <p v-for="(buy,index) in buyList" :key="'buy'+index"><span>{{buy[0]}}</span><span v-bind:class="[buy[3].color]">{{buy[1]}}</span><span>{{buy[2]}}</span></p>
           </div>
         <div class="group">
           <span class="lv1">五档</span><span class="details">详情</span><span class="large">大单</span>
@@ -60,12 +60,13 @@ export default {
     // console.log(l);
     for (let index = 0; index < this.sellList.length; index++) {
       let s = this.sellList[index][1];
+      let p=this.sellList[index][3];
       if (s > this.stockInfo.yesterday) {
-        this.sellList[3].color = "red";
+        p.color = "red";
       } else if (s < this.stockInfo.yesterday) {
-        this.sellList[3].color = "green";
+        p.color = "green";
       } else {
-        this.sellList[3].color = "grey";
+       p.color = "grey";
       }
     }
     //买档
@@ -80,12 +81,13 @@ export default {
     this.buyList = o;
     for (let index = 0; index < this.buyList.length; index++) {
       let b = this.buyList[index][1];
+      let c=this.buyList[index][3];
       if (b > this.stockInfo.yesterday) {
-        this.buyList[3].color = "red";
+        c.color = "red";
       } else if (b < this.stockInfo.yesterday) {
-        this.buyList[3].color = "green";
+        c.color = "green";
       } else {
-        this.buyList[3].color = "grey";
+        c.color = "grey";
       }
     }
   },
