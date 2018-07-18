@@ -16,10 +16,13 @@
       <div class="chart">
       </div>
       <div class="level1">
-          <div class="sale" v-for="(stock,index) in list" :key="index">
-           <p ><span>{{stock[0]}}</span><span v-bind:class="[stockInfo.color]">{{stock[1]}}</span><span>{{stock[2]}}</span></p>
+          <div class="sale">
+           <p v-for="(sell,index) in sellList" :key="'sell'+index"><span>{{sell[0]}}</span><span v-bind:class="[sellList[3].color]">{{sell[1]}}</span><span>{{sell[2]}}</span></p>
           </div>
-        <div>
+         <div>
+           <p v-for="(buy,index) in buyList" :key="'buy'+index"><span>{{buy[0]}}</span><span v-bind:class="[buyList[3].color]">{{buy[1]}}</span><span>{{buy[2]}}</span></p>
+          </div>
+        <div class="group">
           <span class="lv1">五档</span><span class="details">详情</span><span class="large">大单</span>
         </div>
       </div>
@@ -37,39 +40,59 @@ export default {
       isShow: false,
       isActive: true,
       hasError: false,
-      list: []
+      sellList: [],
+      buyList: []
     };
   },
   // stockInfo{"PBrate :"0.85";PErate:"15.32";amplitude:"4.31%";boughtFive:"600";boughtFour:"38";boughtOne:"241"",}
-  computed: {
-    // formated: function() {
-    // console.log(this.unProcess);
-    // // let unProcess=this.unProcess;
-    // let l=["卖五", "卖四", "卖三", "卖二", "卖一","买一","买二","买三","买四","买五"].map(function(key) {
-    //   return [key, unProcess[0][key], unProcess[0][key + "量"]];
-    // });
-    // return this.sellList=l.split(0,5);
-    // console.log(this.sellList);
-    // }
-  },
   created() {
+    //卖档
     let l = [];
     l.push(
-      ["卖五", this.stockInfo.sellFive, this.stockInfo.saleFive],
-      ["卖四", this.stockInfo.sellFour, this.stockInfo.saleFour],
-      ["卖三", this.stockInfo.sellThree, this.stockInfo.saleThree],
-      ["卖二", this.stockInfo.sellTwo, this.stockInfo.saleTwo],
-      ["卖一", this.stockInfo.sellOne, this.stockInfo.saleOne],
-      ["买一", this.stockInfo.buyOne, this.stockInfo.boughtOne],
-      ["买二", this.stockInfo.buyTwo, this.stockInfo.boughtTwo],
-      ["买三", this.stockInfo.buyThree, this.stockInfo.boughtThree],
-      ["买四", this.stockInfo.buyFour, this.stockInfo.boughtFour],
-      ["买五", this.stockInfo.buyFive, this.stockInfo.boughtFive]
+      ["卖五", this.stockInfo.sellFive, this.stockInfo.saleFive, { color: "" }],
+      ["卖四", this.stockInfo.sellFour, this.stockInfo.saleFour, { color: "" }],
+      ["卖三", this.stockInfo.sellThree, this.stockInfo.saleThree, { color: "" }],
+      ["卖二", this.stockInfo.sellTwo, this.stockInfo.saleTwo, { color: "" }],
+      ["卖一", this.stockInfo.sellOne, this.stockInfo.saleOne, { color: "" }]
     );
+    this.sellList = l;
+    // console.log(l[0][3].color);
     // console.log(l);
-    this.list = l;
+    for (let index = 0; index < this.sellList.length; index++) {
+      let s = this.sellList[index][1];
+      if (s > this.stockInfo.yesterday) {
+        this.sellList[3].color = "red";
+      } else if (s < this.stockInfo.yesterday) {
+        this.sellList[3].color = "green";
+      } else {
+        this.sellList[3].color = "grey";
+      }
+    }
+    //买档
+    let o = [];
+    o.push(
+      ["买一", this.stockInfo.buyOne, this.stockInfo.boughtOne, { color: "" }],
+      ["买二", this.stockInfo.buyTwo, this.stockInfo.boughtTwo, { color: "" }],
+      ["买三",this.stockInfo.buyThree,this.stockInfo.boughtThree,{ color: "" }],
+      ["买四", this.stockInfo.buyFour, this.stockInfo.boughtFour, { color: "" }],
+      ["买五", this.stockInfo.buyFive, this.stockInfo.boughtFive, { color: "" }]
+    );
+    this.buyList = o;
+    for (let index = 0; index < this.buyList.length; index++) {
+      let b = this.buyList[index][1];
+      if (b > this.stockInfo.yesterday) {
+        this.buyList[3].color = "red";
+      } else if (b < this.stockInfo.yesterday) {
+        this.buyList[3].color = "green";
+      } else {
+        this.buyList[3].color = "grey";
+      }
+    }
   },
   methods: {
+    // sellState:function(){
+    //   console.log(this.stockInfo.newPrice);
+    // },
     showMinute: function() {
       this.isShow = true;
     },
@@ -92,22 +115,20 @@ export default {
     .sale {
       border-bottom: solid 1px #d7e0ea;
     }
-    .buy {
-      div {
-        height: 20px;
+    .group {
+      height: 20px;
+      display: flex;
+      font-size: 13px;
+      color: #888888;
+      span {
         display: flex;
-        font-size: 14px;
-        color: #888888;
-        span {
-          display: flex;
-          flex: 1;
-          justify-content: center;
-          align-items: center;
-        }
-        .lv1 {
-          color: #000;
-          background-color: #eee;
-        }
+        flex: 1;
+        justify-content: center;
+        align-items: center;
+      }
+      .lv1 {
+        color: #000;
+        background-color: #eee;
       }
     }
     p {

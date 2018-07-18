@@ -151,13 +151,13 @@ export default {
         let yes = item["昨收"];
         if (newPri > yes) {
           l.colorState = "red"; //给上面l列表添加多个属性，在模板里可以直接读取
-          l.color=l.colorState;
+          // l.color=l.colorState;
         } else if (newPri < yes) {
           l.colorState = "green";
-          l.color=l.colorState;
+          // l.color=l.colorState;
         } else {
           l.colorState = "grey";
-          l.color=l.colorState;
+          // l.color=l.colorState;
         }
         //当前价格变了，买卖五档颜色也跟着变
 
