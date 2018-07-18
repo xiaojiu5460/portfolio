@@ -16,27 +16,15 @@
       <div class="chart">
       </div>
       <div class="level1">
-        <div class="sale">
-          <p><span>卖5</span><span>{{stockInfo.sellFive}}</span><span>{{stockInfo.saleFive}}</span></p>
-          <p><span>卖4</span><span>{{stockInfo.sellFour}}</span><span>{{stockInfo.saleFour}}</span></p>
-          <p><span>卖3</span><span>{{stockInfo.sellThree}}</span><span>{{stockInfo.saleThree}}</span></p>
-          <p><span>卖2</span><span>{{stockInfo.sellTwo}}</span><span>{{stockInfo.saleTwo}}</span></p>
-          <p><span>卖1</span><span>{{stockInfo.sellOne}}</span><span>{{stockInfo.saleOne}}</span></p>
-        </div>
-        <div class="buy">
-          <p><span>买1</span><span>{{stockInfo.buyOne}}</span><span>{{stockInfo.boughtOne}}</span></p>
-          <p><span>买2</span><span>{{stockInfo.buyTwo}}</span><span>{{stockInfo.boughtTwo}}</span></p>
-          <p><span>买3</span><span>{{stockInfo.buyThree}}</span><span>{{stockInfo.boughtThree}}</span></p>
-          <p><span>买4</span><span>{{stockInfo.buyFour}}</span><span>{{stockInfo.boughtFour}}</span></p>
-          <p><span>买5</span><span>{{stockInfo.buyFive}}</span><span>{{stockInfo.boughtFive}}</span></p>
-          <div>
-            <span class="lv1">五档</span><span class="details">详情</span><span class="
-large">大单</span>
+          <div class="sale" v-for="(stock,index) in list" :key="index">
+           <p ><span>{{stock[0]}}</span><span v-bind:class="[stockInfo.color]">{{stock[1]}}</span><span>{{stock[2]}}</span></p>
           </div>
+        <div>
+          <span class="lv1">五档</span><span class="details">详情</span><span class="large">大单</span>
         </div>
       </div>
     </div>
-  </div>
+</div>
 </template>
 <script>
 import Minute from "./Minute.vue";
@@ -48,8 +36,38 @@ export default {
     return {
       isShow: false,
       isActive: true,
-      hasError: false
+      hasError: false,
+      list: []
     };
+  },
+  // stockInfo{"PBrate :"0.85";PErate:"15.32";amplitude:"4.31%";boughtFive:"600";boughtFour:"38";boughtOne:"241"",}
+  computed: {
+    // formated: function() {
+    // console.log(this.unProcess);
+    // // let unProcess=this.unProcess;
+    // let l=["卖五", "卖四", "卖三", "卖二", "卖一","买一","买二","买三","买四","买五"].map(function(key) {
+    //   return [key, unProcess[0][key], unProcess[0][key + "量"]];
+    // });
+    // return this.sellList=l.split(0,5);
+    // console.log(this.sellList);
+    // }
+  },
+  created() {
+    let l = [];
+    l.push(
+      ["卖五", this.stockInfo.sellFive, this.stockInfo.saleFive],
+      ["卖四", this.stockInfo.sellFour, this.stockInfo.saleFour],
+      ["卖三", this.stockInfo.sellThree, this.stockInfo.saleThree],
+      ["卖二", this.stockInfo.sellTwo, this.stockInfo.saleTwo],
+      ["卖一", this.stockInfo.sellOne, this.stockInfo.saleOne],
+      ["买一", this.stockInfo.buyOne, this.stockInfo.boughtOne],
+      ["买二", this.stockInfo.buyTwo, this.stockInfo.boughtTwo],
+      ["买三", this.stockInfo.buyThree, this.stockInfo.boughtThree],
+      ["买四", this.stockInfo.buyFour, this.stockInfo.boughtFour],
+      ["买五", this.stockInfo.buyFive, this.stockInfo.boughtFive]
+    );
+    // console.log(l);
+    this.list = l;
   },
   methods: {
     showMinute: function() {
@@ -103,7 +121,7 @@ export default {
         flex: 1;
         display: flex;
         justify-content: center;
-        color: #dc0000;
+        // color: #dc0000;
       }
       span:last-child {
         justify-content: flex-end;
@@ -157,6 +175,15 @@ export default {
     .hide {
       border-bottom: 2px #fff solid;
     }
+  }
+  .red {
+    color: #dc0000;
+  }
+  .green {
+    color: #508d46;
+  }
+  .grey {
+    color: #abafba;
   }
 }
 </style>

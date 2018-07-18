@@ -22,14 +22,14 @@ export default {
   },
   data() {
     return {
-      // list:[],
-      stockInfo: null
+      list:[],
+      stockInfo: null,
     };
   },
   created() {
-    let code = this.$route.query.code.split(" ");
+    // let code = this.$route.query.code.split(" ");
     // console.log(code);
-    var url = `http://web.sqt.gtimg.cn/q=${code.join(",")}`;
+    var url = `http://web.sqt.gtimg.cn/q=${this.$route.query.code}`;
     var parse = function(str) {
       return ("" + str)
         .replace(/[;\s]+$/, "")
@@ -97,10 +97,10 @@ export default {
         });
     };
     this.$http.get(url).then(function(res) {
-      // console.log(res);
-      let data = parse(res.body);
-      // console.log(data);
-      let list = data.map(function(item) {
+      // console.log(parse(res.body)[0]);
+      this.data = parse(res.body);
+      // console.log(this.unProcess);
+      let list = this.data.map(function(item) {
         //map 从处理过的对象里取出需要的值，列入一个数组赋值给list
         let l = {
           name: item["名字"],
@@ -146,15 +146,22 @@ export default {
           buyFive: item["买五"],
           time: item["时间"]
         };
+        //当前价格颜色切换
         let newPri = item["当前价格"];
         let yes = item["昨收"];
         if (newPri > yes) {
           l.colorState = "red"; //给上面l列表添加多个属性，在模板里可以直接读取
+          l.color=l.colorState;
         } else if (newPri < yes) {
           l.colorState = "green";
+          l.color=l.colorState;
         } else {
           l.colorState = "grey";
+          l.color=l.colorState;
         }
+        //当前价格变了，买卖五档颜色也跟着变
+
+        //与昨收价格差颜色切换
         let per = (item["当前价格"] - item["昨收"]).toFixed(2);
         if (per > 0) {
           l.colorState = "red"; //给上面l列表添加多个属性，在模板里可以直接读取
@@ -163,6 +170,7 @@ export default {
         } else {
           l.colorState = "grey";
         }
+        //与昨收涨跌差百分比颜色切换
         let p = (per / item["当前价格"] * 100).toFixed(2);
         if (p > 0) {
           l.colorState = "red"; //给上面l列表添加多个属性，在模板里可以直接读取
