@@ -28,7 +28,7 @@ export default {
     return {
       list: [],
       stockInfo: null,
-      loading:false,
+      loading: false
     };
   },
   created() {
@@ -39,17 +39,27 @@ export default {
     // let code = this.$route.query.code.split(" ");
     // console.log(code);
     this.getData();
+    let myDate = new Date();
+    let currentTime = parseFloat(myDate.getHours() + "" + myDate.getMinutes());
+    let that = this;
+    if (915 < currentTime < 1130 || 1300 < currentTime < 1500) {
+      return setInterval(function() {
+        that.getData();
+      }, 5000);
+    } else {
+      return;
+    }
   },
   methods: {
-    reloading:function(){
-      this.loading=true;
+    reloading: function() {
+      this.loading = true;
       this.getData();
     },
     getData: function() {
       var url = `http://web.sqt.gtimg.cn/q=${this.$route.query.code}`;
-      this.loading=true;
+      this.loading = true;
       this.$http.get(url).then(function(res) {
-        this.loading=false;
+        this.loading = false;
         // console.log(parse(res.body)[0]);
         let data = parse(res.body);
         // console.log(this.unProcess);
