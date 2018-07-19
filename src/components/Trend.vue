@@ -59,11 +59,11 @@ export default {
     // console.log(l[0][3].color);
     // console.log(l);
     for (let index = 0; index < this.sellList.length; index++) {
-      let s = this.sellList[index][1];
+      let s = parseFloat(this.sellList[index][1]);
       let p=this.sellList[index][3];
-      if (s > this.stockInfo.yesterday) {
+      if (s > parseFloat(this.stockInfo.yesterday)) {
         p.color = "red";
-      } else if (s < this.stockInfo.yesterday) {
+      } else if (s < parseFloat(this.stockInfo.yesterday)) {
         p.color = "green";
       } else {
        p.color = "grey";
@@ -80,14 +80,14 @@ export default {
     );
     this.buyList = o;
     for (let index = 0; index < this.buyList.length; index++) {
-      let b = this.buyList[index][1];
-      let c=this.buyList[index][3];
-      if (b > this.stockInfo.yesterday) {
-        c.color = "red";
-      } else if (b < this.stockInfo.yesterday) {
-        c.color = "green";
+      let s = parseFloat(this.buyList[index][1]);
+      let p=this.buyList[index][3];
+      if (s > parseFloat(this.stockInfo.yesterday)) {
+        p.color = "red";
+      } else if (s < parseFloat(this.stockInfo.yesterday)) {
+        p.color = "green";
       } else {
-        c.color = "grey";
+        p.color = "grey";
       }
     }
   },

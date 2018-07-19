@@ -24,7 +24,7 @@
     <div class="percent">
       <span v-bind:class="[stockInfo.colorState]">{{differ}}</span><span v-bind:class="[stockInfo.colorState]">{{per}}</span><span>高低压设备 -1.62%<i class="iconfont icon-ln_qianjin_b"></i></span>
     </div>
-    <div class="inform">
+    <div class="inform"  @click="show">
       <div class="upInform">
         <div class="left">
           <p><span style="letter-spacing: 12px">今开</span><span>{{stockInfo.today}}</span></p>
@@ -39,7 +39,7 @@
         <div class="right">
           <p><span>成交量</span><span>{{(stockInfo.volume/10000).toFixed(2)}}万手</span></p>
           <p><span>成交额</span><span>{{stockInfo.turnover}}万</span></p>
-          <p><span style="letter-spacing: 12px">市值</span><span>{{stockInfo.totalValue}}亿</span></p>
+          <p><span style="letter-spacing: 12px">市值</span><span>{{Math.floor(stockInfo.totalValue)}}亿</span></p>
         </div>
       </div>
       <div class="downInform" v-show="active">
@@ -56,14 +56,14 @@
           <p><span style="letter-spacing: 12px">振幅</span><span>{{stockInfo.amplitude}}</span></p>
         </div>
         <div>
-          <p><span>流通市值</span><span>{{stockInfo.circulation}}亿</span></p>
+          <p><span>流通市值</span><span>{{Math.floor(stockInfo.circulation)}}亿</span></p>
           <p><span>市净率</span><span>{{stockInfo.PBrate}}</span></p>
-          <p><span style="letter-spacing: 12px">内盘</span><span>{{(stockInfo.outerDisk/10000).toFixed(2)}}万</span></p>
-          <p><span style="letter-spacing: 12px">外盘</span><span>{{(stockInfo.innerDisk/10000).toFixed(2)}}万</span></p>
+          <p><span style="letter-spacing: 12px">内盘</span><span>{{(stockInfo.innerDisk/10000).toFixed(2)}}万</span></p>
+          <p><span style="letter-spacing: 12px">外盘</span><span>{{(stockInfo.outerDisk/10000).toFixed(2)}}万</span></p>
         </div>
       </div>
       <div class="icon">
-        <i class="iconfont" :class="{'icon-xiangxia':!active,'icon-xiangshang':active}"  @click="show"></i>
+        <i class="iconfont" :class="{'icon-xiangxia':!active,'icon-xiangshang':active}"></i>
         <!-- <i class="iconfont icon-xiangshang" v-show="up" @click="Up"></i> -->
       </div>
     </div>
@@ -80,15 +80,27 @@ export default {
   },
   computed: {
     differ: function() {
-      return (this.stockInfo.newPrice - this.stockInfo.yesterday).toFixed(2);
+      if(this.stockInfo.colorState==="red"){
+        return '+'+(this.stockInfo.newPrice - this.stockInfo.yesterday).toFixed(2);
+      }else{
+       return  (this.stockInfo.newPrice - this.stockInfo.yesterday).toFixed(2);
+      }
     },
     per: function() {
-      return (this.differ / this.stockInfo.newPrice * 100).toFixed(2) + "%";
+      if(this.stockInfo.colorState==="red"){
+        return '+'+(this.differ / this.stockInfo.newPrice * 100).toFixed(2) + "%";
+      }else{
+        return (this.differ / this.stockInfo.newPrice * 100).toFixed(2) + "%";
+      }
     }
   },
   methods: {
     flagClick: function() {
-      this.exchange = true;
+      if(!this.exchange){
+        this.exchange = true;
+      }else{
+        this.exchange =false;
+      }
     },
     cancel: function() {
       this.exchange = false;
@@ -229,7 +241,7 @@ export default {
       display: flex;
       justify-content: space-between;
       div {
-        width: 32%;
+        width:32%;
         p {
           display: flex;
           margin: 0;
@@ -243,6 +255,7 @@ export default {
             display: flex;
             justify-content: flex-end;
             font-weight: bold;
+            font-size:10px;
           }
         }
       }

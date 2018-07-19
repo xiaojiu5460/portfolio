@@ -1,7 +1,5 @@
 <template>
-  <div :class="{black:blackColor, home:true}">
-    
-    
+  <div :class="{black:blackColor, home:true}">    
     <Header></Header>
     <Navigation></Navigation>
     <StockList :stocks-list="stocksList" v-on:child-mes="updateList"></StockList>  

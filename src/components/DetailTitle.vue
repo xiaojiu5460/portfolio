@@ -4,11 +4,12 @@
       <span><i class="iconfont icon-back"></i></span>
     </div>
     <div class="stockCode">
-      <p class="code">{{stockInfo.name}}({{stockInfo.code}}.{{stockInfo.code2.slice(0,2)}})</p>
+      <p class="code">{{stockInfo.name}}({{stockInfo.code}}.{{(stockInfo.code2.slice(0,2)).toUpperCase()}})</p>
       <p class="time"><span>交易中</span>07-11 09:30:00</p>
     </div>
-    <div class="icon">
-      <span><i class="iconfont icon-shuaxin"></i></span>
+    <div class="icon" @click="reloading">
+      <span v-show="!loading"><i class="iconfont icon-shuaxin"></i></span>
+      <span v-show="loading"><img src="../assets/img/load.gif"></span>
   </div>
 </div>
 </template>
@@ -16,11 +17,14 @@
 <script>
 export default {
   name: "DetailTitle",
-  props: ["stock-info"],
+  props: ["stock-info","loading"],
   components: {},
   // data(){
   // },
   methods:{
+    reloading:function(){
+      this.$emit("load");
+    },
     previous:function(){
       this.$router.push({
         path:'/'
@@ -35,6 +39,10 @@ export default {
   background-color: #2d6bb1;
   height: 45px;
   display: flex;
+  img{
+    width:18px;
+    margin: 12px 12px 0 0;
+  }
   .pre {
     margin-left: 10px;
     span {
