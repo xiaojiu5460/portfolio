@@ -39,10 +39,14 @@ export default {
     // let code = this.$route.query.code.split(" ");
     // console.log(code);
     this.getData();
-    let myDate = new Date();
-    let currentTime = parseFloat(myDate.getHours() + "" + myDate.getMinutes());
+    let getHour=new Date().getHours();
+    let getMinute=new Date().getMinutes();
+    if(getMinute<10){
+      return '0'+getMinute;
+    }
+    let currentTime = parseFloat(getHour + "" + getMinute);
     let that = this;
-    if (915 < currentTime < 1130 || 1300 < currentTime < 1500) {
+    if ((915 < currentTime)&&(currentTime< 1130)  || (1300 < currentTime)&&(currentTime < 1500)) {
       return setInterval(function() {
         that.getData();
       }, 5000);
