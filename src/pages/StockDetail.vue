@@ -15,6 +15,8 @@ import { parse } from "../utils/tools.js";
 
 // console.log(parse);
 
+let intval = null;
+
 export default {
   name: "StockDetail",
   props: [""],
@@ -28,7 +30,7 @@ export default {
     return {
       list: [],
       stockInfo: null,
-      loading: false
+      loading: false,
     };
   },
   created() {
@@ -39,20 +41,42 @@ export default {
     // let code = this.$route.query.code.split(" ");
     // console.log(code);
     this.getData();
-    let getHour=new Date().getHours();
-    let getMinute=new Date().getMinutes();
-    if(getMinute<10){
-      return '0'+getMinute;
+    let getHour = new Date().getHours();
+    let getMinute = new Date().getMinutes();
+    if (getMinute < 10) {
+      return "0" + getMinute;
     }
     let currentTime = parseFloat(getHour + "" + getMinute);
+    // let currentTime =parseFloat( ("0" + getHour).substr(-2) + ("0" + getMinute).substr(-2))
+    // let nowDate = new Date();
+    // let now = nowDate.getTime();
+    // let startAm = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 9, 15, 0, 0).getTime();
+    // let endAm = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 11, 30, 0, 0).getTime();
+    // let startPm = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 13, 0, 0, 0).getTime();
+    // let endPm = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 15, 0, 0, 0).getTime();
+
+    // if(
+    //   (startAm<now&& now<endAm)||
+    //   (startPm< now && now<endPm)
+    // ){
+    //   xxx
+    // }
+
     let that = this;
-    if ((915 < currentTime)&&(currentTime< 1130)  || (1300 < currentTime)&&(currentTime < 1500)) {
-      return setInterval(function() {
+    if (
+      (915 < currentTime && currentTime < 1130) ||
+      (1300 < currentTime && currentTime < 1500)
+    ) {
+      intval = setInterval(function() {
         that.getData();
       }, 5000);
     } else {
       return;
     }
+  },
+  destroyed() {
+    //销毁定时器
+    clearInterval(intval);
   },
   methods: {
     reloading: function() {

@@ -11,7 +11,7 @@
         <div class="weui" v-show="exchange" @click="cancel"></div>
         <div class="exchange" v-show="exchange">
           <ul>
-            <li><div class="icon"><i class="iconfont icon-china"></i></div><div><span>上海交易所</span><p>股票</p></div></li>
+            <li><div class="icon"><i class="iconfont icon-china"></i></div><div class="market"><span v-show="!showMarket">上海交易所</span><span v-show="showMarket">深圳交易所</span><p>股票</p></div></li>
             <li>
               <div>
                 <span class="lvOne">L1</span><span>LV1基础行情</span>
@@ -75,31 +75,41 @@ export default {
   data() {
     return {
       exchange: false,
-      active: false
+      active: false,
+      showMarket:false,
     };
   },
   computed: {
     differ: function() {
-      if(this.stockInfo.colorState==="red"){
-        return '+'+(this.stockInfo.newPrice - this.stockInfo.yesterday).toFixed(2);
-      }else{
-       return  (this.stockInfo.newPrice - this.stockInfo.yesterday).toFixed(2);
+      if (this.stockInfo.colorState === "red") {
+        return (
+          "+" + (this.stockInfo.newPrice - this.stockInfo.yesterday).toFixed(2)
+        );
+      } else {
+        return (this.stockInfo.newPrice - this.stockInfo.yesterday).toFixed(2);
       }
     },
     per: function() {
-      if(this.stockInfo.colorState==="red"){
-        return '+'+(this.differ / this.stockInfo.newPrice * 100).toFixed(2) + "%";
-      }else{
+      if (this.stockInfo.colorState === "red") {
+        return (
+          "+" + (this.differ / this.stockInfo.newPrice * 100).toFixed(2) + "%"
+        );
+      } else {
         return (this.differ / this.stockInfo.newPrice * 100).toFixed(2) + "%";
       }
     }
   },
   methods: {
     flagClick: function() {
-      if(!this.exchange){
+      if (!this.exchange) {
         this.exchange = true;
+      } else {
+        this.exchange = false;
+      }
+      if(this.stockInfo.code.substr(0, 1) === "6"){
+        this.showMarket=false;
       }else{
-        this.exchange =false;
+        this.showMarket=true;
       }
     },
     cancel: function() {
@@ -149,10 +159,20 @@ export default {
         border-bottom: 1px solid #f1f2f5;
         font-size: 14px;
         display: flex;
-        p {
-          margin: 0;
-          font-size: 12px;
-          color: #888888;
+        .market {
+          display: flex;
+          flex-direction: column;
+          span{
+            flex:1;
+            line-height: 17px;
+          }
+          p {
+            line-height: 17px;
+            flex: 1;
+            margin: 0;
+            font-size: 12px;
+            color: #888888;
+          }
         }
         .lvOne {
           width: 16px;
@@ -166,6 +186,8 @@ export default {
           margin-right: 5px;
         }
         .icon {
+          display: flex;
+          flex-direction: column;
           line-height: 35px;
           .iconfont {
             color: #cf3237;
@@ -220,7 +242,7 @@ export default {
       align-items: center;
       color: #9198a6;
       font-size: 12px;
-      padding-left:25px;
+      padding-left: 25px;
       .iconfont {
         font-size: 10px;
       }
@@ -241,7 +263,7 @@ export default {
       display: flex;
       justify-content: space-between;
       div {
-        width:32%;
+        width: 32%;
         p {
           display: flex;
           margin: 0;
@@ -255,30 +277,30 @@ export default {
             display: flex;
             justify-content: flex-end;
             font-weight: bold;
-            font-size:10px;
+            font-size: 10px;
           }
         }
       }
     }
   }
   .red {
-      display: flex;
-      align-items: center;
-      color: #dc0000;
-      width: 45px;
-    }
-    .green {
-      display: flex;
-      align-items: center;
-      color: #508d46;
-      width: 45px;
-    }
-    .grey {
-      display: flex;
-      align-items: center;
-      color: #abafba;
-      width: 45px;
-    }
+    display: flex;
+    align-items: center;
+    color: #dc0000;
+    width: 45px;
+  }
+  .green {
+    display: flex;
+    align-items: center;
+    color: #508d46;
+    width: 45px;
+  }
+  .grey {
+    display: flex;
+    align-items: center;
+    color: #abafba;
+    width: 45px;
+  }
 }
 </style>
 
