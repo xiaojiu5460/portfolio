@@ -3,7 +3,7 @@
     <DetailTitle v-if="stockInfo" :stock-info="stockInfo" :loading="loading" v-on:load="reloading"></DetailTitle>
     <StockData v-if="stockInfo" :stock-info="stockInfo"></StockData>
     <Trend v-if="stockInfo" :stock-info="stockInfo"></Trend>
-    <New></New>
+    <New :news-data="newsData"></New>
   </div>
 </template>
 <script>
@@ -31,6 +31,7 @@ export default {
       list: [],
       stockInfo: null,
       loading: false,
+      newsData:[],
     };
   },
   created() {
@@ -41,6 +42,7 @@ export default {
     // let code = this.$route.query.code.split(" ");
     // console.log(code);
     this.getData();
+    this.getNews();
     let getHour = new Date().getHours();
     let getMinute = new Date().getMinutes();
     if (getMinute < 10) {
@@ -84,7 +86,7 @@ export default {
       this.getData();
     },
     getData: function() {
-      var url = `http://web.sqt.gtimg.cn/q=${this.$route.query.code}`;
+      let url = `http://web.sqt.gtimg.cn/q=${this.$route.query.code}`;
       this.loading = true;
       this.$http.get(url).then(function(res) {
         this.loading = false;
@@ -175,6 +177,16 @@ export default {
           this.stockInfo = list[0];
         }
         // console.log(this.stockInfo)
+      });
+    },
+    getNews: function() {
+      let url = `http://220.249.243.51/ifzqgtimg/appstock/news/info/search?symbol=${this
+        .$route.query.code}&page=1&n=5&type=3`;
+      this.$http.get(url).then(function(res) {
+        // console.log(res.body.data.data);
+
+        this.newsData=res.body.data.data;
+        // console.log(res.body.data.data[0].src)
       });
     }
   }

@@ -12,9 +12,9 @@
     </div>
     <div class="announcement">
       <ul>
-        <li>
-          <p class="Title">7月11日重要公告集锦：美好置业拟不超2.4亿元回购股份</p>
-          <div class="date"><span>金融界</span><span>日期</span></div>
+        <li v-for="(news,index) in newsData" :key="'news'+index">
+          <a class="Title" href="" target="_self">{{news.title}}</a>
+          <div class="date"><span>{{news.src}}</span><span></span></div>
         </li>
       </ul>
     </div>
@@ -22,7 +22,7 @@
 </template>
 <script>
 export default {
-  // props:["list"],
+  props: ["news-data"],
   data() {
     return {
       isActive: true,
@@ -40,7 +40,7 @@ export default {
     align-items: center;
     overflow-x: scroll;
     overflow-y: hidden;
-    padding:0;
+    padding: 0;
     margin: 0;
     color: #888888;
     li {
@@ -52,7 +52,7 @@ export default {
       padding: 0 5px;
       font-size: 13px;
       letter-spacing: 1px;
-      width:13%;
+      width: 13%;
     }
   }
   .show {
@@ -64,22 +64,29 @@ export default {
   }
 }
 .announcement {
-  margin-left:12px;
+  margin-left: 12px;
   ul {
     padding: 0;
-    margin:0;
+    margin: 0;
     li {
       list-style: none;
-        height: 45px;
-        line-height: 20px;
-      p {
+      height: 45px;
+      line-height: 20px;
+      a {
         margin: 0;
         font-size: 13px;
       }
-      div{
-        font-size:8px;
-        color:#888888;
-        span:last-child{
+      a:hover,
+      a:visited,
+      a:link,
+      a:active {
+        color: #000;
+        text-decoration: none;
+      }
+      div {
+        font-size: 8px;
+        color: #888888;
+        span:last-child {
           float: right;
           padding-right: 16px;
         }

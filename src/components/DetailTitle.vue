@@ -23,6 +23,7 @@ export default {
   // },
   computed:{
     date:function(){
+      console.log(this.stockInfo.time);
       return this.stockInfo.time.slice(4,6)+'-'+this.stockInfo.time.slice(6,8);
     },
     hms:function(){

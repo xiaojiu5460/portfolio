@@ -79,11 +79,13 @@ export default {
   methods: {
     //获取当前被点击的股票代码
     getStockCode: function(stock) {
-      this.$router.push({
-        path: "detail",
-        query: {code:stock.code2},
-      });
-      // console.log(stock.code2);
+      if(!this.isShow){
+        this.$router.push({
+          path: "detail",
+          query: {code:stock.code2},
+        });
+        // console.log(stock.code2);
+      }
     },
     editHandle: function(data) {
       // console.log(data)
