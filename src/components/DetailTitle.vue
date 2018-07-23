@@ -7,10 +7,15 @@
     </div>
     <div class="stockCode">
       <p class="code">{{stockInfo.name}}({{stockInfo.code}}.{{(stockInfo.code2.slice(0,2)).toUpperCase()}})</p>
-      <p class="time">
+      <p class="time" v-show="!showPrice">
         <span v-show="exchange">交易中</span>
         <span v-show="!exchange">已休市</span>{{date}}
         <span></span>{{hms}}</p>
+      <p class="price" v-bind:class="[stockInfo.colorState]" v-show="showPrice">
+        <span>{{stockInfo.newPrice}}</span>
+        <span>{{differ}}</span>
+        <span>{{per}}</span>
+      </p>
     </div>
     <div class="icon" @click="reloading">
       <span v-show="!loading">
@@ -22,12 +27,29 @@
 </template>
 
 <script>
+import { EventBus } from "../utils/EventBus.js";
 export default {
   name: "DetailTitle",
   props: ["stock-info", "loading"],
   components: {},
-  // data(){
-  // },
+  data() {
+    return {
+      showPrice: false,
+    }
+  },
+  created() {
+    let that = this;
+    EventBus.$on("showPri", function (data) {
+      switch (data) {
+        case "true":
+          that.showPrice = true;
+          break;
+        case "false":
+          that.showPrice = false;
+          break;
+      }
+    })
+  },
   computed: {
     date: function () {
       // console.log(this.stockInfo.time);
@@ -51,6 +73,24 @@ export default {
       } else {
         return false;
       }
+    },
+    differ: function () {
+      if (this.stockInfo.colorState === "red") {
+        return (
+          "+" + (this.stockInfo.newPrice - this.stockInfo.yesterday).toFixed(2)
+        );
+      } else {
+        return (this.stockInfo.newPrice - this.stockInfo.yesterday).toFixed(2);
+      }
+    },
+    per: function () {
+      if (this.stockInfo.colorState === "red") {
+        return (
+          "+" + (this.differ / this.stockInfo.newPrice * 100).toFixed(2) + "%"
+        );
+      } else {
+        return (this.differ / this.stockInfo.newPrice * 100).toFixed(2) + "%";
+      }
     }
   },
   methods: {
@@ -71,6 +111,9 @@ export default {
   background-color: #2d6bb1;
   height: 45px;
   display: flex;
+  position: fixed;
+  width: 100%;
+  top: 0;
   img {
     width: 18px;
     margin: 12px 12px 0 0;
@@ -100,6 +143,9 @@ export default {
       font-size: 13px;
       color: #a8ccf5;
     }
+    .price {
+      font-size: 13px;
+    }
   }
   .iconfont {
     width: 25px;
@@ -111,6 +157,15 @@ export default {
   .code,
   .icon {
     color: #fff;
+  }
+  .red {
+    color: #dc0000;
+  }
+  .green {
+    color: #508d46;
+  }
+  .grey {
+    color: #abafba;
   }
 }
 li {

@@ -84,7 +84,7 @@ export default {
       let p=this.buyList[index][3];
       if (s > parseFloat(this.stockInfo.yesterday)) {
         p.color = "red";
-      } else if (s < parseFloat(this.stockInfo.yesterday)) {
+      } else if ((s < parseFloat(this.stockInfo.yesterday))&&s>0) {
         p.color = "green";
       } else {
         p.color = "grey";

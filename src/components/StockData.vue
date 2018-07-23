@@ -5,16 +5,32 @@
         <span class="newPri">{{stockInfo.newPrice}}</span>
       </div>
       <div class="flag" @click="flagClick">
-        <span><i class="iconfont icon-china"></i></span><span class="lvOne">L1</span><span><i class="iconfont icon-dotsvertical"></i></span>
+        <span>
+          <i class="iconfont icon-china"></i>
+        </span>
+        <span class="lvOne">L1</span>
+        <span>
+          <i class="iconfont icon-dotsvertical"></i>
+        </span>
       </div>
       <div>
         <div class="weui" v-show="exchange" @click="cancel"></div>
         <div class="exchange" v-show="exchange">
           <ul>
-            <li><div class="icon"><i class="iconfont icon-china"></i></div><div class="market"><span v-show="!showMarket">上海交易所</span><span v-show="showMarket">深圳交易所</span><p>股票</p></div></li>
+            <li>
+              <div class="icon">
+                <i class="iconfont icon-china"></i>
+              </div>
+              <div class="market">
+                <span v-show="!showMarket">上海交易所</span>
+                <span v-show="showMarket">深圳交易所</span>
+                <p>股票</p>
+              </div>
+            </li>
             <li>
               <div>
-                <span class="lvOne">L1</span><span>LV1基础行情</span>
+                <span class="lvOne">L1</span>
+                <span>LV1基础行情</span>
               </div>
             </li>
           </ul>
@@ -22,44 +38,111 @@
       </div>
     </div>
     <div class="percent">
-      <span v-bind:class="[stockInfo.colorState]">{{differ}}</span><span v-bind:class="[stockInfo.colorState]">{{per}}</span><span>高低压设备 -1.62%<i class="iconfont icon-ln_qianjin_b"></i></span>
+      <span v-bind:class="[stockInfo.colorState]">{{differ}}</span>
+      <span v-bind:class="[stockInfo.colorState]">{{per}}</span>
+      <span>高低压设备 -1.62%
+        <i class="iconfont icon-ln_qianjin_b"></i>
+      </span>
     </div>
-    <div class="inform"  @click="show">
+    <div class="inform" @click="show" ref="viewBox">
       <div class="upInform">
         <div class="left">
-          <p><span style="letter-spacing: 12px">今开</span><span>{{stockInfo.today}}</span></p>
-          <p><span style="letter-spacing: 12px">昨收</span><span>{{stockInfo.yesterday}}</span></p>
-          <p><span>换手率</span><span>{{stockInfo.turnoverRate}}</span></p>
+          <p>
+            <span style="letter-spacing: 12px">今开</span>
+            <span>{{stockInfo.today}}</span>
+          </p>
+          <p>
+            <span style="letter-spacing: 12px">昨收</span>
+            <span>{{stockInfo.yesterday}}</span>
+          </p>
+          <p>
+            <span>换手率</span>
+            <span>{{stockInfo.turnoverRate}}</span>
+          </p>
         </div>
         <div class="middle">
-          <p><span style="letter-spacing: 12px">最高</span><span>{{stockInfo.highest}}</span></p>
-          <p><span style="letter-spacing: 12px">最低</span><span>{{stockInfo.lowest}}</span></p>
-          <p><span>市盈TTM</span><span>{{stockInfo.PErate}}</span></p>
+          <p>
+            <span style="letter-spacing: 12px">最高</span>
+            <span>{{stockInfo.highest}}</span>
+          </p>
+          <p>
+            <span style="letter-spacing: 12px">最低</span>
+            <span>{{stockInfo.lowest}}</span>
+          </p>
+          <p>
+            <span>市盈TTM</span>
+            <span>{{stockInfo.PErate}}</span>
+          </p>
         </div>
         <div class="right">
-          <p><span>成交量</span><span>{{(stockInfo.volume/10000).toFixed(2)}}万手</span></p>
-          <p><span>成交额</span><span>{{stockInfo.turnover}}万</span></p>
-          <p><span style="letter-spacing: 12px">市值</span><span>{{Math.floor(stockInfo.totalValue)}}亿</span></p>
+          <p>
+            <span>成交量</span>
+            <span>{{(stockInfo.volume/10000).toFixed(2)}}万手</span>
+          </p>
+          <p>
+            <span>成交额</span>
+            <span>{{stockInfo.turnover}}万</span>
+          </p>
+          <p>
+            <span style="letter-spacing: 12px">市值</span>
+            <span>{{Math.floor(stockInfo.totalValue)}}亿</span>
+          </p>
         </div>
       </div>
       <div class="downInform" v-show="active">
         <div>
-          <p><span style="letter-spacing: 12px">量比</span><span>2.40</span></p>
-          <p><span style="letter-spacing: 12px">委比</span><span>17.21%</span></p>
-          <p><span>涨停价</span><span>{{stockInfo.risePrice}}</span></p>
-          <p><span>跌停价</span><span>{{stockInfo.fallPrice}}</span></p>
+          <p>
+            <span style="letter-spacing: 12px">量比</span>
+            <span>2.40</span>
+          </p>
+          <p>
+            <span style="letter-spacing: 12px">委比</span>
+            <span>17.21%</span>
+          </p>
+          <p>
+            <span>涨停价</span>
+            <span>{{stockInfo.risePrice}}</span>
+          </p>
+          <p>
+            <span>跌停价</span>
+            <span>{{stockInfo.fallPrice}}</span>
+          </p>
         </div>
         <div>
-          <p><span>市盈动</span><span>53.06</span></p>
-          <p><span>市盈静</span><span>43.37</span></p>
-          <p><span style="letter-spacing: 12px">均价</span><span>12.19</span></p>
-          <p><span style="letter-spacing: 12px">振幅</span><span>{{stockInfo.amplitude}}</span></p>
+          <p>
+            <span>市盈动</span>
+            <span>53.06</span>
+          </p>
+          <p>
+            <span>市盈静</span>
+            <span>43.37</span>
+          </p>
+          <p>
+            <span style="letter-spacing: 12px">均价</span>
+            <span>12.19</span>
+          </p>
+          <p>
+            <span style="letter-spacing: 12px">振幅</span>
+            <span>{{stockInfo.amplitude}}</span>
+          </p>
         </div>
         <div>
-          <p><span>流通市值</span><span>{{Math.floor(stockInfo.circulation)}}亿</span></p>
-          <p><span>市净率</span><span>{{stockInfo.PBrate}}</span></p>
-          <p><span style="letter-spacing: 12px">内盘</span><span>{{(stockInfo.innerDisk/10000).toFixed(2)}}万</span></p>
-          <p><span style="letter-spacing: 12px">外盘</span><span>{{(stockInfo.outerDisk/10000).toFixed(2)}}万</span></p>
+          <p>
+            <span>流通市值</span>
+            <span>{{Math.floor(stockInfo.circulation)}}亿</span>
+          </p>
+          <p>
+            <span>市净率</span>
+            <span>{{stockInfo.PBrate}}</span>
+          </p>
+          <p>
+            <span style="letter-spacing: 12px">内盘</span>
+            <span>{{(stockInfo.innerDisk/10000).toFixed(2)}}万</span>
+          </p>
+          <p>
+            <span style="letter-spacing: 12px">外盘</span>
+            <span>{{(stockInfo.outerDisk/10000).toFixed(2)}}万</span>
+          </p>
         </div>
       </div>
       <div class="icon">
@@ -70,17 +153,21 @@
   </div>
 </template>
 <script>
+import { EventBus } from "../utils/EventBus.js";
 export default {
   props: ["stock-info"],
   data() {
     return {
       exchange: false,
       active: false,
-      showMarket:false,
+      showMarket: false,
     };
   },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll, true)
+  },
   computed: {
-    differ: function() {
+    differ: function () {
       if (this.stockInfo.colorState === "red") {
         return (
           "+" + (this.stockInfo.newPrice - this.stockInfo.yesterday).toFixed(2)
@@ -89,33 +176,41 @@ export default {
         return (this.stockInfo.newPrice - this.stockInfo.yesterday).toFixed(2);
       }
     },
-    per: function() {
+    per: function () {
       if (this.stockInfo.colorState === "red") {
         return (
-          "+" + (this.differ / this.stockInfo.newPrice * 100).toFixed(2) + "%"
+          "+" + (this.differ / this.stockInfo.yesterday * 100).toFixed(2) + "%"
         );
       } else {
-        return (this.differ / this.stockInfo.newPrice * 100).toFixed(2) + "%";
+        return (this.differ / this.stockInfo.yesterday * 100).toFixed(2) + "%";
       }
     }
   },
   methods: {
-    flagClick: function() {
+    handleScroll: function () {
+      let scrollTop = this.$refs.viewBox.scrollTop;
+      if (scrollTop > 0) {
+        EventBus.$emit("showPri", "true");
+      } else {
+        EventBus.$emit("showPri", "false");
+      }
+    },
+  flagClick: function () {
       if (!this.exchange) {
         this.exchange = true;
       } else {
         this.exchange = false;
       }
-      if(this.stockInfo.code.substr(0, 1) === "6"){
-        this.showMarket=false;
-      }else{
-        this.showMarket=true;
+      if (this.stockInfo.code.substr(0, 1) === "6") {
+        this.showMarket = false;
+      } else {
+        this.showMarket = true;
       }
     },
-    cancel: function() {
+    cancel: function () {
       this.exchange = false;
     },
-    show: function() {
+    show: function () {
       // if(!this.active){
       //   this.active = true;
       // }else{
@@ -125,11 +220,12 @@ export default {
       // this.down = false;
     }
   }
-};
+}
 </script>
 <style scoped lang="scss">
 .container {
   background-color: #fff;
+  margin-top: 50px;
   .weui {
     position: fixed;
     top: 115px;
@@ -162,8 +258,8 @@ export default {
         .market {
           display: flex;
           flex-direction: column;
-          span{
-            flex:1;
+          span {
+            flex: 1;
             line-height: 17px;
           }
           p {
