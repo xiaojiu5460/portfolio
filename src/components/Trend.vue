@@ -7,8 +7,12 @@
         <li>日K</li>
         <li>周K</li>
         <li>月K</li>
-        <li @click="showMinute">分钟<span class="down"></span></li>
-        <li><i class="iconfont icon-shezhi"></i></li>
+        <li @click="showMinute">分钟
+          <span class="down"></span>
+        </li>
+        <li>
+          <i class="iconfont icon-shezhi"></i>
+        </li>
       </ul>
     </div>
     <Minute :isShow="isShow" v-on:cancel="cancel"></Minute>
@@ -16,18 +20,28 @@
       <div class="chart">
       </div>
       <div class="level1">
-          <div class="sale">
-           <p v-for="(sell,index) in sellList" :key="'sell'+index"><span>{{sell[0]}}</span><span v-bind:class="[sell[3].color]">{{sell[1]}}</span><span>{{sell[2]}}</span></p>
-          </div>
-         <div>
-           <p v-for="(buy,index) in buyList" :key="'buy'+index"><span>{{buy[0]}}</span><span v-bind:class="[buy[3].color]">{{buy[1]}}</span><span>{{buy[2]}}</span></p>
-          </div>
+        <div class="sale">
+          <p v-for="(sell,index) in sellList" :key="'sell'+index">
+            <span>{{sell[0]}}</span>
+            <span v-bind:class="[sell[3].color]">{{sell[1]}}</span>
+            <span>{{sell[2]}}</span>
+          </p>
+        </div>
+        <div>
+          <p v-for="(buy,index) in buyList" :key="'buy'+index">
+            <span>{{buy[0]}}</span>
+            <span v-bind:class="[buy[3].color]">{{buy[1]}}</span>
+            <span>{{buy[2]}}</span>
+          </p>
+        </div>
         <div class="group">
-          <span class="lv1">五档</span><span class="details">详情</span><span class="large">大单</span>
+          <span class="lv1">五档</span>
+          <span class="details">详情</span>
+          <span class="large">大单</span>
         </div>
       </div>
     </div>
-</div>
+  </div>
 </template>
 <script>
 import Minute from "./Minute.vue";
@@ -60,13 +74,13 @@ export default {
     // console.log(l);
     for (let index = 0; index < this.sellList.length; index++) {
       let s = parseFloat(this.sellList[index][1]);
-      let p=this.sellList[index][3];
+      let p = this.sellList[index][3];
       if (s > parseFloat(this.stockInfo.yesterday)) {
         p.color = "red";
-      } else if (s < parseFloat(this.stockInfo.yesterday)) {
+      } else if ((s < parseFloat(this.stockInfo.yesterday)) && s > 0) {
         p.color = "green";
       } else {
-       p.color = "grey";
+        p.color = "grey";
       }
     }
     //买档
@@ -74,17 +88,17 @@ export default {
     o.push(
       ["买一", this.stockInfo.buyOne, this.stockInfo.boughtOne, { color: "" }],
       ["买二", this.stockInfo.buyTwo, this.stockInfo.boughtTwo, { color: "" }],
-      ["买三",this.stockInfo.buyThree,this.stockInfo.boughtThree,{ color: "" }],
+      ["买三", this.stockInfo.buyThree, this.stockInfo.boughtThree, { color: "" }],
       ["买四", this.stockInfo.buyFour, this.stockInfo.boughtFour, { color: "" }],
       ["买五", this.stockInfo.buyFive, this.stockInfo.boughtFive, { color: "" }]
     );
     this.buyList = o;
     for (let index = 0; index < this.buyList.length; index++) {
       let s = parseFloat(this.buyList[index][1]);
-      let p=this.buyList[index][3];
+      let p = this.buyList[index][3];
       if (s > parseFloat(this.stockInfo.yesterday)) {
         p.color = "red";
-      } else if ((s < parseFloat(this.stockInfo.yesterday))&&s>0) {
+      } else if ((s < parseFloat(this.stockInfo.yesterday)) && s > 0) {
         p.color = "green";
       } else {
         p.color = "grey";
@@ -95,10 +109,10 @@ export default {
     // sellState:function(){
     //   console.log(this.stockInfo.newPrice);
     // },
-    showMinute: function() {
+    showMinute: function () {
       this.isShow = true;
     },
-    cancel: function() {
+    cancel: function () {
       this.isShow = false;
     }
   }

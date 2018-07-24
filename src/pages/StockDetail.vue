@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <DetailTitle v-if="stockInfo" :stock-info="stockInfo" :loading="loading" v-on:load="reloading"></DetailTitle>
     <StockData v-if="stockInfo" :stock-info="stockInfo"></StockData>
     <Trend v-if="stockInfo" :stock-info="stockInfo"></Trend>
@@ -12,7 +12,7 @@ import StockData from "../components/StockData.vue";
 import Trend from "../components/Trend.vue";
 import New from "../components/New.vue";
 import { parse } from "../utils/tools.js";
-
+import { EventBus } from "../utils/EventBus.js";
 // console.log(parse);
 
 let intval = null;
@@ -31,7 +31,7 @@ export default {
       list: [],
       stockInfo: null,
       loading: false,
-      newsData:[],
+      newsData: [],
     };
   },
   created() {
@@ -69,7 +69,7 @@ export default {
       (915 < currentTime && currentTime < 1130) ||
       (1300 < currentTime && currentTime < 1500)
     ) {
-      intval = setInterval(function() {
+      intval = setInterval(function () {
         that.getData();
       }, 5000);
     } else {
@@ -79,21 +79,45 @@ export default {
   destroyed() {
     //销毁定时器
     clearInterval(intval);
+    window.removeEventListener("onscroll", this.handleScroll,this.throttle)
+  },
+  mounted() {
+    // window.addEventListener('scroll', this.handleScroll, true)
+    window.onscroll = this.throttle(this.handleScroll, 300);
   },
   methods: {
-    reloading: function() {
+    handleScroll: function () {
+      let scrollTop = document.documentElement.scrollTop;
+      console.log(scrollTop);
+      if (scrollTop < 50) {
+        EventBus.$emit("showPri", "moveup");
+      } else {
+        EventBus.$emit("showPri", "movedown");
+      }
+    },
+    throttle: function (action, delay) {
+      let statTime = 0;
+      return function () {
+        let currTime = Date.now();
+        if (currTime - statTime > delay) {
+          action.apply(this, arguments);
+          statTime = currTime;
+        }
+      }
+    },
+    reloading: function () {
       this.loading = true;
       this.getData();
     },
-    getData: function() {
+    getData: function () {
       let url = `http://web.sqt.gtimg.cn/q=${this.$route.query.code}`;
       this.loading = true;
-      this.$http.get(url).then(function(res) {
+      this.$http.get(url).then(function (res) {
         this.loading = false;
         // console.log(parse(res.body)[0]);
         let data = parse(res.body);
         // console.log(this.unProcess);
-        let list = data.map(function(item) {
+        let list = data.map(function (item) {
           //map 从处理过的对象里取出需要的值，列入一个数组赋值给list
           let l = {
             name: item["名字"],
@@ -179,16 +203,16 @@ export default {
         // console.log(this.stockInfo)
       });
     },
-    getNews: function() {
+    getNews: function () {
       let url = `http://220.249.243.51/ifzqgtimg/appstock/news/info/search?symbol=${this
         .$route.query.code}&page=1&n=5&type=3`;
-      this.$http.get(url).then(function(res) {
+      this.$http.get(url).then(function (res) {
         // console.log(res.body.data.data);
 
-        this.newsData=res.body.data.data;
+        this.newsData = res.body.data.data;
         // console.log(res.body.data.data[0].src)
       });
-    }
+    },
   }
 };
 </script>

@@ -44,7 +44,7 @@
         <i class="iconfont icon-ln_qianjin_b"></i>
       </span>
     </div>
-    <div class="inform" @click="show" ref="viewBox">
+    <div class="inform" @click="show">
       <div class="upInform">
         <div class="left">
           <p>
@@ -153,7 +153,6 @@
   </div>
 </template>
 <script>
-import { EventBus } from "../utils/EventBus.js";
 export default {
   props: ["stock-info"],
   data() {
@@ -162,9 +161,6 @@ export default {
       active: false,
       showMarket: false,
     };
-  },
-  mounted() {
-    window.addEventListener('scroll', this.handleScroll, true)
   },
   computed: {
     differ: function () {
@@ -187,14 +183,6 @@ export default {
     }
   },
   methods: {
-    handleScroll: function () {
-      let scrollTop = this.$refs.viewBox.scrollTop;
-      if (scrollTop > 0) {
-        EventBus.$emit("showPri", "true");
-      } else {
-        EventBus.$emit("showPri", "false");
-      }
-    },
   flagClick: function () {
       if (!this.exchange) {
         this.exchange = true;

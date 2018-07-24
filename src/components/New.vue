@@ -97,8 +97,9 @@ export default {
     margin: 0;
     li {
       list-style: none;
-      height: 45px;
       line-height: 20px;
+      display: flex;
+      flex-direction: column;
       a {
         margin: 0;
         font-size: 13px;
@@ -113,8 +114,12 @@ export default {
       div {
         font-size: 8px;
         color: #888888;
+        display: flex;
+        span:first-child{
+          flex:1;
+        }
         span:last-child {
-          float: right;
+          width: 50px;
           padding-right: 16px;
         }
       }

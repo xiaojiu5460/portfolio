@@ -7,15 +7,17 @@
     </div>
     <div class="stockCode">
       <p class="code">{{stockInfo.name}}({{stockInfo.code}}.{{(stockInfo.code2.slice(0,2)).toUpperCase()}})</p>
-      <p class="time" v-show="!showPrice">
-        <span v-show="exchange">交易中</span>
-        <span v-show="!exchange">已休市</span>{{date}}
-        <span></span>{{hms}}</p>
-      <p class="price" v-bind:class="[stockInfo.colorState]" v-show="showPrice">
-        <span>{{stockInfo.newPrice}}</span>
-        <span>{{differ}}</span>
-        <span>{{per}}</span>
-      </p>
+      <div v-bind:class="{moveup:true,movedown:notActive}">
+        <p class="time">
+          <span v-show="exchange">交易中</span>
+          <span v-show="!exchange">已休市</span>{{date}}
+          <span></span>{{hms}}</p>
+        <p class="price" v-bind:class="[stockInfo.colorState]">
+          <span>{{stockInfo.newPrice}}</span>
+          <span>{{differ}}</span>
+          <span>{{per}}</span>
+        </p>
+      </div>
     </div>
     <div class="icon" @click="reloading">
       <span v-show="!loading">
@@ -34,18 +36,18 @@ export default {
   components: {},
   data() {
     return {
-      showPrice: false,
+      notActive: false,
     }
   },
   created() {
     let that = this;
     EventBus.$on("showPri", function (data) {
       switch (data) {
-        case "true":
-          that.showPrice = true;
+        case "moveup":
+          that.notActive = true;
           break;
-        case "false":
-          that.showPrice = false;
+        case "movedown":
+          that.notActive = false;
           break;
       }
     })
@@ -114,6 +116,7 @@ export default {
   position: fixed;
   width: 100%;
   top: 0;
+  overflow: hidden;
   img {
     width: 18px;
     margin: 12px 12px 0 0;
@@ -132,8 +135,26 @@ export default {
     p {
       text-align: center;
       margin: 3px 0;
+      line-height: 18px;
       span {
         padding-right: 5px;
+      }
+    }
+    .moveup {
+      //
+      overflow: hidden;
+      p {
+        transition: 1s;
+      }
+    }
+    .movedown {
+      //
+      overflow: hidden;
+      p {
+        transition: 1s;
+      }
+      p:first-child {
+        margin-top: -22px;
       }
     }
     .code {
@@ -142,6 +163,7 @@ export default {
     .time {
       font-size: 13px;
       color: #a8ccf5;
+      margin: 0;
     }
     .price {
       font-size: 13px;
@@ -167,8 +189,8 @@ export default {
   .grey {
     color: #abafba;
   }
-}
-li {
-  list-style: none;
+  li {
+    list-style: none;
+  }
 }
 </style>
