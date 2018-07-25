@@ -54,7 +54,7 @@
           <div class="large">
             <ul>
               <li v-for="(largeV,index) in largeVolume" :key="'largeV'+index">
-                <span>{{getLargeV(largeV)}}</span>
+                <span>{{largeV[0].slice(0,5)}}</span>
                 <span class="price">{{largeV[1]}}</span>
                 <span class="volume">{{largeV[2]}}</span>
                 <span :class="{red:(largeV[3]==='B'),green:(largeV[3]==='S')}">{{largeV[3]}}</span>
@@ -139,18 +139,12 @@ export default {
     }
   },
   methods: {
-    getLargeV:function(l){
-      let H = l[0].split(':')[0];
-      let getM=l[0].split(':')[1];
-      return ("0" + H).substr(-2) +':'+ ("0" + getM).substr(-2);
-    },
     showLv1: function () {
       this.showFive = true;
       this.showDetails = false;
       this.showLargeV = false;
     },
     showDetail: function () {
-      this.$emit("reloadD");
       this.showFive = false;
       this.showDetails = true;
       this.showLargeV = false;
