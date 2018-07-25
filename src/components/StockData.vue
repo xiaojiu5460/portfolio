@@ -40,7 +40,7 @@
     <div class="percent">
       <span v-bind:class="[stockInfo.colorState]">{{differ}}</span>
       <span v-bind:class="[stockInfo.colorState]">{{per}}</span>
-      <span>高低压设备 -1.62%
+      <span>{{zdf.name}}<span class="zdf">{{plateZdf}}</span>
         <i class="iconfont icon-ln_qianjin_b"></i>
       </span>
     </div>
@@ -154,7 +154,7 @@
 </template>
 <script>
 export default {
-  props: ["stock-info"],
+  props: ["stock-info","zdf"],
   data() {
     return {
       exchange: false,
@@ -163,6 +163,13 @@ export default {
     };
   },
   computed: {
+    plateZdf:function(){
+      if(this.zdf.zdf>0){
+        return "+"+(this.zdf.zdf)+"%";
+      }else{
+        return (this.zdf.zdf)+"%";
+      }
+    },
     differ: function () {
       if (this.stockInfo.colorState === "red") {
         return (
@@ -329,6 +336,9 @@ export default {
       padding-left: 25px;
       .iconfont {
         font-size: 10px;
+      }
+      .zdf{
+        padding-left:3px;
       }
     }
   }

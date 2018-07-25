@@ -36,7 +36,8 @@ export default {
         "sh603136",
         "sh601015",
         "sz300230",
-        "sh601900"
+        "sh601900",
+        "sz000636"
       ],
       blackColor: false
     };

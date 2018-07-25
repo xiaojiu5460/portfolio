@@ -65,9 +65,16 @@ export function parse(str) {
         });
 }
 
-// export function add(){
-//     console.log('add func');
-// }
+export function throttle(action, delay) {
+    let statTime = 0;
+    return function() {
+        let currTime = Date.now();
+        if (currTime - statTime > delay) {
+            action.apply(this, arguments);
+            statTime = currTime;
+        }
+    }
+}
 
 
 

@@ -1,7 +1,7 @@
 <template>
   <div class="trend">
     <div>
-      <ul>
+      <ul class="timeView">
         <li :class="{show:isActive,hide:hasError}">分时</li>
         <li>五日</li>
         <li>日K</li>
@@ -20,24 +20,52 @@
       <div class="chart">
       </div>
       <div class="level1">
-        <div class="sale">
-          <p v-for="(sell,index) in sellList" :key="'sell'+index">
-            <span>{{sell[0]}}</span>
-            <span v-bind:class="[sell[3].color]">{{sell[1]}}</span>
-            <span>{{sell[2]}}</span>
-          </p>
+        <div class="showFive" v-show="showFive">
+          <div class="sale">
+            <p v-for="(sell,index) in sellList" :key="'sell'+index">
+              <span>{{sell[0]}}</span>
+              <span v-bind:class="[sell[3].color]">{{sell[1]}}</span>
+              <span>{{sell[2]}}</span>
+            </p>
+          </div>
+          <div>
+            <p v-for="(buy,index) in buyList" :key="'buy'+index">
+              <span>{{buy[0]}}</span>
+              <span v-bind:class="[buy[3].color]">{{buy[1]}}</span>
+              <span>{{buy[2]}}</span>
+            </p>
+          </div>
         </div>
-        <div>
-          <p v-for="(buy,index) in buyList" :key="'buy'+index">
-            <span>{{buy[0]}}</span>
-            <span v-bind:class="[buy[3].color]">{{buy[1]}}</span>
-            <span>{{buy[2]}}</span>
+        <div class="detail" v-show="showDetails">
+          <p>
+            <span>查看分价明细</span>
           </p>
+          <ul>
+            <li v-for="(detail,index) in details" :key="'detail'+index">
+              <span>{{detail[1].slice(0,5)}}</span>
+              <span class="price">{{detail[2]}}</span>
+              <span class="volume">{{detail[4]}}</span>
+              <span :class="{red:(detail[6]==='B'),green:(detail[6]==='S')}">{{detail[6]}}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="largeVolume" v-show="showLargeV">
+          <div class="charts"></div>
+          <div class="large">
+            <ul>
+              <li v-for="(largeV,index) in largeVolume" :key="'largeV'+index">
+                <span>{{largeV[0].slice(0,5)}}</span>
+                <span class="price">{{largeV[1]}}</span>
+                <span class="volume">{{largeV[2]}}</span>
+                <span :class="{red:(largeV[3]==='B'),green:(largeV[3]==='S')}">{{largeV[3]}}</span>
+              </li>
+            </ul>
+          </div>
         </div>
         <div class="group">
-          <span class="lv1">五档</span>
-          <span class="details">详情</span>
-          <span class="large">大单</span>
+          <span :class="{lv1:showFive,noHL:!showFive}" @click="showLv1">五档</span>
+          <span :class="{details:true,detailHL:showDetails}" @click="showDetail">详情</span>
+          <span :class="{large:true,largeHL:showLargeV}" @click="showLarge">大单</span>
         </div>
       </div>
     </div>
@@ -46,7 +74,7 @@
 <script>
 import Minute from "./Minute.vue";
 export default {
-  props: ["stock-info"],
+  props: ["stock-info", "details", "large-volume"],
   name: "Trend",
   components: { Minute },
   data() {
@@ -55,8 +83,13 @@ export default {
       isActive: true,
       hasError: false,
       sellList: [],
-      buyList: []
+      buyList: [],
+      showFive: true,
+      showDetails: false,
+      showLargeV: false,
     };
+  },
+  computed: {
   },
   // stockInfo{"PBrate :"0.85";PErate:"15.32";amplitude:"4.31%";boughtFive:"600";boughtFour:"38";boughtOne:"241"",}
   created() {
@@ -106,6 +139,21 @@ export default {
     }
   },
   methods: {
+    showLv1: function () {
+      this.showFive = true;
+      this.showDetails = false;
+      this.showLargeV = false;
+    },
+    showDetail: function () {
+      this.showFive = false;
+      this.showDetails = true;
+      this.showLargeV = false;
+    },
+    showLarge: function () {
+      this.showFive = false;
+      this.showDetails = false;
+      this.showLargeV = true;
+    },
     // sellState:function(){
     //   console.log(this.stockInfo.newPrice);
     // },
@@ -126,10 +174,98 @@ export default {
     flex: 1;
   }
   .level1 {
-    width: 110px;
+    width: 120px;
     margin-left: 5px;
-    .sale {
-      border-bottom: solid 1px #d7e0ea;
+    .showFive {
+      .sale {
+        border-bottom: solid 1px #d7e0ea;
+      }
+      p {
+        display: flex;
+        align-items: center;
+        margin: 0 5px 0 0;
+        height: 28px;
+        font-size: 12px;
+        font-weight: bold;
+        span {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          // color: #dc0000;
+        }
+        span:last-child {
+          justify-content: flex-end;
+          color: #000;
+        }
+        span:first-child {
+          color: #000;
+          justify-content: flex-start;
+        }
+      }
+    }
+    .detail {
+      height: 283px;
+      overflow-y: scroll;
+      p {
+        display: flex;
+        justify-content: center;
+        margin: 0 5px 0 0;
+        position: fixed;
+        background-color: #fff;
+        width: 120px;
+        span {
+          background-color: #dce5f0;
+          line-height: 18px;
+          font-size: 10px;
+          padding: 0 8px;
+          border-radius: 3px;
+          color: #a0b7d5;
+        }
+      }
+    }
+    ul {
+      font-weight: bold;
+      padding: 20px 0 0 0;
+      margin: 0;
+      font-size: 10px;
+      li {
+        display: flex;
+        line-height: 24px;
+        span:first-child {
+          width: 30px;
+        }
+        .price {
+          width: 38px;
+          display: flex;
+          justify-content: flex-end;
+        }
+        .volume {
+          display: flex;
+          justify-content: flex-end;
+          width: 30px;
+        }
+        span {
+          margin-right: 3px;
+        }
+      }
+    }
+    .largeVolume {
+      display: flex;
+      flex-direction: column;
+      width: 120px;
+      height: 283px;
+      overflow-y: scroll;
+      .charts {
+        flex: 1;
+      }
+      .large {
+        height: 50px;
+        justify-content: flex-end;
+        border-top: solid #a0a1a0 1px;
+        ul {
+          padding: 0;
+        }
+      }
     }
     .group {
       height: 20px;
@@ -142,38 +278,18 @@ export default {
         justify-content: center;
         align-items: center;
       }
-      .lv1 {
+      .lv1,
+      .detailHL,
+      .largeHL {
         color: #000;
         background-color: #eee;
-      }
-    }
-    p {
-      display: flex;
-      align-items: center;
-      margin: 0 5px 0 0;
-      height: 28px;
-      font-size: 12px;
-      font-weight: bold;
-      span {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        // color: #dc0000;
-      }
-      span:last-child {
-        justify-content: flex-end;
-        color: #000;
-      }
-      span:first-child {
-        color: #000;
-        justify-content: flex-start;
       }
     }
   }
 }
 .trend div {
   border-bottom: 1px solid #f1f2f5;
-  ul {
+  .timeView {
     display: flex;
     align-items: center;
     overflow-x: scroll;
@@ -185,7 +301,6 @@ export default {
       display: flex;
       flex: 1;
       justify-content: center;
-      list-style: none;
       line-height: 26px;
       text-align: center;
       flex-shrink: 0;
@@ -222,6 +337,9 @@ export default {
   .grey {
     color: #abafba;
   }
+}
+li {
+  list-style: none;
 }
 </style>
 

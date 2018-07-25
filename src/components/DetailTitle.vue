@@ -144,14 +144,14 @@ export default {
       //
       overflow: hidden;
       p {
-        transition: 1s;
+        transition: 500ms;
       }
     }
     .movedown {
       //
       overflow: hidden;
       p {
-        transition: 1s;
+        transition: 500ms;
       }
       p:first-child {
         margin-top: -22px;
