@@ -3,7 +3,7 @@
     <DetailTitle v-if="stockInfo" :stock-info="stockInfo" :loading="loading" v-on:load="reloading"></DetailTitle>
     <StockData v-if="stockInfo" :stock-info="stockInfo" :zdf="zdf"></StockData>
     <Trend v-if="stockInfo" :stock-info="stockInfo" :details="details" :large-volume="largeVolume" v-on:reloadD="reloadDetail"></Trend>
-    <New :news-data="newsData"></New>
+    <New :news-data="newsData" :reports-volume="reportsVolume"></New>
   </div>
 </template>
 <script>
@@ -36,6 +36,7 @@ export default {
       zdf: [],
       details: [],
       largeVolume: [],
+      reportsVolume: [],
     };
   },
   created() {
@@ -50,6 +51,7 @@ export default {
     this.getZdf();
     this.getDetail();
     this.getLargeVolume();
+    this.getReports();
     let getHour = new Date().getHours();
     let getMinute = new Date().getMinutes();
     if (getMinute < 10) {
@@ -252,6 +254,13 @@ export default {
       this.$http.get(url).then(function (res) {
         this.largeVolume = res.body.data.detail;
         // console.log(this.largeVolume);
+      })
+    },
+    getReports: function () {
+      let url = `http://220.249.243.51/ifzqgtimg/appstock/app/investRate/getReport?symbol=${this
+        .$route.query.code}&page=0&n=20`;
+      this.$http.get(url).then(function (res) {
+        this.reportsVolume = res.body.data.data;
       })
     },
   }

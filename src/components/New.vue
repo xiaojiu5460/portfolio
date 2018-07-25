@@ -2,15 +2,15 @@
   <div class="news">
     <div class="title">
       <ul>
-        <li :class="{show:isActive,hide:hasError}">新闻</li>
+        <li :class="{showNew:showNews,hideNew:!showNews}" @click="newsHL">新闻</li>
         <li>公告</li>
         <li>资金</li>
         <li>简况</li>
         <li>财务</li>
-        <li>研报</li>
+        <li :class="{report:!showReport,research:showReport}" @click="reportsHL">研报</li>
       </ul>
     </div>
-    <div class="announcement">
+    <div class="announcement" v-show="news">
       <ul>
         <li v-for="(news,index) in newsData" :key="'news'+index">
           <a class="Title" href="" target="_self">{{news.title}}</a>
@@ -21,27 +21,51 @@
         </li>
       </ul>
     </div>
+    <div class="reports" v-show="!news">
+      <p>研报摘要</p>
+      <ul>
+        <li v-for="(reports,index) in reportsVolume" :key="'reports'+index">
+          <a href="" target="_self">{{reports.title.split('】')[1].slice(0)}}</a>
+          <div class="date">
+            <span>{{reports.title.split('】')[0].slice(1)}}</span>
+            <span class="state">买入</span>
+            <span>{{updated(reports)}}</span>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 <script>
 
 export default {
-  props: ["news-data"],
+  props: ["news-data", "reports-volume"],
   data() {
     return {
-      isActive: true,
-      hasError: false
+      showNews: true,
+      showReport: false,
+      news:true,
     };
   },
   methods: {
+    reportsHL:function(){
+        this.showReport=true;
+        this.showNews=false;
+        this.news=false;
+    },
+    newsHL:function(){
+        this.showReport=false;
+        this.showNews=true;
+        this.news=true;
+    },
     updated: function (n) {
       let format = new Date(n.time).getTime();
       let H = (new Date(n.time).getHours());
       let M = (new Date(n.time).getMinutes());
-      let today =  ("0" + H).substr(-2) + ':' +  ("0" + M).substr(-2);
+      let today = ("0" + H).substr(-2) + ':' + ("0" + M).substr(-2);
       let Month = (new Date(n.time).getMonth());
       let D = (new Date(n.time).getDate());
-      let history =  ("0" + Month).substr(-2) + '-' +  ("0" + D).substr(-2);
+      let history = ("0" + Month).substr(-2) + '-' + ("0" + D).substr(-2);
       // console.log(format);
       // console.log(n.time);
       let nowDate = new Date();
@@ -82,22 +106,24 @@ export default {
       width: 13%;
     }
   }
-  .show {
+  .showNew,
+  .research {
     color: #007aff;
     border-bottom: 2px #007aff solid;
   }
-  .hide {
+  .hideNew,
+  .report {
     border-bottom: 2px #fff solid;
   }
 }
-.announcement {
+.announcement,
+.reports {
   margin-left: 12px;
   ul {
     padding: 0;
     margin: 0;
     li {
       list-style: none;
-      line-height: 20px;
       display: flex;
       flex-direction: column;
       a {
@@ -111,17 +137,55 @@ export default {
         color: #000;
         text-decoration: none;
       }
-      div {
-        font-size: 8px;
-        color: #888888;
+    }
+  }
+}
+.announcement {
+  li {
+    line-height: 20px;
+    div {
+      font-size: 8px;
+      color: #888888;
+      display: flex;
+      span:first-child {
+        flex: 1;
+      }
+      span:last-child {
+        width: 50px;
+        padding-right: 16px;
+      }
+    }
+  }
+}
+.reports {
+  p {
+    margin: 8px 0;
+    color: #2e6bb1;
+    font-size: 12px;
+  }
+  li {
+    line-height: 25px;
+    div {
+      font-size: 8px;
+      color: #888888;
+      display: flex;
+      span:first-child {
+        width: 80px;
+      }
+      .state {
+        color: #d11d1d;
+        border: solid 1px #d11d1d;
+        width: 30px;
+        height: 20px;
+        line-height: 20px;
+        text-align: center;
+        border-radius: 3px;
+      }
+      span:last-child {
+        flex: 1;
         display: flex;
-        span:first-child{
-          flex:1;
-        }
-        span:last-child {
-          width: 50px;
-          padding-right: 16px;
-        }
+        justify-content: flex-end;
+        padding-right: 16px;
       }
     }
   }
