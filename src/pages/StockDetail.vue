@@ -2,7 +2,7 @@
   <div>
     <DetailTitle v-if="stockInfo" :stock-info="stockInfo" :loading="loading" v-on:load="reloading"></DetailTitle>
     <StockData v-if="stockInfo" :stock-info="stockInfo" :zdf="zdf"></StockData>
-    <Trend v-if="stockInfo" :stock-info="stockInfo" :details="details" :large-volume="largeVolume"></Trend>
+    <Trend v-if="stockInfo" :stock-info="stockInfo" :details="details" :large-volume="largeVolume" v-on:reloadD="reloadDetail"></Trend>
     <New :news-data="newsData"></New>
   </div>
 </template>
@@ -16,6 +16,7 @@ import { EventBus } from "../utils/EventBus.js";
 // console.log(parse);
 
 let intval = null;
+let i = null;
 
 export default {
   name: "StockDetail",
@@ -34,7 +35,7 @@ export default {
       newsData: [],
       zdf: [],
       details: [],
-      largeVolume:[],
+      largeVolume: [],
     };
   },
   created() {
@@ -78,19 +79,35 @@ export default {
       intval = setInterval(function () {
         that.getData();
       }, 5000);
-    } else {
-      return;
     }
   },
   destroyed() {
     //销毁定时器
     clearInterval(intval);
+    clearInterval(i);
     window.removeEventListener("scroll", this.handleScroll, false)
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll, false);
   },
   methods: {
+    reloadDetail: function () {
+      let getHour = new Date().getHours();
+      let getMinute = new Date().getMinutes();
+      if (getMinute < 10) {
+        return "0" + getMinute;
+      }
+      let currentTime = parseFloat(getHour + "" + getMinute);
+      let that = this;
+      if (
+        (915 < currentTime && currentTime < 1130) ||
+        (1300 < currentTime && currentTime < 1500)
+      ) {
+        i = setInterval(function () {
+          that.getDetail();
+        }, 5000);
+      }
+    },
     handleScroll: throttle(function () {
       let scrollTop = document.documentElement.scrollTop;
       // console.log(scrollTop);
@@ -101,7 +118,7 @@ export default {
       }
     }, 300),
     reloading: function () {
-      // this.loading = true; 请求前109行已在加载
+      //  this.loading = true;   请求前109行已在加载
       this.getData();
     },
     getData: function () {
@@ -229,10 +246,10 @@ export default {
         // console.log(that.details);
       })
     },
-    getLargeVolume:function(){
-      let url=`http://220.249.243.51/ifzqgtimg/appstock/app/HsDealinfo/getDadan?code=${this
+    getLargeVolume: function () {
+      let url = `http://220.249.243.51/ifzqgtimg/appstock/app/HsDealinfo/getDadan?code=${this
         .$route.query.code}`;
-              this.$http.get(url).then(function (res) {
+      this.$http.get(url).then(function (res) {
         this.largeVolume = res.body.data.detail;
         // console.log(this.largeVolume);
       })
