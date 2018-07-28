@@ -2,7 +2,7 @@
   <div class="trend">
     <div>
       <ul class="timeView">
-        <li :class="{show:isActive,hide:hasError}">分时</li>
+        <li :class="{show:isActive,hide:!isActive}">分时</li>
         <li>五日</li>
         <li>日K</li>
         <li>周K</li>
@@ -20,7 +20,7 @@
       <div class="chart">
       </div>
       <div class="level1">
-        <div class="showFive" v-show="showFive">
+        <div class="showFive" v-show="show=='五档'">
           <div class="sale">
             <p v-for="(sell,index) in sellList" :key="'sell'+index">
               <span>{{sell[0]}}</span>
@@ -36,7 +36,7 @@
             </p>
           </div>
         </div>
-        <div class="detail" v-show="showDetails">
+        <div class="detail" v-show="show=='详情'">
           <p>
             <span>查看分价明细</span>
           </p>
@@ -49,7 +49,7 @@
             </li>
           </ul>
         </div>
-        <div class="largeVolume" v-show="showLargeV">
+        <div class="largeVolume" v-show="show=='大单'">
           <div class="charts"></div>
           <div class="large">
             <ul>
@@ -63,9 +63,9 @@
           </div>
         </div>
         <div class="group">
-          <span :class="{lv1:showFive,noHL:!showFive}" @click="showLv1">五档</span>
-          <span :class="{details:true,detailHL:showDetails}" @click="showDetail">详情</span>
-          <span :class="{large:true,largeHL:showLargeV}" @click="showLarge">大单</span>
+          <span :class="{lv1:show=='五档',noHL:show==!'五档'}" @click="showLv1">五档</span>
+          <span :class="{details:true,detailHL:show=='详情'}" @click="showDetail">详情</span>
+          <span :class="{large:true,largeHL:show=='大单'}" @click="showLarge">大单</span>
         </div>
       </div>
     </div>
@@ -81,12 +81,9 @@ export default {
     return {
       isShow: false,
       isActive: true,
-      hasError: false,
       sellList: [],
       buyList: [],
-      showFive: true,
-      showDetails: false,
-      showLargeV: false,
+      show: '五档',
     };
   },
   computed: {
@@ -139,26 +136,22 @@ export default {
     }
   },
   methods: {
-    getLargeV:function(l){
-      let H=l[0].split(':')[0];
-      let M=l[0].split(':')[1];
-      return ("0"+H).substr(-2)+':'+("0"+M).substr(-2);
+    getLargeV: function (l) {
+      let H = l[0].split(':')[0];
+      let M = l[0].split(':')[1];
+      return ("0" + H).substr(-2) + ':' + ("0" + M).substr(-2);
     },
     showLv1: function () {
-      this.showFive = true;
-      this.showDetails = false;
-      this.showLargeV = false;
+      this.$emit("level-one")
+      this.show = '五档';
     },
     showDetail: function () {
-      this.$emit("reloadD")
-      this.showFive = false;
-      this.showDetails = true;
-      this.showLargeV = false;
+      this.$emit("reload-detail");
+      this.show = '详情';
     },
     showLarge: function () {
-      this.showFive = false;
-      this.showDetails = false;
-      this.showLargeV = true;
+      this.$emit("reload-large");
+      this.show = '大单';
     },
     // sellState:function(){
     //   console.log(this.stockInfo.newPrice);
@@ -211,12 +204,14 @@ export default {
     }
     .detail {
       height: 283px;
+      position: relative;
       overflow-y: scroll;
       p {
         display: flex;
         justify-content: center;
         margin: 0 5px 0 0;
-        position: fixed;
+        position: absolute;
+        top: 0;
         background-color: #fff;
         width: 120px;
         span {

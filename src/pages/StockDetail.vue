@@ -2,21 +2,22 @@
   <div>
     <DetailTitle v-if="stockInfo" :stock-info="stockInfo" :loading="loading" v-on:load="reloading"></DetailTitle>
     <StockData v-if="stockInfo" :stock-info="stockInfo" :zdf="zdf"></StockData>
-    <Trend v-if="stockInfo" :stock-info="stockInfo" :details="details" :large-volume="largeVolume" v-on:reloadD="reloadDetail"></Trend>
-    <New :news-data="newsData" :reports-volume="reportsVolume"></New>
+    <Trend v-if="stockInfo" :stock-info="stockInfo" :details="details" :large-volume="largeVolume" v-on:reload-detail="reloadDetail" v-on:reload-large="reloadLarge" v-on:level-one="levelOne"></Trend>
+    <StockMainData :stockcode="$route.query.code"></StockMainData>
   </div>
 </template>
 <script>
 import DetailTitle from "../components/DetailTitle.vue";
 import StockData from "../components/StockData.vue";
 import Trend from "../components/Trend.vue";
-import New from "../components/New.vue";
+import StockMainData from "../components/StockMainData.vue";
 import { parse, throttle } from "../utils/tools.js";
 import { EventBus } from "../utils/EventBus.js";
 // console.log(parse);
 
 let intval = null;
-let i = null;
+let detailIntval = null;
+let largeIntval = null;
 
 export default {
   name: "StockDetail",
@@ -25,18 +26,16 @@ export default {
     DetailTitle,
     StockData,
     Trend,
-    New
+    StockMainData
   },
   data() {
     return {
       list: [],
       stockInfo: null,
       loading: false,
-      newsData: [],
-      zdf: [],
+      zdf: {},
       details: [],
-      largeVolume: [],
-      reportsVolume: [],
+      largeVolume: null,
     };
   },
   created() {
@@ -47,11 +46,9 @@ export default {
     // let code = this.$route.query.code.split(" ");
     // console.log(code);
     this.getData();
-    this.getNews();
     this.getZdf();
     this.getDetail();
     this.getLargeVolume();
-    this.getReports();
     let getHour = new Date().getHours();
     let getMinute = new Date().getMinutes();
     if (getMinute < 10) {
@@ -72,7 +69,6 @@ export default {
     // ){
     //   xxx
     // }
-
     let that = this;
     if (
       (915 < currentTime && currentTime < 1130) ||
@@ -80,19 +76,42 @@ export default {
     ) {
       intval = setInterval(function () {
         that.getData();
-      }, 5000);
+      }, 5000000000);
     }
   },
   destroyed() {
     //销毁定时器
     clearInterval(intval);
-    clearInterval(i);
     window.removeEventListener("scroll", this.handleScroll, false)
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll, false);
   },
   methods: {
+    levelOne: function () {
+      //点五档清理大单和详情定时器
+      clearInterval(largeIntval);
+      clearInterval(detailIntval);
+    },
+    reloadLarge: function () {
+      let getHour = new Date().getHours();
+      let getMinute = new Date().getMinutes();
+      if (getMinute < 10) {
+        return "0" + getMinute;
+      }
+      let currentTime = parseFloat(getHour + "" + getMinute);
+      let that = this;
+      if (
+        (915 < currentTime && currentTime < 1130) ||
+        (1300 < currentTime && currentTime < 1500)
+      ) {
+        largeIntval = setInterval(function () {
+          that.getLargeVolume();
+        }, 5000000000);
+      }
+      //点大单时清理详情定时器
+      clearInterval(detailIntval);
+    },
     reloadDetail: function () {
       let getHour = new Date().getHours();
       let getMinute = new Date().getMinutes();
@@ -105,20 +124,22 @@ export default {
         (915 < currentTime && currentTime < 1130) ||
         (1300 < currentTime && currentTime < 1500)
       ) {
-        i = setInterval(function () {
+        detailIntval = setInterval(function () {
           that.getDetail();
-        }, 5000);
+        }, 5000000000);
       }
     },
     handleScroll: throttle(function () {
-      let scrollTop = document.documentElement.scrollTop;
-      // console.log(scrollTop);
-      if (scrollTop < 50) {
-        EventBus.$emit("showPri", "moveup");
-      } else {
-        EventBus.$emit("showPri", "movedown");
-      }
-    }, 300),
+      setTimeout(() => {
+        let scrollTop = document.documentElement.scrollTop;
+        // console.log(scrollTop);
+        if (scrollTop > 80) {
+          EventBus.$emit("showPri", "moveup");
+        } else {
+          EventBus.$emit("showPri", "movedown");
+        }
+      }, 1);
+    }, 50),
     reloading: function () {
       //  this.loading = true;   请求前109行已在加载
       this.getData();
@@ -217,21 +238,12 @@ export default {
         // console.log(this.stockInfo)
       });
     },
-    getNews: function () {
-      let url = `http://220.249.243.51/ifzqgtimg/appstock/news/info/search?symbol=${this
-        .$route.query.code}&page=1&n=5&type=3`;
-      this.$http.get(url).then(function (res) {
-        // console.log(res.body.data.data);
-        this.newsData = res.body.data.data;
-        // console.log(res.body.data.data[0].src)
-      });
-    },
     getZdf: function () {
       let url = `http://220.249.243.51/ifzqgtimg/appstock/app/stockinfo/plate?code=${this
         .$route.query.code}&zdf=1`;
       this.$http.get(url).then(function (res) {
         this.zdf = res.body.data[0];
-        // console.log(this.zdf.name);
+        // console.log(this.zdf);
       })
     },
     getDetail: function () {
@@ -254,13 +266,6 @@ export default {
       this.$http.get(url).then(function (res) {
         this.largeVolume = res.body.data.detail;
         // console.log(this.largeVolume);
-      })
-    },
-    getReports: function () {
-      let url = `http://220.249.243.51/ifzqgtimg/appstock/app/investRate/getReport?symbol=${this
-        .$route.query.code}&page=0&n=20`;
-      this.$http.get(url).then(function (res) {
-        this.reportsVolume = res.body.data.data;
       })
     },
   }
