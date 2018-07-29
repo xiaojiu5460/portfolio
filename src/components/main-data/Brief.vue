@@ -154,37 +154,37 @@
                 <div class="leaderPost">
                     <div class="lead">
                         <p>高管</p>
-                        <p>for</p>
+                        <p v-for="(leader,index) in brief.ggjj" :key="'leader'+index">{{leader.gg}}</p>
                     </div>
                     <div class="post">
                         <p>职务</p>
-                        <p>for</p>
+                        <p v-for="(leader,index) in brief.ggjj" :key="'leader'+index">{{leader.zw}}</p>
                     </div>
                     <div class="shares">
                         <p>持股数(股)</p>
-                        <p>for</p>
+                        <p v-for="(leader,index) in brief.ggjj" :key="'leader'+index">{{leader.cgs}}</p>
                     </div>
                     <div class="pay">
                         <p>薪酬(元)</p>
-                        <p>for</p>
+                        <p v-for="(leader,index) in brief.ggjj" :key="'leader'+index">{{leader.xc}}</p>
                     </div>
                 </div>
                 <div class="reduce">
                     <div class="lead">
                         <p>高管增减持</p>
-                        <p>for</p>
+                        <p v-for="(hold,index) in brief.ggzjc" :key="'hold'+index">{{hold.gg}}</p>
                     </div>
                     <div class="post">
                         <p>公告日期</p>
-                        <p>for</p>
+                        <p v-for="(hold,index) in brief.ggzjc" :key="'hold'+index">{{hold.date}}</p>
                     </div>
                     <div class="shares">
                         <p>变动量(股)</p>
-                        <p>for</p>
+                        <p v-for="(hold,index) in brief.ggzjc" :key="'hold'+index">{{hold.bdl}}</p>
                     </div>
                     <div class="pay">
                         <p>均价(元)</p>
-                        <p>for</p>
+                        <p v-for="(hold,index) in brief.ggzjc" :key="'hold'+index">{{hold.jj}}</p>
                     </div>
                 </div>
             </div>
@@ -196,21 +196,21 @@
                 <div class="bonus">
                     <div class="left">
                         <p>年度</p>
-                        <p>2017</p>
+                        <p v-for="(bonus,index) in brief.fhsp" :key="'bonus'+index">{{bonus.nd}}</p>
                     </div>
                     <div class="middle">
                         <p>方案</p>
-                        <p>10派？</p>
+                        <p v-for="(bonus,index) in brief.fhsp" :key="'bonus'+index">10派{{bonus.fh}}</p>
                     </div>
                     <div class="right">
                         <p>除权日</p>
-                        <p>2018-06-12</p>
+                        <p v-for="(bonus,index) in brief.fhsp" :key="'bonus'+index">{{bonus.date}}</p>
                     </div>
                 </div>
             </div>
             <div>
                 <div class="briefTitle">
-                    <span>行业对比(高低压设备)</span>
+                    <span>行业对比({{zdf.name}})</span>
                     <span>2018一季报</span>
                 </div>
                 <div></div>
@@ -222,8 +222,8 @@
 <script>
 
 export default {
-    props: ["brief","zdf"],
-    created(){
+    props: ["brief", "zdf"],
+    created() {
         // console.log(this.zdf)
     },
     computed: {
@@ -294,18 +294,19 @@ li {
       padding: 0;
       li {
         display: flex;
+        line-height: 20px;
         .form {
-          width: 140px;
+          width: 170px;
+          overflow: hidden;
         }
         .income,
         .percent {
           flex: 1;
         }
-        // span {
-        //   span:first-child {
-        //     width:140px;
-        //   }
-        // }
+        .percent {
+          display: flex;
+          justify-content: flex-end;
+        }
       }
     }
   }
@@ -333,13 +334,22 @@ li {
     .lead {
       width: 70px;
     }
-    .post,
-    .shares {
+    .post {
       flex: 1;
+    }
+    .shares {
+      width: 80px;
+      p {
+        display: flex;
+        justify-content: flex-end;
+      }
     }
     .pay {
       width: 50px;
-      justify-content: flex-end;
+      p {
+        display: flex;
+        justify-content: flex-end;
+      }
     }
     p:first-child {
       color: rgb(68, 66, 66);

@@ -7,7 +7,7 @@
     </div>
     <div class="stockCode">
       <p class="code">{{stockInfo.name}}({{stockInfo.code}}.{{(stockInfo.code2.slice(0,2)).toUpperCase()}})</p>
-      <div v-bind:class="{moveup:true,movedown:notActive}">
+      <div :class="[active]">
         <p class="time">
           <span v-show="exchange">交易中</span>
           <span v-show="!exchange">已休市</span>{{date}}
@@ -36,20 +36,13 @@ export default {
   components: {},
   data() {
     return {
-      notActive: false,
+      active: 'moveup',
     }
   },
   created() {
     let that = this;
     EventBus.$on("showPri", function (data) {
-      switch (data) {
-        case "moveup":
-          that.notActive = true;
-          break;
-        case "movedown":
-          that.notActive = false;
-          break;
-      }
+      that.active=data;
     })
   },
   computed: {

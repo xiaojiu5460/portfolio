@@ -86,6 +86,7 @@ export default {
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll, false);
+    // window.addEventListener("scroll", this.titleScroll, false);
   },
   methods: {
     levelOne: function () {
@@ -134,12 +135,26 @@ export default {
         let scrollTop = document.documentElement.scrollTop;
         // console.log(scrollTop);
         if (scrollTop > 80) {
-          EventBus.$emit("showPri", "moveup");
-        } else {
           EventBus.$emit("showPri", "movedown");
+        } else {
+          EventBus.$emit("showPri", "moveup");
+        }
+        if (scrollTop > 460) {
+          EventBus.$emit("titleFixed", "titlefix");
+        } else {
+          EventBus.$emit("titleFixed", "news");
         }
       }, 1);
     }, 50),
+    // titleScroll:throttle(function(){
+    //   let scrollTop = document.documentElement.scrollTop;
+    //     console.log(scrollTop);
+    //     if (scrollTop > 460) {
+    //       EventBus.$emit("titleFixed", "titlefix");
+    //     } else {
+    //       EventBus.$emit("titleFixed", "title");
+    //     }
+    // }),
     reloading: function () {
       //  this.loading = true;   请求前109行已在加载
       this.getData();

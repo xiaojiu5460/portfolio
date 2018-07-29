@@ -1,6 +1,6 @@
 <template>
-  <div class="news">
-    <div :class="{title:true,titlefix:showfix}">
+  <div :class="[showfix]">
+    <div class="title">
       <ul>
         <li :class="{showNew:show=='新闻',hideNew:show==!'新闻'}" @click="newsHL">新闻</li>
         <li :class="{announcement:show==!'公告',notice:show=='公告'}" @click="noticeHL">公告</li>
@@ -21,12 +21,13 @@ import News from "./main-data/News.vue";
 import Announcement from "./main-data/Announcement.vue";
 import Brief from "./main-data/Brief.vue";
 import Reports from "./main-data/Reports.vue";
+import { EventBus } from "../utils/EventBus.js";
 export default {
   props: ["stockcode"],
   data() {
     return {
       show: '新闻',
-      showfix: false,
+      showfix: 'news',
       newsData: null,
       announcement: null,
       reportsVolume: null,
@@ -47,6 +48,10 @@ export default {
     // this.getBriefVolume();
     // this.getZdf();
     // console.log(this.stockcode)
+    let that = this;
+    EventBus.$on("titleFixed", function (data) {
+      that.showfix = data;
+    })
   },
   computed: {
   },
@@ -79,6 +84,7 @@ export default {
         l.zysrdetail = res.body.data.zysr.detail;
         l.gdgb = res.body.data.gdgb;
         l.ggzjc = res.body.data.ggzjc;
+        l.ggjj = res.body.data.ggjj;
         l.fhsp = res.body.data.fhsp;
         l.pxmzb = res.body.data.pxmzb;
         l.hydb = res.body.data.hydb;
@@ -122,11 +128,11 @@ export default {
     },
     briefHL: function () {
       this.show = '简况';
-      let that=this;
+      let that = this;
       Promise.all([this.getBriefVolume(), this.getZdf()]).then(function (res) {
         // console.log(res[0]);
-        that.briefingVolume=res[0];
-        that.briefZdf=res[1];
+        that.briefingVolume = res[0];
+        that.briefZdf = res[1];
       },
         // function (res) {
         //   console.log(res)
@@ -140,46 +146,84 @@ export default {
 li {
   list-style: none;
 }
-.title,
-.titlefix {
-  border-bottom: 1px solid #f1f2f5;
-  margin: 0 16px 0 12px;
-  width: 95%;
-  background-color: #fff;
-  ul {
-    display: flex;
-    align-items: center;
-    overflow-y: hidden;
-    padding: 0;
-    margin: 0;
-    color: #888888;
-    li {
+.news {
+  .title {
+    border-bottom: 1px solid #f1f2f5;
+    margin: 0 16px 0 12px;
+    width: 95%;
+    background-color: #fff;
+    ul {
       display: flex;
-      justify-content: center;
-      list-style: none;
-      line-height: 26px;
-      flex-shrink: 0;
-      padding: 0 5px;
-      font-size: 13px;
-      letter-spacing: 1px;
-      width: 13%;
+      align-items: center;
+      overflow-y: hidden;
+      padding: 0;
+      margin: 0;
+      color: #888888;
+      li {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        line-height: 26px;
+        flex-shrink: 0;
+        padding: 0 5px;
+        font-size: 13px;
+        letter-spacing: 1px;
+        width: 13%;
+      }
     }
-  }
-  .showNew,
-  .research,
-  .notice,
-  .briefing {
-    color: #007aff;
-    border-bottom: 2px #007aff solid;
-  }
-  .hideNew,
-  .report {
-    border-bottom: 2px #fff solid;
+    .showNew,
+    .research,
+    .notice,
+    .briefing {
+      color: #007aff;
+      border-bottom: 2px #007aff solid;
+    }
+    .hideNew,
+    .report {
+      border-bottom: 2px #fff solid;
+    }
   }
 }
 .titlefix {
-  position: fixed;
-  top: 45px;
+  margin-top: 30px;
+  .title {
+    position: fixed;
+    top: 45px;
+    border-bottom: 1px solid #f1f2f5;
+    margin: 0 16px 0 12px;
+    width: 95%;
+    background-color: #fff;
+    ul {
+      display: flex;
+      align-items: center;
+      overflow-y: hidden;
+      padding: 0;
+      margin: 0;
+      color: #888888;
+      li {
+        display: flex;
+        justify-content: center;
+        list-style: none;
+        line-height: 26px;
+        flex-shrink: 0;
+        padding: 0 5px;
+        font-size: 13px;
+        letter-spacing: 1px;
+        width: 13%;
+      }
+    }
+    .showNew,
+    .research,
+    .notice,
+    .briefing {
+      color: #007aff;
+      border-bottom: 2px #007aff solid;
+    }
+    .hideNew,
+    .report {
+      border-bottom: 2px #fff solid;
+    }
+  }
 }
 </style>
 
