@@ -205,7 +205,7 @@ export default {
     .detail {
       height: 283px;
       position: relative;
-      overflow-y: scroll;
+      overflow:hidden;
       p {
         display: flex;
         justify-content: center;
@@ -229,6 +229,8 @@ export default {
       padding: 20px 0 0 0;
       margin: 0;
       font-size: 10px;
+      height: 100%;
+      overflow-y: scroll;
       li {
         display: flex;
         line-height: 24px;

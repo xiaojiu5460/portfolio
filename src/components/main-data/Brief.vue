@@ -51,16 +51,68 @@
             </div>
             <div>
                 <div class="belongTo">
-                    <div>
+                    <div class="left">
+                        <p>
+                            <span>所属行业</span>
+                        </p>
+                        <p class="concept">
+                            <span>所属概念</span>
+                        </p>
+                        <p>
+                            <span>公司名称</span>
+                        </p>
+                        <p>
+                            <span>上市日期</span>
+                        </p>
+                        <p>
+                            <span>发行价格</span>
+                        </p>
+                        <p>
+                            <span>所属地区</span>
+                        </p>
+                        <p>
+                            <span>主营业务</span>
+                        </p>
+                    </div>
+                    <div class="right">
+                        <p>
+                            <span v-if="zdf">{{zdf.name}}{{'('+plateZdf+')'}}</span>
+                        </p>
+                        <p class="belong">
+                            <span v-for="(belong,index) in brief.concept" :key="'belong'+index">{{belong.name}}(0.00%)</span>
+                        </p>
+                        <p class="icon">
+                            <span class="down"  v-show="active" @click="moreInformation">查看更多
+                                <i class="iconfont icon-xiangxia"></i>
+                            </span>
+                            <span class="up" v-show="!active" @click="lessInformation">收起
+                                <i class="iconfont icon-xiangshang"></i>
+                            </span>
+                        </p>
+                        <p>
+                            <span>{{brief.gsjj.gsmz}}</span>
+                        </p>
+                        <p>
+                            <span>{{brief.gsjj.riqi}}</span>
+                        </p>
+                        <p>
+                            <span>{{brief.gsjj.jg}}</span>
+                        </p>
+                        <p>
+                            <span>{{brief.gsjj.dy}}</span>
+                        </p>
+                        <p>
+                            <span>{{brief.gsjj.yw}}</span>
+                        </p>
+                    </div>
+                    <!-- <div>
                         <span>所属行业</span>
                         <span v-if="zdf">{{zdf.name}}{{'('+plateZdf+')'}}</span>
                     </div>
                     <div class="own">
                         <div>
                             <span>所属概念</span>
-                        </div>
-                        <div>
-                            <span class="v-for"></span>
+                            <span v-for="(belong,index) in brief.concept" :key="'belong'+index">{{belong.name}}(0.00%)</span>
                         </div>
                     </div>
                     <div>
@@ -82,7 +134,7 @@
                     <div>
                         <span>主营业务</span>
                         <span>{{brief.gsjj.yw}}</span>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -222,9 +274,22 @@
 <script>
 
 export default {
+    data(){
+        return{
+            active:true,
+        }
+    },
     props: ["brief", "zdf"],
     created() {
         // console.log(this.zdf)
+    },   
+    methods:{
+        moreInformation:function(){
+            this.active=false;
+        },
+        lessInformation:function(){
+            this.active=true;
+        }
     },
     computed: {
         plateZdf: function () {
@@ -280,10 +345,32 @@ li {
   .belongTo {
     margin: 5px 12px;
     font-size: 12px;
-    div {
-      margin: 3px 0;
-      span:first-child {
-        // padding-right: 12px;
+    display: flex;
+    .left {
+      width: 65px;
+      .concept {
+        padding-bottom: 43px;
+      }
+    }
+    .right {
+      flex: 1;
+      .belong {
+        height: 35px;
+        overflow: hidden;
+        margin:0;
+        span {
+          color: darkturquoise;
+          padding-right: 50px;
+          line-height: 18px;
+        }
+      }
+      .icon {
+          margin:3px 0;
+        .down,
+        .up {
+          display: inline-block;
+          color: #094775;
+        }
       }
     }
   }

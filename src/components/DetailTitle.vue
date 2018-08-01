@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="detailTitle">
     <div class="pre" @click="previous">
       <span>
         <i class="iconfont icon-back"></i>
@@ -102,7 +102,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.container {
+.detailTitle {
   background-color: #2d6bb1;
   height: 45px;
   display: flex;
@@ -110,6 +110,7 @@ export default {
   width: 100%;
   top: 0;
   overflow: hidden;
+  z-index: 1;
   img {
     width: 18px;
     margin: 12px 12px 0 0;
@@ -177,7 +178,7 @@ export default {
     color: #dc0000;
   }
   .green {
-    color: #508d46;
+    color: #21bd0b;
   }
   .grey {
     color: #abafba;

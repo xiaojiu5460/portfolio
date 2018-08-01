@@ -1,19 +1,24 @@
 import Home from './pages/Home.vue'
-// import Header from './components/Header.vue'
+import NewsDetail from './components/main-data/NewsDetail.vue'
 // import GroupManage from './components/GroupManage.vue'
 import StockDetail from './pages/StockDetail.vue'
+import Search from './components/Search.vue'
 
 
-const routes = [
-    {
+const routes = [{
         path: '/',
         component: Home,
     },
-    // {
-    //     path: '/GroupManage',
-    //     name: 'GroupManage',
-    //     component: GroupManage
-    // },
+    {
+        path: '/NewsDetail',
+        name: 'NewsDetail',
+        component: NewsDetail
+    },
+    {
+        path: '/search',
+        name: 'Search',
+        component: Search
+    },
     {
         path: '/detail',
         name: 'StockDetail',
@@ -21,4 +26,3 @@ const routes = [
     },
 ];
 export default routes;
-

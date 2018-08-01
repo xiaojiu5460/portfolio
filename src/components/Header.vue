@@ -1,7 +1,7 @@
 <template>
   <div :class="{container:true,blackSkin:blackSkin}">
     <div class="search">
-      <div><i class="iconfont icon-fangdajing"></i>点击搜索股票/板块</div>
+      <div @click="searchStock"><i class="iconfont icon-fangdajing"></i>点击搜索股票/板块</div>
     </div>
     <div class="more"><span @click="showGroup">···</span>
     <Group :isShow="isShow" v-on:cancel="cancel"></Group>
@@ -36,6 +36,11 @@ export default {
     });
   },
   methods: {
+    searchStock:function(){
+      this.$router.push({
+        path: '/search'
+      })
+    },
     showGroup: function() {
       this.isShow = true;
     },

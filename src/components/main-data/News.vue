@@ -2,7 +2,7 @@
   <div class="currentNew">
     <ul>
       <li v-for="(news,index) in newsData" :key="'news'+index">
-        <a class="Title" href="" target="_self">{{news.title}}</a>
+        <router-link :to="{ path: '/NewsDetail', query: { code: news.symbol,id:news.id,title:news.title,src:news.src,time:news.time}}">{{news.title}}</router-link>
         <div class="date">
           <span>{{news.src}}</span>
           <span>{{updated(news)}}</span>
@@ -12,7 +12,6 @@
   </div>
 </template>
 <script>
-
 export default {
   props: ["news-data"],
   data() {
@@ -21,7 +20,8 @@ export default {
     };
   },
   created() {
-    // console.log(this.brief)
+    // console.log(this.newsData)
+    // window.localStorage.setItem("code",this.news.symbol)
   },
   methods: {
     updated: function (n) {
@@ -29,7 +29,7 @@ export default {
       let H = (new Date(n.time).getHours());
       let M = (new Date(n.time).getMinutes());
       let today = ("0" + H).substr(-2) + ':' + ("0" + M).substr(-2);
-      let Month = (new Date(n.time).getMonth());
+      let Month = (new Date(n.time).getMonth()) + 1;
       let D = (new Date(n.time).getDate());
       let history = ("0" + Month).substr(-2) + '-' + ("0" + D).substr(-2);
       // console.log(format);
