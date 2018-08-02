@@ -9,6 +9,7 @@
     },
     "dependencies": {
         "dayjs": "^1.7.4",
+        "echarts": "^4.1.0",
         "normalize.css": "^8.0.0",
         "vue": "^2.5.16",
         "vue-resource": "^1.5.1",

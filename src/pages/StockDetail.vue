@@ -2,7 +2,7 @@
   <div>
     <DetailTitle v-if="stockInfo" :stock-info="stockInfo" :loading="loading" v-on:load="reloading"></DetailTitle>
     <StockData v-if="stockInfo" :stock-info="stockInfo" :zdf="zdf"></StockData>
-    <Trend v-if="stockInfo" :stock-info="stockInfo" :details="details" :large-volume="largeVolume" v-on:reload-detail="reloadDetail" v-on:reload-large="reloadLarge" v-on:level-one="levelOne"></Trend>
+    <Trend v-if="stockInfo&&largeVolume" :stock-info="stockInfo" :details="details" :large-volume="largeVolume" v-on:reload-detail="reloadDetail" v-on:reload-large="reloadLarge" v-on:level-one="levelOne"></Trend>
     <StockMainData :stockcode="$route.query.code"></StockMainData>
   </div>
 </template>
@@ -139,7 +139,7 @@ export default {
         } else {
           EventBus.$emit("showPri", "moveup");
         }
-        if (scrollTop > 460) {
+        if (scrollTop > 438) {
           EventBus.$emit("titleFixed", "titlefix");
         } else {
           EventBus.$emit("titleFixed", "news");
@@ -279,7 +279,7 @@ export default {
       let url = `http://220.249.243.51/ifzqgtimg/appstock/app/HsDealinfo/getDadan?code=${this
         .$route.query.code}`;
       this.$http.get(url).then(function (res) {
-        this.largeVolume = res.body.data.detail;
+        this.largeVolume = res.body.data;
         // console.log(this.largeVolume);
       })
     },

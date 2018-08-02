@@ -49,19 +49,47 @@
             </li>
           </ul>
         </div>
-        <div class="largeVolume" v-show="show=='大单'">
-          <div class="charts"></div>
-          <div class="large">
-            <ul>
-              <li v-for="(largeV,index) in largeVolume" :key="'largeV'+index">
-                <span>{{getLargeV(largeV)}}</span>
-                <span class="price">{{largeV[1]}}</span>
-                <span class="volume">{{largeV[2]}}</span>
-                <span :class="{red:(largeV[3]==='B'),green:(largeV[3]==='S')}">{{largeV[3]}}</span>
-              </li>
-            </ul>
+        <div v-show="show=='大单'">
+          <div class="largeVolume" v-if="!showEchart">
+            <div>
+              <div class="charts">
+                <div id="main" style="width: 120px;height:100px;" @click="showlevelone"></div>
+              </div>
+              <div class="chartDetail">
+                <div class="buy">
+                  <div class="first" style="background-color:#eb4e27"></div>
+                  <span class="middle">买盘:</span>
+                  <span>{{largeVolume.summary.data.cje100.split(',')[4]}}手</span>
+                </div>
+                <div class="sell">
+                  <div class="first" style="background-color:#54b835"> </div>
+                  <span class="middle">卖盘:</span>
+                  <span>{{largeVolume.summary.data.cje100.split(',')[5]}}手</span>
+                </div>
+                <div class="mid">
+                  <div class="first" style="background-color:#bfbfc0"> </div>
+                  <span class="middle">中性盘:</span>
+                  <span>{{largeVolume.summary.data.cje100.split(',')[6]}}手</span>
+                </div>
+                <div class="remarks">
+                  <span>注:单笔成交额>100万</span>
+                </div>
+              </div>
+            </div>
+            <div class="large">
+              <ul>
+                <li v-for="(largeV,index) in largeVolume.detail" :key="'largeV'+index">
+                  <span>{{getLargeV(largeV)}}</span>
+                  <span class="price">{{largeV[1]}}</span>
+                  <span class="volume">{{largeV[2]}}</span>
+                  <span :class="{red:(largeV[3]==='B'),green:(largeV[3]==='S')}">{{largeV[3]}}</span>
+                </li>
+              </ul>
+            </div>
           </div>
+          <div class="noVolume" v-if="showEchart">暂无大单概要数据</div>
         </div>
+
         <div class="group">
           <span :class="{lv1:show=='五档',noHL:show==!'五档'}" @click="showLv1">五档</span>
           <span :class="{details:true,detailHL:show=='详情'}" @click="showDetail">详情</span>
@@ -73,6 +101,9 @@
 </template>
 <script>
 import Minute from "./Minute.vue";
+var echarts = require('echarts/lib/echarts');
+require('echarts/lib/component/title');
+require('echarts/lib/chart/pie');
 export default {
   props: ["stock-info", "details", "large-volume"],
   name: "Trend",
@@ -87,6 +118,14 @@ export default {
     };
   },
   computed: {
+    showEchart: function () {
+      let buyVolume = this.largeVolume.summary.data.cje100.split(',')[4];
+      let sellVolume = this.largeVolume.summary.data.cje100.split(',')[5];
+      let middle = this.largeVolume.summary.data.cje100.split(',')[6];
+      if (buyVolume == 0 && sellVolume == 0 && middle == 0) {
+        return true;
+      }
+    },
   },
   // stockInfo{"PBrate :"0.85";PErate:"15.32";amplitude:"4.31%";boughtFive:"600";boughtFour:"38";boughtOne:"241"",}
   created() {
@@ -136,6 +175,11 @@ export default {
     }
   },
   methods: {
+    showlevelone: function () {
+      if (this.showLarge) {
+        this.show = '五档';
+      }
+    },
     getLargeV: function (l) {
       let H = l[0].split(':')[0];
       let M = l[0].split(':')[1];
@@ -152,6 +196,30 @@ export default {
     showLarge: function () {
       this.$emit("reload-large");
       this.show = '大单';
+      let buyVolume = this.largeVolume.summary.data.cje100.split(',')[4];
+      let sellVolume = this.largeVolume.summary.data.cje100.split(',')[5];
+      let middle = this.largeVolume.summary.data.cje100.split(',')[6];
+      // console.log(this.largeVolume);
+      var myChart = echarts.init(document.getElementById('main'));
+      var option = {
+        // xAxis: {},
+        // yAxis: {offset :50},
+        color: ['#eb4e27', '#54b835', '#bfbfc0'],
+        series: [{
+          name: '大单分布',
+          type: 'pie',
+          data: [buyVolume, sellVolume, middle],
+          label: {            position: 'inside', formatter: function (params) {
+              if (params.percent !== 0) {
+                return Math.round(params.percent) + '%';
+              }
+            }
+          },
+          startAngle: 5,
+        }]
+      };
+      // 使用刚指定的配置项和数据显示图表。
+      myChart.setOption(option);
     },
     // sellState:function(){
     //   console.log(this.stockInfo.newPrice);
@@ -173,7 +241,7 @@ export default {
     flex: 1;
   }
   .level1 {
-    width: 120px;
+    width: 130px;
     margin-left: 5px;
     .showFive {
       .sale {
@@ -183,7 +251,7 @@ export default {
         display: flex;
         align-items: center;
         margin: 0 5px 0 0;
-        height: 28px;
+        height: 26px;
         font-size: 12px;
         font-weight: bold;
         span {
@@ -203,9 +271,9 @@ export default {
       }
     }
     .detail {
-      height: 283px;
+      height: 260px;
       position: relative;
-      overflow:hidden;
+      overflow: hidden;
       p {
         display: flex;
         justify-content: center;
@@ -213,7 +281,7 @@ export default {
         position: absolute;
         top: 0;
         background-color: #fff;
-        width: 120px;
+        width: 130px;
         span {
           background-color: #dce5f0;
           line-height: 18px;
@@ -255,11 +323,40 @@ export default {
     .largeVolume {
       display: flex;
       flex-direction: column;
-      width: 120px;
-      height: 283px;
+      width: 130px;
+      height: 260px;
       overflow-y: scroll;
       .charts {
         flex: 1;
+      }
+      .chartDetail {
+        font-size: 12px;
+        .buy,
+        .sell,
+        .mid {
+          display: flex;
+          margin-right: 5px;
+          .first {
+            width: 10px;
+            height: 10px;
+            display: inline-block;
+            margin: 3px;
+          }
+          .middle {
+            width: 39px;
+            display: flex;
+            align-items: center;
+          }
+          span:last-child {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+          }
+        }
+        .remarks {
+          line-height: 30px;
+        }
       }
       .large {
         height: 50px;
@@ -269,6 +366,12 @@ export default {
           padding: 0;
         }
       }
+    }
+    .noVolume{
+      height: 260px;
+      line-height: 260px;
+      text-align: center;
+      font-size:14px;
     }
     .group {
       height: 20px;
