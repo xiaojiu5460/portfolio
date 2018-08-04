@@ -196,10 +196,14 @@ export default {
     showLarge: function () {
       this.$emit("reload-large");
       this.show = '大单';
-      let buyVolume = this.largeVolume.summary.data.cje100.split(',')[4];
-      let sellVolume = this.largeVolume.summary.data.cje100.split(',')[5];
-      let middle = this.largeVolume.summary.data.cje100.split(',')[6];
+      let [buyVolume, sellVolume, middle] = this.largeVolume.summary.data.cje100.split(',').slice(4, 7);
+      // let buyVolume = this.largeVolume.summary.data.cje100.split(',')[4];
+      // let sellVolume = this.largeVolume.summary.data.cje100.split(',')[5];
+      // let middle = this.largeVolume.summary.data.cje100.split(',')[6];
       // console.log(this.largeVolume);
+      if(buyVolume==0&&sellVolume==0&&middle==0){
+        return
+      }
       var myChart = echarts.init(document.getElementById('main'));
       var option = {
         // xAxis: {},
@@ -330,7 +334,7 @@ export default {
         flex: 1;
       }
       .chartDetail {
-        font-size: 12px;
+        font-size: 10px;
         .buy,
         .sell,
         .mid {
@@ -371,7 +375,7 @@ export default {
       height: 260px;
       line-height: 260px;
       text-align: center;
-      font-size:14px;
+      font-size:13px;
     }
     .group {
       height: 20px;

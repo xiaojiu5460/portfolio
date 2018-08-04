@@ -82,7 +82,7 @@
                             <span v-for="(belong,index) in brief.concept" :key="'belong'+index">{{belong.name}}(0.00%)</span>
                         </p>
                         <p class="icon">
-                            <span class="down"  v-show="active" @click="moreInformation">查看更多
+                            <span class="down" v-show="active" @click="moreInformation">查看更多
                                 <i class="iconfont icon-xiangxia"></i>
                             </span>
                             <span class="up" v-show="!active" @click="lessInformation">收起
@@ -163,7 +163,40 @@
                 <span>业绩趋势</span>
                 <span></span>
             </div>
-            <div></div>
+            <div class="yjqs">
+                <p class="trendtitle">
+                    <span :class="{yysr:show=='营业收入',yySR:show!=='营业收入'}" @click="yysrchart(brief.hytrend)">营业收入</span>
+                    <span :class="{jlr:true,JLR:show=='净利润'}" @click="jlrchart(brief.hytrend)">净利润</span>
+                    <span :class="{mgsy:true,MGSY:show=='每股收益'}" @click="mgsychart">每股收益</span>
+                </p>
+                <div v-show="show=='营业收入'">
+                    <p class="createvolume" v-for="(create,index) in brief.hytrend" :key="'create'+index">
+                        <span class="years">{{create.date}}年报</span>
+                        <span>{{create.yysr}}</span>
+                        <span class="create">同比增长</span>
+                        <span>{{create.t_yysr+'%'}}</span>
+                    </p>
+                </div>
+                <div v-show="show=='净利润'">
+                    <p class="jrlvolume" v-for="(jrl,index) in brief.hytrend" :key="'jrl'+index">
+                        <span class="years">{{jrl.date}}年报</span>
+                        <span>{{jrl.jlr}}</span>
+                        <span class="create">同比增长</span>
+                        <span>{{jrl.t_mgsy+'%'}}</span>
+                    </p>
+                </div>
+                <div v-show="show=='每股收益'">
+                    <p class="mgsyvolume" v-for="(mgsy,index) in brief.hytrend" :key="'mgsy'+index">
+                        <span class="years">{{mgsy.date}}年报</span>
+                        <span>{{mgsy.mgsy}}</span>
+                        <span class="create">同比增长</span>
+                        <span>{{mgsy.t_jlr+'%'}}</span>
+                    </p>
+                </div>
+            </div>
+            <div id="yysrchart" style="width:350px;height:160px;" v-show="show=='营业收入'"></div>
+            <div id="jlrchart" style="width:350px;height:160px;" v-show="show=='净利润'"></div>
+            <div id="mgsychart" style="width:350px;height:160px;" v-show="show=='每股收益'"></div>
         </div>
         <div class="holder">
             <div class="briefTitle">
@@ -272,23 +305,126 @@
     </div>
 </template>
 <script>
-
+var echarts = require('echarts/lib/echarts');
+require('echarts/lib/component/title');
+require('echarts/lib/chart/bar');
 export default {
-    data(){
-        return{
-            active:true,
+    data() {
+        return {
+            active: true,
+            show: '营业收入',
         }
     },
     props: ["brief", "zdf"],
     created() {
-        // console.log(this.zdf)
-    },   
-    methods:{
-        moreInformation:function(){
-            this.active=false;
+        // console.log(this.brief.hytrend)
+    },
+    methods: {
+        mgsychart: function () {
+            this.show = '每股收益';
         },
-        lessInformation:function(){
-            this.active=true;
+        jlrchart: function (j) {
+            this.show = '净利润';
+            let myChart = echarts.init(document.getElementById('jlrchart'));
+            let data = [];
+            // var yMax=data.sort()[3];
+            for (let index = 0; index < j.length; index++) {
+                const element = j[index];
+                // dataAxis.unshift(element.date);
+                if (element.jlr.slice(-2) == "亿元") {
+                    data.unshift(parseFloat(element.jlr))
+                } else if (element.jlr.slice(-2) == "万元") {
+                    data.unshift(parseFloat(element.jlr) / 10000)
+                }
+            }
+            // console.log(data)
+            let option = {
+                color: ['#a20707', '#05a21a'],
+                grid: {
+                    bottom: '50%',
+                    top: '3%',
+                },
+                xAxis: {
+                    data: ['2014', '2015', '2016', '2017'],
+                    axisLabel: { margin: 50, textStyle: { color: '#818182' } },
+                    axisTick: { show: false },
+                    axisLine: { lineStyle: { type: 'dashed', color: '#b9cce2', } },
+                },
+                yAxis: {
+                    axisLine: { show: false },
+                    axisTick: { show: false },
+                    splitLine: { show: false },
+                    axisLabel: { textStyle: { color: '#999' } },
+                    min: 0,
+                    minInterval: 50
+                },
+                series: [{
+                    name: '净利润',
+                    type: 'bar',
+                    barWidth: 30,
+                    barGap: '50%',
+                    itemStyle: {
+                        normal: { color: '#a20707', },
+                        emphasis: { color: '#dc0000', },
+                    },
+                    data: data
+                }]
+            };
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+            // console.log(JSON.stringify(option))
+        },
+        yysrchart: function (yysr) {
+            this.show = '营业收入';
+            let myChart = echarts.init(document.getElementById('yysrchart'));
+            // var dataAxis = []; //年度
+            let data = [];
+            // var yMax=data.sort()[3];
+            for (let index = 0; index < yysr.length; index++) {
+                const element = yysr[index];
+                // dataAxis.unshift(element.date);
+                data.unshift(parseFloat(element.yysr))
+            }
+            var option = {
+                grid: {
+                    bottom: '13%',
+                    top: '3%',
+                },
+                xAxis: {
+                    data: ['2014', '2015', '2016', '2017'],
+                    axisLabel: { textStyle: { color: '#818182' } },
+                    axisTick: { show: false },
+                    axisLine: { lineStyle: { type: 'dashed', color: '#b9cce2', } },
+                },
+                yAxis: {
+                    axisLine: { show: false },
+                    axisTick: { show: false },
+                    splitLine: { show: false },
+                    axisLabel: { textStyle: { color: '#999' } },
+                    min: 0,
+                    minInterval: 70
+                },
+                series: [{
+                    name: '营业收入',
+                    type: 'bar',
+                    barWidth: 30,
+                    barGap: '50%',
+                    itemStyle: {
+                        normal: { color: '#a20707', },
+                        emphasis: { color: '#dc0000', },
+                    },
+                    data: data
+                }]
+            };
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+            // console.log(JSON.stringify(option))
+        },
+        moreInformation: function () {
+            this.active = false;
+        },
+        lessInformation: function () {
+            this.active = true;
         }
     },
     computed: {
@@ -319,6 +455,59 @@ li {
     span:last-child {
       float: right;
       line-height: 20px;
+    }
+  }
+  .achievement {
+    .yjqs {
+      .trendtitle {
+        font-size: 13px;
+        width: 220px;
+        text-align: center;
+        display: flex;
+        margin: 12px 20%;
+        span {
+          flex: 1;
+          width: 33.3%;
+          border: #2e6bb1 solid 1px;
+          color: #2e6bb1;
+          line-height: 25px;
+          align-items: center;
+        }
+        .yysr,
+        .JLR,
+        .MGSY {
+          background-color: #2e6bb1;
+          color: #fff;
+          //   border-top-left-radius: 3px;
+          //   border-bottom-left-radius: 3px;
+          border-right: 0;
+        }
+        .yySR {
+          border-right: 0;
+        }
+        span:last-child {
+          //   border-top-right-radius: 3px;
+          //   border-bottom-right-radius: 3px;
+          border-left: 0;
+        }
+      }
+      .createvolume,
+      .jrlvolume,
+      .mgsyvolume {
+        font-size: 12px;
+        width: 278px;
+        text-align: center;
+        display: flex;
+        margin: 12px 15%;
+        span {
+          flex: 1;
+          width: 25%;
+        }
+        .years,
+        .create {
+          color: #a2a8ae;
+        }
+      }
     }
   }
   .addition {
@@ -357,7 +546,7 @@ li {
       .belong {
         height: 35px;
         overflow: hidden;
-        margin:0;
+        margin: 0;
         span {
           color: darkturquoise;
           padding-right: 50px;
@@ -365,7 +554,7 @@ li {
         }
       }
       .icon {
-          margin:3px 0;
+        margin: 3px 0;
         .down,
         .up {
           display: inline-block;

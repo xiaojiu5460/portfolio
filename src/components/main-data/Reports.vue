@@ -108,6 +108,7 @@ export default {
         margin: 0 5px;
         border-radius: 3px;
         padding: 1px 3px;
+        line-height: 14px;
       }
       .nothing {
         flex: 1;
