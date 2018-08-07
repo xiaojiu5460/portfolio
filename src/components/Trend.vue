@@ -20,7 +20,7 @@
       <div class="chart">
       </div>
       <div class="level1">
-        <div class="showFive" v-show="show=='五档'">
+        <div class="showFive" v-show="show=='五档'" @click="turnDetail">
           <div class="sale">
             <p v-for="(sell,index) in sellList" :key="'sell'+index">
               <span>{{sell[0]}}</span>
@@ -36,7 +36,7 @@
             </p>
           </div>
         </div>
-        <div class="detail" v-show="show=='详情'">
+        <div class="detail" v-show="show=='详情'" @click="turnLargeVolume">
           <p>
             <span>查看分价明细</span>
           </p>
@@ -49,11 +49,11 @@
             </li>
           </ul>
         </div>
-        <div v-show="show=='大单'">
-          <div class="largeVolume" v-if="!showEchart">
+        <div v-show="show=='大单'" @click="turnLevelone">
+          <div class="largeVolume" v-if="!noEchart">
             <div>
               <div class="charts">
-                <div id="main" style="width: 120px;height:100px;" @click="showlevelone"></div>
+                <div id="main" style="width: 120px;height:100px;"></div>
               </div>
               <div class="chartDetail">
                 <div class="buy">
@@ -87,7 +87,7 @@
               </ul>
             </div>
           </div>
-          <div class="noVolume" v-if="showEchart">暂无大单概要数据</div>
+          <div class="noVolume" v-if="noEchart">暂无大单概要数据</div>
         </div>
 
         <div class="group">
@@ -118,7 +118,7 @@ export default {
     };
   },
   computed: {
-    showEchart: function () {
+    noEchart: function () {
       let buyVolume = this.largeVolume.summary.data.cje100.split(',')[4];
       let sellVolume = this.largeVolume.summary.data.cje100.split(',')[5];
       let middle = this.largeVolume.summary.data.cje100.split(',')[6];
@@ -175,10 +175,14 @@ export default {
     }
   },
   methods: {
-    showlevelone: function () {
-      if (this.showLarge) {
-        this.show = '五档';
-      }
+    turnDetail: function () {
+      this.show = '详情';
+    },
+    turnLargeVolume: function () {
+      this.show = "大单";
+    },
+    turnLevelone: function () {
+      this.show = '五档';
     },
     getLargeV: function (l) {
       let H = l[0].split(':')[0];
@@ -201,7 +205,7 @@ export default {
       // let sellVolume = this.largeVolume.summary.data.cje100.split(',')[5];
       // let middle = this.largeVolume.summary.data.cje100.split(',')[6];
       // console.log(this.largeVolume);
-      if(buyVolume==0&&sellVolume==0&&middle==0){
+      if (buyVolume == 0 && sellVolume == 0 && middle == 0) {
         return
       }
       var myChart = echarts.init(document.getElementById('main'));
@@ -213,7 +217,9 @@ export default {
           name: '大单分布',
           type: 'pie',
           data: [buyVolume, sellVolume, middle],
-          label: {            position: 'inside', formatter: function (params) {
+          label: {
+            position: 'inside',
+            formatter: function (params) {
               if (params.percent !== 0) {
                 return Math.round(params.percent) + '%';
               }
@@ -247,7 +253,9 @@ export default {
   .level1 {
     width: 130px;
     margin-left: 5px;
+    height: 260px;
     .showFive {
+      height: 239px;
       .sale {
         border-bottom: solid 1px #d7e0ea;
       }
@@ -255,7 +263,7 @@ export default {
         display: flex;
         align-items: center;
         margin: 0 5px 0 0;
-        height: 26px;
+        height: 24px;
         font-size: 12px;
         font-weight: bold;
         span {
@@ -275,7 +283,7 @@ export default {
       }
     }
     .detail {
-      height: 260px;
+      height: 239px;
       position: relative;
       overflow: hidden;
       p {
@@ -327,8 +335,8 @@ export default {
     .largeVolume {
       display: flex;
       flex-direction: column;
+      height: 239px;
       width: 130px;
-      height: 260px;
       overflow-y: scroll;
       .charts {
         flex: 1;
@@ -371,11 +379,11 @@ export default {
         }
       }
     }
-    .noVolume{
-      height: 260px;
+    .noVolume {
+      height: 239px;
       line-height: 260px;
       text-align: center;
-      font-size:13px;
+      font-size: 13px;
     }
     .group {
       height: 20px;
@@ -398,7 +406,7 @@ export default {
   }
 }
 .trend div {
-  border-bottom: 1px solid #f1f2f5;
+  // border-bottom: 1px solid #f1f2f5;
   .timeView {
     display: flex;
     align-items: center;

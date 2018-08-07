@@ -133,6 +133,12 @@ export default {
         // console.log(res[0]);
         that.briefingVolume = res[0];
         that.briefZdf = res[1];
+        if(that.briefZdf.zdf>0){
+          that.briefZdf.color='red';
+        }else{
+          that.briefZdf.color='green';
+        }
+        // console.log(that.briefZdf);
       },
         // function (res) {
         //   console.log(res)

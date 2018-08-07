@@ -51,90 +51,50 @@
             </div>
             <div>
                 <div class="belongTo">
-                    <div class="left">
-                        <p>
-                            <span>所属行业</span>
-                        </p>
-                        <p class="concept">
-                            <span>所属概念</span>
-                        </p>
-                        <p>
-                            <span>公司名称</span>
-                        </p>
-                        <p>
-                            <span>上市日期</span>
-                        </p>
-                        <p>
-                            <span>发行价格</span>
-                        </p>
-                        <p>
-                            <span>所属地区</span>
-                        </p>
-                        <p>
-                            <span>主营业务</span>
-                        </p>
-                    </div>
-                    <div class="right">
-                        <p>
-                            <span v-if="zdf">{{zdf.name}}{{'('+plateZdf+')'}}</span>
-                        </p>
-                        <p class="belong">
-                            <span v-for="(belong,index) in brief.concept" :key="'belong'+index">{{belong.name}}(0.00%)</span>
-                        </p>
-                        <p class="icon">
-                            <span class="down" v-show="active" @click="moreInformation">查看更多
-                                <i class="iconfont icon-xiangxia"></i>
-                            </span>
-                            <span class="up" v-show="!active" @click="lessInformation">收起
-                                <i class="iconfont icon-xiangshang"></i>
-                            </span>
-                        </p>
-                        <p>
-                            <span>{{brief.gsjj.gsmz}}</span>
-                        </p>
-                        <p>
-                            <span>{{brief.gsjj.riqi}}</span>
-                        </p>
-                        <p>
-                            <span>{{brief.gsjj.jg}}</span>
-                        </p>
-                        <p>
-                            <span>{{brief.gsjj.dy}}</span>
-                        </p>
-                        <p>
-                            <span>{{brief.gsjj.yw}}</span>
-                        </p>
-                    </div>
-                    <!-- <div>
-                        <span>所属行业</span>
-                        <span v-if="zdf">{{zdf.name}}{{'('+plateZdf+')'}}</span>
-                    </div>
                     <div class="own">
-                        <div>
-                            <span>所属概念</span>
-                            <span v-for="(belong,index) in brief.concept" :key="'belong'+index">{{belong.name}}(0.00%)</span>
+                        <div class="belong">所属行业</div>
+                        <div v-if="zdf">
+                            <span class="belongName">{{zdf.name}}</span>
+                            <span v-bind:class="[zdf.color]">{{'('+plateZdf+')'}}</span>
                         </div>
                     </div>
-                    <div>
-                        <span>公司名称</span>
-                        <span>{{brief.gsjj.gsmz}}</span>
+                    <div class="own">
+                        <div class="belong">所属概念</div>
+                        <div class="concept">
+                            <div :class="{msg:true,msgAuto:msgAuto}">
+                                <div class="message" v-for="(belong,index) in brief.concept" :key="'belong'+index">
+                                    <span class="belongName">{{belong.name}}</span>(0.00%)</div>
+                            </div>
+                            <div class="icon" v-show="showIcon(brief.concept)">
+                                <span class="down" v-show="!msgAuto" @click="moreInformation(brief.concept)">查看更多
+                                    <i class="iconfont icon-xiangxia"></i>
+                                </span>
+                                <span class="up" v-show="msgAuto" @click="lessInformation">收起
+                                    <i class="iconfont icon-xiangshang"></i>
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <span>上市日期</span>
-                        <span>{{brief.gsjj.riqi}}</span>
+                    <div class="own">
+                        <div class="belong">公司名称</div>
+                        <div>{{brief.gsjj.gsmz}}</div>
                     </div>
-                    <div>
-                        <span>发行价格</span>
-                        <span>{{brief.gsjj.jg}}</span>
+                    <div class="own">
+                        <div class="belong">上市日期</div>
+                        <div>{{brief.gsjj.riqi}}</div>
                     </div>
-                    <div>
-                        <span>所属地区</span>
-                        <span>{{brief.gsjj.dy}}</span>
+                    <div class="own">
+                        <div class="belong">发行价格</div>
+                        <div>{{brief.gsjj.jg}}</div>
                     </div>
-                    <div>
-                        <span>主营业务</span>
-                        <span>{{brief.gsjj.yw}}</span>
-                    </div> -->
+                    <div class="own">
+                        <div class="belong">所属地区</div>
+                        <div>{{brief.gsjj.dy}}</div>
+                    </div>
+                    <div class="own">
+                        <div class="belong">主营业务</div>
+                        <div>{{brief.gsjj.yw}}</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -165,9 +125,9 @@
             </div>
             <div class="yjqs">
                 <p class="trendtitle">
-                    <span :class="{yysr:show=='营业收入',yySR:show!=='营业收入'}" @click="yysrchart(brief.hytrend)">营业收入</span>
-                    <span :class="{jlr:true,JLR:show=='净利润'}" @click="jlrchart(brief.hytrend)">净利润</span>
-                    <span :class="{mgsy:true,MGSY:show=='每股收益'}" @click="mgsychart">每股收益</span>
+                    <span :class="{yysr:show=='营业收入',yySR:show!=='营业收入'}" @click="yysrChart">营业收入</span>
+                    <span :class="{jlr:true,JLR:show=='净利润'}" @click="jlrChart">净利润</span>
+                    <span :class="{mgsy:true,MGSY:show=='每股收益'}" @click="mgsyChart">每股收益</span>
                 </p>
                 <div v-show="show=='营业收入'">
                     <p class="createvolume" v-for="(create,index) in brief.hytrend" :key="'create'+index">
@@ -194,9 +154,9 @@
                     </p>
                 </div>
             </div>
-            <div id="yysrchart" style="width:350px;height:160px;" v-show="show=='营业收入'"></div>
-            <div id="jlrchart" style="width:350px;height:160px;" v-show="show=='净利润'"></div>
-            <div id="mgsychart" style="width:350px;height:160px;" v-show="show=='每股收益'"></div>
+            <div id="yysrChart" style="width:350px;height:160px;" v-show="show=='营业收入'"></div>
+            <div id="jlrChart" style="width:350px;height:160px;" v-show="show=='净利润'"></div>
+            <div id="mgsyChart" style="width:350px;height:160px;" v-show="show=='每股收益'"></div>
         </div>
         <div class="holder">
             <div class="briefTitle">
@@ -305,45 +265,44 @@
     </div>
 </template>
 <script>
-var echarts = require('echarts/lib/echarts');
+let echarts = require('echarts/lib/echarts');
 require('echarts/lib/component/title');
 require('echarts/lib/chart/bar');
 export default {
     data() {
         return {
-            active: true,
             show: '营业收入',
+            msgAuto: false,
         }
     },
     props: ["brief", "zdf"],
     created() {
         // console.log(this.brief.hytrend)
     },
+    mounted() {
+        this.echart('营业收入');
+    },
     methods: {
-        mgsychart: function () {
+        mgsyChart: function () {
             this.show = '每股收益';
+            this.echart('每股收益');
         },
-        jlrchart: function (j) {
+        jlrChart: function () {
             this.show = '净利润';
-            let myChart = echarts.init(document.getElementById('jlrchart'));
+            this.echart('净利润');
+            // let that = this;
+        },
+        yysrChart: function () {
+            this.show = '营业收入';
+            this.echart('营业收入');
+        },
+        echart: function (type) {
+            let that = this;
+            let myYysrChart = echarts.init(document.getElementById('yysrChart'));
+            let myJlrChart = echarts.init(document.getElementById('jlrChart'));
+            let myMgsyChart = echarts.init(document.getElementById('mgsyChart'));
             let data = [];
-            // var yMax=data.sort()[3];
-            for (let index = 0; index < j.length; index++) {
-                const element = j[index];
-                // dataAxis.unshift(element.date);
-                if (element.jlr.slice(-2) == "亿元") {
-                    data.unshift(parseFloat(element.jlr))
-                } else if (element.jlr.slice(-2) == "万元") {
-                    data.unshift(parseFloat(element.jlr) / 10000)
-                }
-            }
-            // console.log(data)
             let option = {
-                color: ['#a20707', '#05a21a'],
-                grid: {
-                    bottom: '50%',
-                    top: '3%',
-                },
                 xAxis: {
                     data: ['2014', '2015', '2016', '2017'],
                     axisLabel: { margin: 50, textStyle: { color: '#818182' } },
@@ -354,78 +313,158 @@ export default {
                     axisLine: { show: false },
                     axisTick: { show: false },
                     splitLine: { show: false },
+                    min: min,
                     axisLabel: { textStyle: { color: '#999' } },
-                    min: 0,
-                    minInterval: 50
+                    minInterval: Math.max(...data.map(v => Math.abs(v))),
                 },
-                series: [{
-                    name: '净利润',
-                    type: 'bar',
-                    barWidth: 30,
-                    barGap: '50%',
-                    itemStyle: {
-                        normal: { color: '#a20707', },
-                        emphasis: { color: '#dc0000', },
-                    },
-                    data: data
-                }]
-            };
-            // 使用刚指定的配置项和数据显示图表。
-            myChart.setOption(option);
-            // console.log(JSON.stringify(option))
-        },
-        yysrchart: function (yysr) {
-            this.show = '营业收入';
-            let myChart = echarts.init(document.getElementById('yysrchart'));
-            // var dataAxis = []; //年度
-            let data = [];
-            // var yMax=data.sort()[3];
-            for (let index = 0; index < yysr.length; index++) {
-                const element = yysr[index];
-                // dataAxis.unshift(element.date);
-                data.unshift(parseFloat(element.yysr))
             }
-            var option = {
-                grid: {
-                    bottom: '13%',
-                    top: '3%',
-                },
-                xAxis: {
-                    data: ['2014', '2015', '2016', '2017'],
-                    axisLabel: { textStyle: { color: '#818182' } },
-                    axisTick: { show: false },
-                    axisLine: { lineStyle: { type: 'dashed', color: '#b9cce2', } },
-                },
-                yAxis: {
-                    axisLine: { show: false },
-                    axisTick: { show: false },
-                    splitLine: { show: false },
-                    axisLabel: { textStyle: { color: '#999' } },
-                    min: 0,
-                    minInterval: 70
-                },
-                series: [{
-                    name: '营业收入',
-                    type: 'bar',
-                    barWidth: 30,
-                    barGap: '50%',
-                    itemStyle: {
-                        normal: { color: '#a20707', },
-                        emphasis: { color: '#dc0000', },
+            console.log(data)
+            //刻度起点
+            let min = function () {
+                if (Math.min.apply(null, data) >= 0) {
+                    return 0
+                } else {
+                    return Math.min.apply(null, data).toFixed(2)
+                }
+            }
+            //数组data映射对象数组 过程增加属性
+
+            if (type == '营业收入') {
+                // console.log(that.brief.hytrend)
+                for (let index = 0; index < that.brief.hytrend.length; index++) {
+                    const element = that.brief.hytrend[index];
+                    data.unshift(parseFloat(element.yysr))
+                }
+                myYysrChart.clear();
+                option = {
+                    grid: {
+                        bottom: '13%',
+                        top: '3%',
+                        left: '13%',
                     },
-                    data: data
-                }]
-            };
-            // 使用刚指定的配置项和数据显示图表。
-            myChart.setOption(option);
-            // console.log(JSON.stringify(option))
+                    xAxis: option.xAxis,
+                    yAxis: option.yAxis,
+                    series: [{
+                        name: '营业收入',
+                        type: 'bar',
+                        barWidth: 30,
+                        barGap: '50%',
+                        itemStyle: {
+                            normal: { color: '#a20707', },
+                            emphasis: { color: '#dc0000', },
+                        },
+                        data: data
+                    }]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myYysrChart.setOption(option);
+            } else if (type == '净利润') {
+                for (let index = 0; index < that.brief.hytrend.length; index++) {
+                    const element = that.brief.hytrend[index];
+                    // dataAxis.unshift(element.date);
+                    if (element.jlr.slice(-2) == "亿元") {
+                        data.unshift(parseFloat(element.jlr))
+                    } else if (element.jlr.slice(-2) == "万元") {
+                        data.unshift(parseFloat(element.jlr) / 10000)
+                    }
+                }
+                let d = data.map(function (value) {
+                    let item = {
+                        value: value,
+                        itemStyle: {
+                            color: ''
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                color: ''
+                            }
+                        }
+                    }
+                    if (value > 0) {
+                        item.itemStyle.color = '#a20707'
+                        item.emphasis.itemStyle.color = '#dc0000'
+                    } else {
+                        item.itemStyle.color = 'green'
+                        item.emphasis.itemStyle.color = 'green'
+                    }
+                    return item;
+                })
+                myJlrChart.clear();
+                option = {
+                    grid: {
+                        bottom: '40%',
+                        top: '3%',
+                        left: '15%',
+                    },
+                    xAxis: option.xAxis,
+                    yAxis: option.yAxis,
+                    series: [{
+                        name: '净利润',
+                        type: 'bar',
+                        barWidth: 30,
+                        barGap: '50%',
+                        data: d,
+                    }]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myJlrChart.setOption(option);
+            } else {
+                for (let index = 0; index < that.brief.hytrend.length; index++) {
+                    const element = that.brief.hytrend[index];
+                    data.unshift(parseFloat(element.mgsy))
+                }
+                let d = data.map(function (value) {
+                    let item = {
+                        value: value,
+                        itemStyle: {
+                            color: ''
+                        },
+                        emphasis: {
+                            itemStyle: {
+                                color: ''
+                            }
+                        }
+                    }
+                    if (value > 0) {
+                        item.itemStyle.color = '#a20707'
+                        item.emphasis.itemStyle.color = '#dc0000'
+                    } else {
+                        item.itemStyle.color = 'green'
+                        item.emphasis.itemStyle.color = 'green'
+                    }
+                    return item;
+                })
+                myMgsyChart.clear();
+                option = {
+                    grid: {
+                        bottom: '40%',
+                        top: '3%',
+                    },
+                    xAxis: option.xAxis,
+                    yAxis: option.yAxis,
+                    series: [{
+                        name: '净利润',
+                        type: 'bar',
+                        barWidth: 30,
+                        barGap: '50%',
+                        data: d
+                    }]
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myMgsyChart.setOption(option);
+            }
         },
         moreInformation: function () {
-            this.active = false;
+            this.msgAuto = true;
         },
         lessInformation: function () {
-            this.active = true;
-        }
+            this.msgAuto = false;
+        },
+        showIcon: function (concept) {
+            if (concept.length > 2) {
+                return true;
+            }
+        },
     },
     computed: {
         plateZdf: function () {
@@ -535,30 +574,35 @@ li {
     margin: 5px 12px;
     font-size: 12px;
     display: flex;
-    .left {
-      width: 65px;
-      .concept {
-        padding-bottom: 43px;
-      }
-    }
-    .right {
-      flex: 1;
+    flex-direction: column;
+    line-height: 20px;
+    .own {
+      display: flex;
       .belong {
-        height: 35px;
-        overflow: hidden;
-        margin: 0;
-        span {
-          color: darkturquoise;
-          padding-right: 50px;
-          line-height: 18px;
-        }
+        width: 60px;
       }
-      .icon {
-        margin: 3px 0;
-        .down,
-        .up {
+      .belongName {
+        color: #10c8cacf;
+      }
+      .red {
+        color: #e6311d;
+      }
+      .green {
+        color: #0b9c11;
+      }
+      div:last-child {
+        flex: 1;
+      }
+      .msg {
+        height: 40px;
+        overflow: hidden;
+        .message {
+          width: 50%;
           display: inline-block;
-          color: #094775;
+          line-height: 20px;
+        }
+        &.msgAuto {
+          height: auto;
         }
       }
     }

@@ -24,6 +24,7 @@ export default {
 </script>
 <style scoped lang="scss">
 .minute {
+  z-index: 1;
   .weui {
     position: fixed;
     top: 0;
