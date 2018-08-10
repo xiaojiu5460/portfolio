@@ -94,9 +94,31 @@ export default {
         l.hydbHyMin = res.body.data.hydb.hymin;
         l.hydbHyMin = res.body.data.hydb.hymin;
         l.hytrend = res.body.data.hytrend;
-        // this.briefingVolume = l;
-        // this.briefingVolume = Object.assign({}, res.body.data);
-        // console.log(res.body.data);
+        for (let index = 0; index < l.hytrend.length; index++) {
+          const e = l.hytrend[index];
+          if(e.t_yysr>0){
+            l.hytrend[index].yysrColor="red"
+          }else if(e.t_yysr<0){
+            l.hytrend[index].yysrColor="green"
+          }else{
+            l.hytrend[index].yysrColor="grey"
+          }
+          if(e.t_jlr>0){
+            l.hytrend[index].jlrColor="red"
+          }else if(e.t_jlr<0){
+            l.hytrend[index].jlrColor="green"
+          }else{
+            l.hytrend[index].jlrColor="grey"
+          }
+          if(e.t_mgsy>0){
+            l.hytrend[index].mgsyColor="red"
+          }else if(e.t_mgsy<0){
+            l.hytrend[index].mgsyColor="green"
+          }else{
+            l.hytrend[index].mgsyColor="grey"
+          }
+        }
+        // console.log(l)
         return l;
       })
     },
@@ -158,6 +180,7 @@ li {
     margin: 0 16px 0 12px;
     width: 95%;
     background-color: #fff;
+    z-index: 1;
     ul {
       display: flex;
       align-items: center;
@@ -193,6 +216,7 @@ li {
 .titlefix {
   margin-top: 30px;
   .title {
+    z-index: 1;
     position: fixed;
     top: 45px;
     border-bottom: 1px solid #f1f2f5;
