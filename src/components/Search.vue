@@ -21,7 +21,7 @@
         </div>
         <div :class="{result:true,resultAuto:auto}">
           <ul>
-            <li v-for="(search,index) in searchData" :key="'search'+index">
+            <li v-for="(search,index) in searchData" :key="'search'+index" @click="goDetail(search)">
               <div class="searchList">
                 <div class="left">
                   <p>{{search[2]}}</p>
@@ -36,7 +36,7 @@
             </li>
           </ul>
         </div>
-        <div class="expand" @click="showAllresult" v-show="searchData.length>5">
+        <div class="expand" @click="showAllresult" v-show="searchData.length>5||!auto">
           <span class="down">展开更多股票
             <i class="iconfont icon-xiangxia"></i>
           </span>
@@ -53,7 +53,7 @@
           <span class="title">热搜榜</span>
         </div>
         <div class="hotStock">
-          <div class="stock" v-for="(hot,index) in hotStock" :key="'hot'+index">
+          <div class="stock" v-for="(hot,index) in hotStock" :key="'hot'+index" @click="getCode(hot)">
             <p>{{hot[1]}}</p>
             <p>{{hot[0].slice(2)}}.{{hot[0].slice(0,2).toUpperCase()}}</p>
           </div>
@@ -62,19 +62,34 @@
       <div>
         <div class="history">
           <span class="title">股票查询记录</span>
-          <span class="icon">
+          <span class="icon" @click="deleteList">
             <i class="iconfont icon-shanchu"></i>
           </span>
         </div>
-        <div class="historyList">
+        <div class="historyList" v-for="(history,index) in historyList" :key="'history'+index" v-if="historyList">
           <div class="left">
-            <p>*ST船舶</p>
-            <p>600150.SH</p>
+            <p>{{history.name}}</p>
+            <p>{{history.code}}.{{history.market.toUpperCase()}}</p>
           </div>
           <div class="right">
             <span>
               <i class="iconfont icon-tianjia"></i>
             </span>
+          </div>
+        </div>
+        <!--  -->
+        <div class="iosDialog" v-show="deleteClick">
+          <div class="weui-mask"></div>
+          <div class="weui-dialog">
+            <div class="weui-dialog_bd">删除搜索历史记录？</div>
+            <div class="weui-dialog_ft">
+              <div @click="uncertain">
+                <a>取消</a>
+              </div>
+              <div @click="determine">
+                <a>确定</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -84,17 +99,21 @@
 <script>
 
 export default {
+  name: "Search",
   data() {
     return {
       auto: false,
       inputNumber: null,
       searchData: [],
+      historyList: null,
       isShow: false,
       left: false,
       hotStock: null,
+      deleteClick: false,
     }
   },
   created() {
+    this.getHistoryList();
     let url = `http://proxy.finance.qq.com/ifzqgtimg/appstock/app/HotStock/getHotStock`;
     this.$http.get(url).then(function (res) {
       this.hotStock = res.data.data;
@@ -109,6 +128,33 @@ export default {
     },
   },
   methods: {
+    goDetail(stock) {
+      this.$router.push({
+        path: "detail",
+        query: { code: stock[0] + stock[1] },
+      });
+      //根据点击的li获取stock相关信息
+      this.getHistoryList();
+      let l = {
+        name: stock[2],
+        code: stock[1],
+        market: stock[0],
+      };
+      //localData是原有value(有值或没有),在原有value基础上push新value并set,保证初始时historylist能读到
+      let localData=JSON.parse(localStorage.getItem("history"))||[];
+      localData.push(l)
+      localStorage.setItem("history", JSON.stringify(localData))
+    },
+    getHistoryList() {
+      //初始读localStorage存储value
+      this.historyList = JSON.parse(localStorage.getItem("history"));
+    },
+    getCode(stock) {
+      this.$router.push({
+        path: "detail",
+        query: { code: stock[0] },
+      });
+    },
     getSearchData() {
       if (this.inputNumber == null) {
         return;
@@ -142,6 +188,19 @@ export default {
       this.$router.push({
         path: '/'
       })
+    },
+    deleteList() {
+      if (this.historyList) {
+        this.deleteClick = true;
+      }
+    },
+    uncertain() {
+      this.deleteClick = false;
+    },
+    determine() {
+      this.historyList = [];
+      localStorage.clear();
+      this.deleteClick = false;
     },
   },
 }
@@ -343,6 +402,59 @@ export default {
   left: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0);
+}
+.weui-mask {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+.weui-dialog {
+  position: fixed;
+  z-index: 5000;
+  width: 70%;
+  max-width: 300px;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  text-align: center;
+  border-radius: 10px;
+  overflow: hidden;
+  .weui-dialog_bd {
+    min-height: 40px;
+    font-size: 16px;
+    word-wrap: break-word;
+    word-break: break-all;
+    color: #808080;
+    height: 70px;
+    line-height: 70px;
+    border-bottom: 1px solid #d9d9d9;
+  }
+  .weui-dialog_ft {
+    position: relative;
+    font-size: 14px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    height: 40px;
+    > div {
+      flex: 1;
+      color: #6db5fd;
+      &:last-child {
+        border-left: 1px solid #d9d9d9;
+      }
+    }
+    a {
+      display: block;
+      line-height: 40px;
+      letter-spacing: 2px;
+    }
+  }
 }
 </style>
 
