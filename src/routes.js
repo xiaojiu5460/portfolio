@@ -1,6 +1,6 @@
 import Home from './pages/Home.vue'
 import NewsDetail from './components/main-data/NewsDetail.vue'
-// import GroupManage from './components/GroupManage.vue'
+import GroupManage from './components/GroupManage.vue'
 import StockDetail from './pages/StockDetail.vue'
 import Search from './components/Search.vue'
 
@@ -23,6 +23,11 @@ const routes = [{
         path: '/detail',
         name: 'StockDetail',
         component: StockDetail
+    },
+    {
+        path: '/GroupManage',
+        name: 'GroupManage',
+        component: GroupManage
     },
 ];
 export default routes;

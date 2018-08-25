@@ -3,7 +3,7 @@
     <div  class="weui" v-show="isShow" @click="hideGroup"></div>
     <div :class="{skins:true,black:blackSkin}" v-show="isShow"><span :class="{up:true,blackUp:blackSkin}"></span>
       <ul>
-        <li><i class="iconfont icon-fenzu"></i><span>分组管理</span></li>
+        <li @click="gotoGroupDetail"><i class="iconfont icon-fenzu"></i><span>分组管理</span></li>
         <li v-show="!showSkin" @click="blackColor"><i class="iconfont icon-iconset0454"></i><span>黑色皮肤</span></li>
         <li v-show="showSkin" @click="whiteColor"><i class="iconfont icon-taiyang-copy"></i><span>蓝白皮肤</span></li>
       </ul>
@@ -31,6 +31,11 @@ export default {
     }
   },
   methods: {
+    gotoGroupDetail(){
+      this.$router.push({
+        path: '/GroupManage'
+      })
+    },
     blackColor: function() {
       this.blackSkin = true;
       EventBus.$emit("changeSkin", "black");

@@ -1,8 +1,8 @@
 <template>
-  <div :class="{black:blackColor, home:true}">    
+  <div :class="{black:blackColor, home:true}">
     <Header></Header>
     <Navigation></Navigation>
-    <StockList :stocks-list="stocksList" v-on:child-mes="updateList"></StockList>  
+    <StockList :stocks-list="stocksList" v-on:child-mes="updateList"></StockList>
   </div>
 </template>
 
@@ -12,7 +12,8 @@ import Header from "../components/Header.vue";
 import Navigation from "../components/Navigation.vue";
 import StockList from "../components/StockList.vue";
 import { EventBus } from "../utils/EventBus.js";
-    // <router-link to="/xxx">Go to xxx</router-link>
+import { getAllGroupInfo, setStockLs, getStocksByGroup } from "../utils/ls.js";
+// <router-link to="/xxx">Go to xxx</router-link>
 export default {
   name: "Home",
   components: {
@@ -22,34 +23,26 @@ export default {
   },
   data() {
     return {
-      stocksList: [
-        "sh000001",
-        "sz300001",
-        "sh600180",
-        "sz000729",
-        "sz000001",
-        "sz300540",
-        "sh600150",
-        "sz002053",
-        "sh603099",
-        "sz002076",
-        "sh603136",
-        "sh601015",
-        "sz300230",
-        "sh601900",
-        "sz000636"
-      ],
+      stocksList: null,
       blackColor: false
     };
   },
-  created: function() {
+  created: function () {
+    // 先getitem 是否为空 否则给默认值set
+    //1. local为空，stocklist=默认给的code列表
+    //2. local不为空时，stocklist=local里的code列表
+    getAllGroupInfo();
+    this.stocksList = getStocksByGroup('全部').code;
+    setStockLs();
     let that = this;
-    EventBus.$on("changeSkin", function(data) {
+    EventBus.$on("newStockList", function (group) {
+        that.stocksList = getStocksByGroup(group).code;
+    })
+    EventBus.$on("changeSkin", function (data) {
       switch (data) {
         case "black":
           that.blackColor = true;
           break;
-
         case "white":
           that.blackColor = false;
           break;
@@ -57,11 +50,11 @@ export default {
     });
   },
   methods: {
-    updateList: function(data) {
+    updateList: function (data) {
       // console.log(data)
       //把勾选的股票删除
       var newList = [];
-      var newData = data.map(function(item) {
+      var newData = data.map(function (item) {
         return item.code2;
       });
       //遍历list里和mes不同的加到新数组

@@ -94,7 +94,7 @@ export default {
     },
     previous: function () {
       this.$router.push({
-        path: '/'
+        path: history.back()
       })
     }
   }

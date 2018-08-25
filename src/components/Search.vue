@@ -21,13 +21,13 @@
         </div>
         <div :class="{result:true,resultAuto:auto}">
           <ul>
-            <li v-for="(search,index) in searchData" :key="'search'+index" @click="goDetail(search)">
+            <li v-for="(search,index) in searchData" :key="'search'+index">
               <div class="searchList">
-                <div class="left">
+                <div class="left" @click="goDetail(search)">
                   <p>{{search[2]}}</p>
                   <p>{{search[1]}}.{{search[0].toUpperCase()}}</p>
                 </div>
-                <div class="right">
+                <div class="right" @click="showDialog(search)">
                   <span>
                     <i class="iconfont icon-tianjia"></i>
                   </span>
@@ -36,7 +36,36 @@
             </li>
           </ul>
         </div>
-        <div class="expand" @click="showAllresult" v-show="searchData.length>5||!auto">
+        <div class="iosDialog" v-show="showWeui">
+          <div class="weui-mask"></div>
+          <div class="weui-dialog">
+            <div class="setting">设置分组</div>
+            <div class="setting_all">
+              <div>
+                <span>
+                  <i class="iconfont icon-gouxuan"></i>
+                </span>全部
+              </div>
+            </div>
+            <div class="setting_other" v-for="(group,index) in groups" :key="'group'+index" v-if="groups" @click="switchState(group)">
+              <div :class="{black:!group.state,blue:group.state}">
+                <span>
+                  <i class="iconfont" :class="{'icon-weigouxuan':!group.state,'icon-gouxuan':group.state}"></i>
+                </span>
+                <span>{{group.group}}</span>
+              </div>
+            </div>
+            <div class="setting_ft">
+              <div @click="turnBack">
+                <a>取消</a>
+              </div>
+              <div @click="addSearchCode">
+                <a>确定</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="expand" @click="showAllresult" v-show="searchData.length>5&&!auto">
           <span class="down">展开更多股票
             <i class="iconfont icon-xiangxia"></i>
           </span>
@@ -69,15 +98,41 @@
         <div class="historyList" v-for="(history,index) in historyList" :key="'history'+index" v-if="historyList">
           <div class="left">
             <p>{{history.name}}</p>
-            <p>{{history.code}}.{{history.market.toUpperCase()}}</p>
+            <p>{{history.code.slice(2)}}.{{history.code.slice(0,2).toUpperCase()}}</p>
           </div>
-          <div class="right">
+          <div class="right" @click="showdialog(history)">
             <span>
               <i class="iconfont icon-tianjia"></i>
             </span>
           </div>
         </div>
-        <!--  -->
+        <div class="iosDialog" v-show="showWeui">
+          <div class="weui-mask"></div>
+          <div class="weui-dialog">
+            <div class="setting">设置分组</div>
+            <div class="setting_all">
+              <span>
+                <i class="iconfont icon-gouxuan"></i>
+              </span>全部
+            </div>
+            <div class="setting_other" v-for="(g,index) in groups" :key="'g'+index" v-if="groups" @click="switchState(g)">
+              <div :class="{black:!g.state,blue:g.state}">
+                <span>
+                  <i class="iconfont" :class="{'icon-weigouxuan':!g.state,'icon-gouxuan':g.state}"></i>
+                </span>
+                <span>{{g.group}}</span>
+              </div>
+            </div>
+            <div class="setting_ft">
+              <div @click="turnBack">
+                <a>取消</a>
+              </div>
+              <div @click="addHistoryCode">
+                <a>确定</a>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="iosDialog" v-show="deleteClick">
           <div class="weui-mask"></div>
           <div class="weui-dialog">
@@ -97,11 +152,12 @@
   </div>
 </template>
 <script>
-
+import { getAllGroupInfo, searchAddtoLS, hisAddtoLs } from "../utils/ls.js";
 export default {
   name: "Search",
   data() {
     return {
+      showWeui: false,
       auto: false,
       inputNumber: null,
       searchData: [],
@@ -110,6 +166,10 @@ export default {
       left: false,
       hotStock: null,
       deleteClick: false,
+      search: null, //从搜索出来的拿到单个股票信息
+      history: null, //从历史记录列表拿到的单个股票信息
+      groups: null,
+      clickGroup: [], //模态框分组列表 被勾选的group
     }
   },
   created() {
@@ -128,6 +188,50 @@ export default {
     },
   },
   methods: {
+    switchState(group) {
+      this.clickGroup.push(group);
+      if (!group.state) {
+        group.state = true;
+      } else {
+        group.state = false;
+      }
+    },
+    turnBack() {
+      this.showWeui = false;
+    },
+    getGroups() {
+      let l = getAllGroupInfo().slice(1);
+      this.groups = l.map(function (item) {
+        let g = {
+          group: item.group,
+          code: item.code,
+        };
+        g.state = false;
+        return g;
+      })
+    },
+    showdialog(h) {
+      this.showWeui = true;
+      this.getGroups();
+      this.history = h;
+    },
+    addHistoryCode() {
+      hisAddtoLs(this.clickGroup, this.history);
+      if (this.showWeui) {
+        this.showWeui = false;
+      }
+    },
+    showDialog(s) {
+      this.showWeui = true;
+      this.search = s;
+      this.getGroups();
+    },
+    addSearchCode() {        //搜索栏拿到的股票信息添加到去自选股的localStorage里
+      searchAddtoLS(this.clickGroup, this.search)
+      if (this.showWeui) {
+        this.showWeui = false;
+      }
+    },
     goDetail(stock) {
       this.$router.push({
         path: "detail",
@@ -135,15 +239,29 @@ export default {
       });
       //根据点击的li获取stock相关信息
       this.getHistoryList();
+      let code = stock[0] + stock[1];
       let l = {
         name: stock[2],
-        code: stock[1],
-        market: stock[0],
+        code: stock[0] + stock[1],
       };
       //localData是原有value(有值或没有),在原有value基础上push新value并set,保证初始时historylist能读到
-      let localData=JSON.parse(localStorage.getItem("history"))||[];
-      localData.push(l)
-      localStorage.setItem("history", JSON.stringify(localData))
+      let localData = JSON.parse(localStorage.getItem("history")) || [];
+      // let isExist = false; //标记代码在不是localData里面
+      if (this.isExist(code, localData)) {
+        return
+      } else {
+        localData.push(l)
+        localStorage.setItem("history", JSON.stringify(localData))
+      }
+    },
+    isExist(code, ld) {
+      for (let i = 0; i < ld.length; i++) {
+        const e = ld[i];
+        if (code == e.code) {
+          return true;
+        }
+        return false;
+      }
     },
     getHistoryList() {
       //初始读localStorage存储value
@@ -161,13 +279,11 @@ export default {
       }
       let url = `http://proxy.finance.qq.com/ifzqgtimg/appstock/smartbox/search/get?q=${this.inputNumber}`;
       this.$http.get(url).then(function (res) {
-        this.searchData = res.body.data.stock;
+        this.searchData = (res.body.data.stock).filter(market => market[4] == "GP-A");
         // console.log(this.searchData);
       })
     },
     deleteNumber() { //删除输入框的数字或文字
-      // let d=(JSON.parse((this.inputNumber)));
-      // console.log(d)
       this.inputNumber = null;
     },
     showAllresult() {
@@ -258,7 +374,9 @@ export default {
     margin-right: 12px;
     align-items: center;
     display: flex;
-    color: #11a1f5;
+    span:first-child {
+      color: #11a1f5;
+    }
   }
 }
 .container {
@@ -446,6 +564,57 @@ export default {
       flex: 1;
       color: #6db5fd;
       &:last-child {
+        border-left: 1px solid #d9d9d9;
+      }
+    }
+    a {
+      display: block;
+      line-height: 40px;
+      letter-spacing: 2px;
+    }
+  }
+  .setting {
+    min-height: 40px;
+    font-size: 16px;
+    word-wrap: break-word;
+    word-break: break-all;
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid #d9d9d9;
+  }
+  .setting_all {
+    color: #b1b4b7;
+  }
+  .setting_all,
+  .setting_other {
+    border-bottom: 1px solid #d9d9d9;
+    text-align: left;
+    padding-left: 12px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 14px;
+    div {
+      span {
+        padding-right: 8px;
+      }
+    }
+    .blue,
+    .blue .icon-gouxuan {
+      color: #11a1f5;
+    }
+  }
+  .setting_ft {
+    position: relative;
+    font-size: 14px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    height: 40px;
+    > div {
+      flex: 1;
+      color: #86898b;
+      &:last-child {
+        color: #6db5fd;
         border-left: 1px solid #d9d9d9;
       }
     }

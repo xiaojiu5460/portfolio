@@ -1,31 +1,35 @@
 <template>
   <div :class="{group:true,black:blackColor}">
     <ul>
-      <li :class="{show:isActive,hide:hasError}">全部</li>
-      <li>沪深</li>
-      <li>港股</li>
-      <li>美股</li>
-      <li>场外基金</li>
-      <li>自定义</li>
+      <!-- <li :class="{showAll:groupInfo=='全部',hideAll:groupInfo!=='全部'}" @click="showAll">全部</li> -->
+      <li :class="{switchBlack:groupInfo==group,switchBlue:groupInfo !==group}" v-for="(group,index) in groups" :key="'group'+index" @click="switchColor(group)">{{group}}</li>
     </ul>
   </div>
 </template>
 
 <script>
 import { EventBus } from "../utils/EventBus.js";
+import { getLsGroup } from "../utils/ls.js";
 export default {
   name: "navigation",
   data() {
     return {
-      isActive: true,
-      hasError: false,
-      blackColor: false
+      groupInfo: '全部',
+      blackColor: false,
+      groups: null,
     };
   },
+  methods: {
+    switchColor(group) {
+      this.groupInfo = group;
+      EventBus.$emit("newStockList",group)
+    }
+  },
   props: {},
-  created: function() {
+  created() {
+    this.groups = getLsGroup();
     let that = this;
-    EventBus.$on("changeSkin", function(data) {
+    EventBus.$on("changeSkin", function (data) {
       switch (data) {
         case "black":
           that.blackColor = true;
@@ -45,11 +49,13 @@ export default {
   border-bottom: 1px solid #f1f2f5;
   height: 30px;
   background-color: #fff;
-  .show {
+  .showAll,
+  .switchBlack {
     color: #0078ff;
     border-bottom: 2px #0078ff solid;
   }
-  .hide {
+  .hideAll,
+  .switchBlue {
     border-bottom: 2px #fff solid;
   }
   ul {
