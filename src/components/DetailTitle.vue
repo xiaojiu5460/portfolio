@@ -93,9 +93,7 @@ export default {
       this.$emit("load");
     },
     previous: function () {
-      this.$router.push({
-        path: history.back()
-      })
+      history.back()
     }
   }
 };

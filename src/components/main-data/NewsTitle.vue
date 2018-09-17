@@ -18,9 +18,7 @@ export default {
   },
   methods: {
     previous: function () {
-      this.$router.push({
-        path: history.back(),
-      })
+      history.back()
     }
   },
 }

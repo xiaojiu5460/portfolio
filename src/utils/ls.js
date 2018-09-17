@@ -9,9 +9,18 @@ function getAllGroupInfo() {
     let groupsData;
     if (!groups) {
         groupsData = [{
-            group: '全部',
-            code: ['sh000001']
-        }];
+                group: '全部',
+                code: ['sh000001']
+            },
+            {
+                group: '沪市',
+                code: ['sh000001']
+            },
+            {
+                group: '深市',
+                code: ['sz000001']
+            },
+        ];
     } else {
         groupsData = JSON.parse(groups);
     }
@@ -65,52 +74,40 @@ function getLsGroup() {
     // console.log(groups)
 }
 
+//根据code获取所在分组
+function getGroupsByCode(code) {
+    let g = getAllGroupInfo();
+    let group = [];
+    for (let i = 0; i < g.length; i++) {
+        const e = g[i].code;
+        const element = g[i].group;
+        if (e.indexOf(code) != -1) {
+            group.push(element);
+        }
+    }
+    return group;
+}
+
 //添加单个股票到某个组
 function searchAddtoLS(group, s) {
     let l = getAllGroupInfo();
     let code = l[0].code;
-    if (code.indexOf(s[0] + s[1]) == -1) {
-        code.push(s[0] + s[1])
+    if (code.indexOf(s.code) == -1) {
+        code.push(s.code)
     }
     for (let i = 0; i < l.length; i++) {
         const e = l[i];
         if (group != []) {
             for (let j = 0; j < group.length; j++) {
                 const element = group[j];
-                if (e.group == element.group && l[i].code.indexOf(s[0] + s[1]) == -1) {
-                    l[i].code.push(s[0] + s[1])
+                if (e.group == element.group && l[i].code.indexOf(s.code) == -1) {
+                    l[i].code.push(s.code)
                 }
             }
         }
     }
     localStorage.setItem(groupDataKey, JSON.stringify(l))
 }
-
-// 历史列表添加单个股票到自选股
-function hisAddtoLs(group, h) {
-    let l = getAllGroupInfo();
-    let code = l[0].code;
-    if (code.indexOf(h.code) == -1) {
-        code.push(h.code)
-    }
-    for (let i = 0; i < l.length; i++) {
-        const e = l[i];
-        if (group != []) {
-            for (let j = 0; j < group.length; j++) {
-                const element = group[j];
-                if (e.group == element.group && l[i].code.indexOf(h.code) == -1) {
-                    l[i].code.push(h.code)
-                }
-            }
-        }
-    }
-    localStorage.setItem(groupDataKey, JSON.stringify(l))
-}
-
-// // 从所有分组里面删除一批股票
-// function deleteStockListFromAllGroups(stockList){
-
-// }
 
 // 从一个分组里面删除一批股票
 function deleteStocksFromGroup(group, codeList) {
@@ -147,11 +144,11 @@ export {
     deleteStocksFromGroup,
     deleteStockFromList,
     deleteGroupByName,
-    hisAddtoLs,
     searchAddtoLS,
     getAllGroupInfo,
     getStocksByGroup,
     setStockLs,
     addGroup,
-    getLsGroup
+    getLsGroup,
+    getGroupsByCode
 }

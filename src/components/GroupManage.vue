@@ -105,9 +105,7 @@ export default {
       }
     },
     previous: function () {
-      this.$router.push({
-        path: history.back()
-      })
+      history.back()
     },
     addNewGroup() {
       this.inputName = '';

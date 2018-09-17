@@ -19,13 +19,14 @@
         <div class="history">
           <span class="title">股票</span>
         </div>
-        <div :class="{result:true,resultAuto:auto}">
+        <div class="result">
           <ul>
             <li v-for="(search,index) in searchData" :key="'search'+index">
               <div class="searchList">
                 <div class="left" @click="goDetail(search)">
-                  <p>{{search[2]}}</p>
-                  <p>{{search[1]}}.{{search[0].toUpperCase()}}</p>
+                  <p>{{search.name}}</p>
+                  <p class="state" v-show="search.state">{{search.code.slice(2)}}.{{search.market.toUpperCase()}}</p>
+                  <p v-show="!search.state">已在'{{search.groups}}'中</p>
                 </div>
                 <div class="right" @click="showDialog(search)">
                   <span>
@@ -65,7 +66,7 @@
             </div>
           </div>
         </div>
-        <div class="expand" @click="showAllresult" v-show="searchData.length>5&&!auto">
+        <div class="expand" @click="showAllresult" v-show="showMore">
           <span class="down">展开更多股票
             <i class="iconfont icon-xiangxia"></i>
           </span>
@@ -96,9 +97,10 @@
           </span>
         </div>
         <div class="historyList" v-for="(history,index) in historyList" :key="'history'+index" v-if="historyList">
-          <div class="left">
+          <div class="left" @click="goDetail(history)">
             <p>{{history.name}}</p>
-            <p>{{history.code.slice(2)}}.{{history.code.slice(0,2).toUpperCase()}}</p>
+            <p class="state" v-show="history.state">{{history.code.slice(2)}}.{{history.code.slice(0,2).toUpperCase()}}</p>
+            <p v-show="!history.state">已在'{{history.groups}}'中</p>
           </div>
           <div class="right" @click="showdialog(history)">
             <span>
@@ -152,15 +154,15 @@
   </div>
 </template>
 <script>
-import { getAllGroupInfo, searchAddtoLS, hisAddtoLs } from "../utils/ls.js";
+import { getAllGroupInfo, searchAddtoLS, getGroupsByCode } from "../utils/ls.js";
 export default {
   name: "Search",
   data() {
     return {
       showWeui: false,
-      auto: false,
       inputNumber: null,
       searchData: [],
+      searchList: [],
       historyList: null,
       isShow: false,
       left: false,
@@ -170,6 +172,8 @@ export default {
       history: null, //从历史记录列表拿到的单个股票信息
       groups: null,
       clickGroup: [], //模态框分组列表 被勾选的group
+      showMore: false,
+      haveGroups: false,
     }
   },
   created() {
@@ -199,7 +203,7 @@ export default {
     turnBack() {
       this.showWeui = false;
     },
-    getGroups() {
+    getGroups(s) {
       let l = getAllGroupInfo().slice(1);
       this.groups = l.map(function (item) {
         let g = {
@@ -209,14 +213,23 @@ export default {
         g.state = false;
         return g;
       })
+      for (let i = 0; i < this.groups.length; i++) {
+        const element = this.groups[i].code;
+        if (element.indexOf(s.code) == -1) {
+          this.clickGroup = [];
+        } else {
+          element.state = true;
+        }
+      }
+      return this.groups;
     },
     showdialog(h) {
       this.showWeui = true;
-      this.getGroups();
       this.history = h;
+      this.getGroups(this.history);
     },
     addHistoryCode() {
-      hisAddtoLs(this.clickGroup, this.history);
+      searchAddtoLS(this.clickGroup, this.history);
       if (this.showWeui) {
         this.showWeui = false;
       }
@@ -224,7 +237,7 @@ export default {
     showDialog(s) {
       this.showWeui = true;
       this.search = s;
-      this.getGroups();
+      this.getGroups(this.search);
     },
     addSearchCode() {        //搜索栏拿到的股票信息添加到去自选股的localStorage里
       searchAddtoLS(this.clickGroup, this.search)
@@ -235,14 +248,16 @@ export default {
     goDetail(stock) {
       this.$router.push({
         path: "detail",
-        query: { code: stock[0] + stock[1] },
+        query: { code: stock.code },
       });
       //根据点击的li获取stock相关信息
       this.getHistoryList();
-      let code = stock[0] + stock[1];
+      let code = stock.code;
       let l = {
-        name: stock[2],
-        code: stock[0] + stock[1],
+        name: stock.name,
+        code: stock.code,
+        groups: getGroupsByCode(stock.code),
+        state: true,
       };
       //localData是原有value(有值或没有),在原有value基础上push新value并set,保证初始时historylist能读到
       let localData = JSON.parse(localStorage.getItem("history")) || [];
@@ -251,6 +266,14 @@ export default {
         return
       } else {
         localData.push(l)
+        for (let i = 0; i < localData.length; i++) {
+          const e = localData[i];
+          if (e.groups.length == 0) {
+            e.state = true;
+          } else {
+            e.state = false;
+          }
+        }
         localStorage.setItem("history", JSON.stringify(localData))
       }
     },
@@ -279,15 +302,39 @@ export default {
       }
       let url = `http://proxy.finance.qq.com/ifzqgtimg/appstock/smartbox/search/get?q=${this.inputNumber}`;
       this.$http.get(url).then(function (res) {
-        this.searchData = (res.body.data.stock).filter(market => market[4] == "GP-A");
-        // console.log(this.searchData);
+        this.searchList = (res.body.data.stock).filter(market => market[4] == "GP-A")
+          .map(v => {
+            return {
+              code: v[0] + v[1],
+              name: v[2],
+              groups: getGroupsByCode(v[0] + v[1]),
+              market: v[0],
+              state: true,
+            }
+          })
+        for (let i = 0; i < this.searchList.length; i++) {
+          const e = this.searchList[i];
+          if (e.groups.length == 0) {
+            e.state = true;
+          } else {
+            e.state = false;
+          }
+        }
+        this.searchData = this.searchList.slice(0, 5);
+        if (this.searchList.length > 5) {
+          this.showMore = true;
+        } else {
+          this.showMore = false;
+        }
       })
     },
     deleteNumber() { //删除输入框的数字或文字
       this.inputNumber = null;
     },
+
     showAllresult() {
-      this.auto = true;
+      this.searchData = this.searchList;
+      this.showMore = false;
     },
     back: function () {
       this.isShow = false;
@@ -329,16 +376,10 @@ export default {
 .result {
   ul {
     height: 205px;
-    overflow: hidden;
     padding-left: 0px;
     margin: 0;
     li {
       list-style: none;
-    }
-  }
-  &.resultAuto {
-    ul {
-      height: auto;
     }
   }
 }
@@ -364,7 +405,8 @@ export default {
     p:first-child {
       font-size: 14px;
     }
-    p:last-child {
+    p:last-child,
+    .state {
       font-size: 12px;
       color: #7a7777;
     }
