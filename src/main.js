@@ -9,7 +9,7 @@ Vue.use(VueRouter);
 Vue.config.productionTip = true
 
 const router = new VueRouter({
-    mode: 'history',
+    // mode: 'history',
     routes
 })
 
