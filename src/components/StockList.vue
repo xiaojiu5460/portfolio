@@ -135,7 +135,7 @@ export default {
         this.list = []; //因为并没有修改列表已经渲染出来的界面，要恢复空值（什么都不渲染）
         return;
       }
-      var url = `http://web.sqt.gtimg.cn/q=${this.stocksList.join(",")}`;
+      var url = `//web.sqt.gtimg.cn/q=${this.stocksList.join(",")}`;
       this.$http.get(url).then(function(res) {
         // console.log(res);
         let data = parse(res.body);
