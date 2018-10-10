@@ -157,7 +157,7 @@ this.searchList = (res.body.data.stock).filter(market => market[4] == "GP-A").ma
 ***
 
 ***五、资讯展示*** (新闻、公告、简况、研报...)
-1. 新闻
+<br/>1. 新闻
 <br/>**接口地址**：`http://220.249.243.51/ifzqgtimg/appstock/news/info/search?symbol=${this.stockcode}&page=1&n=5&type=3`
 <br/>**请求参数**：`symbol=${this.stockcode}&page=1&n=5&type=3` //stockcode为从父组件传的当前需要detail的股票代码;symbol=股票代码;page=查第几页;n=每页新闻个数;type=固定值
 <br/>**响应内容格式**：json
@@ -242,7 +242,7 @@ this.searchList = (res.body.data.stock).filter(market => market[4] == "GP-A").ma
 "zysr": {},...
 ```
 <br/>**数据处理**：`res.body.data`中取各部分所需渲染数据
-<br/>4. 研报
+<br/><br/>4. 研报
 <br/>**接口地址**：`http://220.249.243.51/ifzqgtimg/appstock/app/investRate/getReport?symbol=${this.stockcode}&page=0&n=20`
 <br/>**请求参数**： *参数同新闻模块参数一致*
 <br/>**响应内容格式**：json
