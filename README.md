@@ -109,11 +109,11 @@
 三、热搜榜、股票查询记录
 1. 热搜榜
 
-**接口地址**：`http://proxy.finance.qq.com/ifzqgtimg/appstock/app/HotStock/getHotStock`
+   **接口地址**：`http://proxy.finance.qq.com/ifzqgtimg/appstock/app/HotStock/getHotStock`
 
-**响应内容格式**：json
+   **响应内容格式**：json
 
-**响应结果**：
+   **响应结果**：
 ```
 "code": 0,
 "msg": "",
@@ -128,4 +128,4 @@
 ]
 ```
 
-**数据处理**：`res.data`
+   **数据处理**：`res.data`
