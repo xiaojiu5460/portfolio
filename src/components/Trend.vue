@@ -17,7 +17,7 @@
     </div>
     <Minute :isShow="isShow" v-on:cancel="cancel"></Minute>
     <div class="information">
-      <div class="chart">
+      <div id="timeIndexChart">
       </div>
       <div class="level1">
         <div class="showFive" v-show="show=='五档'" @click="turnDetail">
@@ -101,11 +101,9 @@
 </template>
 <script>
 import Minute from "./Minute.vue";
-var echarts = require('echarts/lib/echarts');
-require('echarts/lib/component/title');
-require('echarts/lib/chart/pie');
+import echarts from 'echarts'
 export default {
-  props: ["stock-info", "details", "large-volume"],
+  props: ["stock-info", "details", "large-volume", "detail-code"],
   name: "Trend",
   components: { Minute },
   data() {
@@ -115,6 +113,7 @@ export default {
       sellList: [],
       buyList: [],
       show: '五档',
+      timeSharpingData: null,
     };
   },
   computed: {
@@ -129,6 +128,7 @@ export default {
   },
   // stockInfo{"PBrate :"0.85";PErate:"15.32";amplitude:"4.31%";boughtFive:"600";boughtFour:"38";boughtOne:"241"",}
   created() {
+    // console.log(this.stockInfo.yesterday);
     //卖档
     let l = [];
     l.push(
@@ -174,7 +174,64 @@ export default {
       }
     }
   },
+  mounted() {
+    // 请求分时图data
+    this.getTimeSharpData();
+  },
   methods: {
+    getTimeSharpData() {
+      // 请求分时图data
+      let url = `http://web.ifzq.gtimg.cn/appstock/app/minute/query?code=${this.detailCode}`;
+      let that = this;
+      this.$http.get(url).then(function (res) {
+        let code = that.detailCode;
+        this.timeSharpingData = JSON.parse(res.bodyText).data[code].data.data;
+        this.echart();
+      })
+    },
+    echart() {
+      let timeSharpChart = echarts.init(document.getElementById('timeIndexChart'));
+      let timeData = [];
+      let priceData = [];
+      // let yesterday = this.stockInfo.yesterday;
+      // let a=Math.abs(Math.max(...priceData)-yesterday).toFixed(2);
+      // let min = (yesterday- parseFloat(a)).toFixed(2);
+      // let max = (yesterday + parseFloat(a)).toFixed(2)
+      for (let i = 0; i < this.timeSharpingData.length; i++) {
+        const element = this.timeSharpingData[i];
+        let t = element.split(' ')[0].slice(0, 2);
+        timeData.push(element.split(' ')[0].replace(t, t + ':'));
+        priceData.push(parseFloat(element.split(' ')[1]));
+      }
+      let option = {
+        grid: {
+          left: '0',
+          right: '0',
+          top: '5%',
+        },
+        xAxis: {
+          type: 'category',
+          axisTick: { show: false },
+          boundaryGap: false,
+          data: timeData,
+        },
+        yAxis: {
+          type: 'value',
+          axisTick: { show: false },
+          axisLine: { show: false },
+          axisLabel: { inside: true },
+          max: Math.max(...priceData) + 0.5,
+          min: Math.min(...priceData),
+          minInterval: Math.max(...priceData),
+        },
+        series: [{
+          data: priceData,
+          type: 'line',
+          areaStyle: {}
+        }]
+      };
+      timeSharpChart.setOption(option);
+    },
     turnDetail: function () {
       this.show = '详情';
     },
@@ -246,7 +303,7 @@ export default {
 <style scoped lang="scss">
 .information {
   display: flex;
-  .chart {
+  #timeIndexChart {
     border: solid 1px #d7e0ea;
     flex: 1;
   }

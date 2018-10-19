@@ -2,7 +2,7 @@
   <div>
     <DetailTitle v-if="stockInfo" :stock-info="stockInfo" :loading="loading" v-on:load="reloading"></DetailTitle>
     <StockData v-if="stockInfo" :stock-info="stockInfo" :zdf="zdf"></StockData>
-    <Trend v-if="stockInfo&&largeVolume" :stock-info="stockInfo" :details="details" :large-volume="largeVolume" v-on:reload-detail="reloadDetail" v-on:reload-large="reloadLarge" v-on:level-one="levelOne"></Trend>
+    <Trend v-if="stockInfo&&largeVolume" :stock-info="stockInfo" :details="details" :large-volume="largeVolume" v-on:reload-detail="reloadDetail" v-on:reload-large="reloadLarge" v-on:level-one="levelOne" :detail-code="detailCode"></Trend>
     <StockMainData :stockcode="$route.query.code"></StockMainData>
   </div>
 </template>
@@ -21,7 +21,6 @@ let largeIntval = null;
 
 export default {
   name: "StockDetail",
-  props: [""],
   components: {
     DetailTitle,
     StockData,
@@ -36,6 +35,7 @@ export default {
       zdf: {},
       details: [],
       largeVolume: null,
+      detailCode: null,
     };
   },
   created() {
@@ -45,6 +45,7 @@ export default {
     // 4.定时刷新（每天的交易时间9点15分到11点半，1点到3点，没5秒自动刷新）
     // let code = this.$route.query.code.split(" ");
     // console.log(code);
+    this.detailCode = this.$route.query.code;
     this.getData();
     this.getZdf();
     this.getDetail();
@@ -160,7 +161,7 @@ export default {
       this.getData();
     },
     getData: function () {
-      let url = `http://web.sqt.gtimg.cn/q=${this.$route.query.code}`;
+      let url = `http://web.sqt.gtimg.cn/q=${this.detailCode}`;
       this.loading = true;
       this.$http.get(url).then(function (res) {
         this.loading = false;
