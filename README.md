@@ -105,3 +105,27 @@
 
 2. 颜色切换:子组件通过EventBus.$emit/$on通知兄弟组件和父组件同时切色
 ---
+
+三、热搜榜、股票查询记录
+1. 热搜榜
+
+**接口地址**：`http://proxy.finance.qq.com/ifzqgtimg/appstock/app/HotStock/getHotStock`
+
+**响应内容格式**：json
+
+**响应结果**：
+```
+"code": 0,
+"msg": "",
+"data": [
+    ["hk03690",     //market+code
+    "美团点评-Ｗ",  //name
+    "GP"],
+    ["sz300104",
+    "乐视网",
+    "GP-A"],
+    ...
+]
+```
+
+**数据处理**：`res.data`
