@@ -30,7 +30,7 @@
 
 (1) 通过GET请求获取股票列表
 
-   数据接口：http://sqt.gtimg.cn/utf8/q=sz000729
+   **数据接口**：http://sqt.gtimg.cn/utf8/q=sz000729
 
    查询参数：q=sz000729  (备:q的查询参数值格式为字符串)
 
