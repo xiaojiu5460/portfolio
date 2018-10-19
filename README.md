@@ -129,3 +129,31 @@
 ```
 
    **数据处理**：`res.data`
+
+2. 搜索股票增至不同分组
+
+   **接口地址**：`http://proxy.finance.qq.com/ifzqgtimg/appstock/smartbox/search/get?q=${this.inputNumber}`
+
+   **查询参数**: `q=${this.inputNumber}` (定义inputNumber为input输入值)
+
+   **响应内容格式**：json
+
+   **响应结果**：res=
+```
+{
+  "code": 0,
+  "msg": "",
+  "data": {
+  "stock": [
+    ["sh",            //market
+     "600001",       //code
+     "邯郸钢铁",    //name
+     "hdgt",        //简称
+     "GP-A"         //所属A股
+    ]
+  ],
+  "sector": []
+  }
+}
+```
+   **数据处理**：对返回结果的json格式，处理成数组，便于做渲染；
