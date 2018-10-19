@@ -96,9 +96,9 @@ sort: function(field) {
 二、Header拓展功能
 1. 自选股自定义分组管理:系统分组/个人分组/添加分组(`locaLstorage读写`)
 
-**系统分组**：主页面`created`时来读取locaLstorage做全部分组渲染,读取过程中判断系统分组内stock是否为空，若为空，渲染`默认给的stockList`去渲染;
+    **系统分组**：主页面`created`时来读取locaLstorage做全部分组渲染,读取过程中判断系统分组内stock是否为空，若为空，渲染`默认给的stockList`去渲染;
 
-**个人分组**：配合添加分组功能使用，增加分组后写入locaLstorage。
+    **个人分组**：配合添加分组功能使用，增加分组后写入locaLstorage。
 
 2. 颜色切换:子组件通过EventBus.$emit/$on通知兄弟组件和父组件同时切色
 ---
