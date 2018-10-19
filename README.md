@@ -24,7 +24,7 @@
    -  资讯展示
         - 包括：新闻、公告、资金、简况、研报 
 
-https://github.com/xiaojiu5460/portfolio/blob/master/src/assets/img/app.png
+   ![App](/src/assets/img/app.png)
 
 ### 功能实现过程 :
 一、行情列表展示
