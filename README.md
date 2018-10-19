@@ -32,7 +32,7 @@
 
    **数据接口**：http://sqt.gtimg.cn/utf8/q=sz000729
 
-   **查询参数**：q=sz000729  (备:q的查询参数值格式为字符串)
+   **查询参数**：q=sz000729  (备:q的查询参数值格式为字符串，代表需要查询的个股数据)
 
    **响应内容格式**：文本格式;
 
@@ -132,9 +132,9 @@
 
 2. 搜索股票增至不同分组
 
-   **接口地址**：`http://proxy.finance.qq.com/ifzqgtimg/appstock/smartbox/search/get?q=${this.inputNumber}`
+   **接口地址**：http://proxy.finance.qq.com/ifzqgtimg/appstock/smartbox/search/get?q=600001;
 
-   **查询参数**: `q=${this.inputNumber}` (定义inputNumber为input输入值)
+   **查询参数**: q=600001 (备:q的查询参数值格式为字符串，代表搜索时输入的内容)
 
    **响应内容格式**：json
 
