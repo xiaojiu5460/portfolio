@@ -9,7 +9,7 @@
     <div class="groupList">
       <div class="already">
         <span class="title">已有分组</span>
-        <span class="func">点击分组重命名 | 长按拖动排序</span>
+        <!-- <span class="func">点击分组重命名 | 长按拖动排序</span> -->
       </div>
       <div class="groups">
         <div class="all">

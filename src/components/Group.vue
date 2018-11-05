@@ -4,8 +4,8 @@
     <div :class="{skins:true,black:blackSkin}" v-show="isShow"><span :class="{up:true,blackUp:blackSkin}"></span>
       <ul>
         <li @click="gotoGroupDetail"><i class="iconfont icon-fenzu"></i><span>分组管理</span></li>
-        <li v-show="!showSkin" @click="blackColor"><i class="iconfont icon-iconset0454"></i><span>黑色皮肤</span></li>
-        <li v-show="showSkin" @click="whiteColor"><i class="iconfont icon-taiyang-copy"></i><span>蓝白皮肤</span></li>
+        <li v-show="!showSkin" @click="swithColor('black')"><i class="iconfont icon-iconset0454"></i><span>黑色皮肤</span></li>
+        <li v-show="showSkin" @click="swithColor('white')"><i class="iconfont icon-taiyang-copy"></i><span>蓝白皮肤</span></li>
       </ul>
      </div>
   </div>
@@ -31,19 +31,27 @@ export default {
     }
   },
   methods: {
-    gotoGroupDetail(){
+    gotoGroupDetail() {
       this.$router.push({
-        path: '/GroupManage'
-      })
+        path: "/GroupManage"
+      });
     },
-    blackColor: function() {
-      this.blackSkin = true;
-      EventBus.$emit("changeSkin", "black");
+    swithColor: function(color) {
+      if (color === "black") {
+        this.blackSkin = true;
+      } else if (color === "white") {
+        this.blackSkin = false;
+      }
+      EventBus.$emit("changeSkin", color);
     },
-    whiteColor: function() {
-      this.blackSkin = false;
-      EventBus.$emit("changeSkin", "white");
-    },
+    // blackColor: function() {
+    //   this.blackSkin = true;
+    //   EventBus.$emit("changeSkin", "black");
+    // },
+    // whiteColor: function() {
+    //   this.blackSkin = false;
+    //   EventBus.$emit("changeSkin", "white");
+    // },
     hideGroup: function() {
       this.$emit("cancel");
     }

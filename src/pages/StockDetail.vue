@@ -35,7 +35,7 @@ export default {
       zdf: {},
       details: [],
       largeVolume: null,
-      detailCode: null,
+      detailCode: null
     };
   },
   created() {
@@ -75,27 +75,27 @@ export default {
       (915 < currentTime && currentTime < 1130) ||
       (1300 < currentTime && currentTime < 1500)
     ) {
-      intval = setInterval(function () {
+      intval = setInterval(function() {
         that.getData();
-      }, 5000000000);
+      }, 5000);
     }
   },
   destroyed() {
     //销毁定时器
     clearInterval(intval);
-    window.removeEventListener("scroll", this.handleScroll, false)
+    window.removeEventListener("scroll", this.handleScroll, false);
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll, false);
     // window.addEventListener("scroll", this.titleScroll, false);
   },
   methods: {
-    levelOne: function () {
+    levelOne: function() {
       //点五档清理大单和详情定时器
       clearInterval(largeIntval);
       clearInterval(detailIntval);
     },
-    reloadLarge: function () {
+    reloadLarge: function() {
       let getHour = new Date().getHours();
       let getMinute = new Date().getMinutes();
       if (getMinute < 10) {
@@ -107,14 +107,14 @@ export default {
         (915 < currentTime && currentTime < 1130) ||
         (1300 < currentTime && currentTime < 1500)
       ) {
-        largeIntval = setInterval(function () {
+        largeIntval = setInterval(function() {
           that.getLargeVolume();
         }, 5000000000);
       }
       //点大单时清理详情定时器
       clearInterval(detailIntval);
     },
-    reloadDetail: function () {
+    reloadDetail: function() {
       let getHour = new Date().getHours();
       let getMinute = new Date().getMinutes();
       if (getMinute < 10) {
@@ -126,12 +126,12 @@ export default {
         (915 < currentTime && currentTime < 1130) ||
         (1300 < currentTime && currentTime < 1500)
       ) {
-        detailIntval = setInterval(function () {
+        detailIntval = setInterval(function() {
           that.getDetail();
         }, 5000000000);
       }
     },
-    handleScroll: throttle(function () {
+    handleScroll: throttle(function() {
       setTimeout(() => {
         let scrollTop = document.documentElement.scrollTop;
         // console.log(scrollTop);
@@ -156,19 +156,19 @@ export default {
     //       EventBus.$emit("titleFixed", "title");
     //     }
     // }),
-    reloading: function () {
+    reloading: function() {
       //  this.loading = true;   请求前109行已在加载
       this.getData();
     },
-    getData: function () {
+    getData: function() {
       let url = `http://web.sqt.gtimg.cn/q=${this.detailCode}`;
       this.loading = true;
-      this.$http.get(url).then(function (res) {
+      this.$http.get(url).then(function(res) {
         this.loading = false;
         // console.log(parse(res.body)[0]);
         let data = parse(res.body);
         // console.log(this.unProcess);
-        let list = data.map(function (item) {
+        let list = data.map(function(item) {
           //map 从处理过的对象里取出需要的值，列入一个数组赋值给list
           let l = {
             name: item["名字"],
@@ -237,7 +237,7 @@ export default {
             l.colorState = "grey";
           }
           //与昨收涨跌差百分比颜色切换
-          let p = (per / item["当前价格"] * 100).toFixed(2);
+          let p = ((per / item["当前价格"]) * 100).toFixed(2);
           if (p > 0) {
             l.colorState = "red"; //给上面l列表添加多个属性，在模板里可以直接读取
           } else if (p < 0) {
@@ -254,36 +254,39 @@ export default {
         // console.log(this.stockInfo)
       });
     },
-    getZdf: function () {
-      let url = `http://220.249.243.51/ifzqgtimg/appstock/app/stockinfo/plate?code=${this
-        .$route.query.code}&zdf=1`;
-      this.$http.get(url).then(function (res) {
+    getZdf: function() {
+      let url = `http://220.249.243.51/ifzqgtimg/appstock/app/stockinfo/plate?code=${
+        this.$route.query.code
+      }&zdf=1`;
+      this.$http.get(url).then(function(res) {
         this.zdf = res.body.data[0];
         // console.log(this.zdf);
-      })
+      });
     },
-    getDetail: function () {
-      let url = `http://220.249.243.51/ifzqgtimg/appstock/app/dealinfo/getMingxi?code=${this
-        .$route.query.code}&limit=70&direction=1&version=2`;
+    getDetail: function() {
+      let url = `http://220.249.243.51/ifzqgtimg/appstock/app/dealinfo/getMingxi?code=${
+        this.$route.query.code
+      }&limit=70&direction=1&version=2`;
       var that = this;
-      this.$http.get(url).then(function (res) {
+      this.$http.get(url).then(function(res) {
         let data = res.body.data;
         // console.log(data);
-        data.forEach(function (item) {
-          let l = item.split('/');
+        data.forEach(function(item) {
+          let l = item.split("/");
           return that.details.push(l);
-        })
+        });
         // console.log(that.details);
-      })
+      });
     },
-    getLargeVolume: function () {
-      let url = `http://220.249.243.51/ifzqgtimg/appstock/app/HsDealinfo/getDadan?code=${this
-        .$route.query.code}`;
-      this.$http.get(url).then(function (res) {
+    getLargeVolume: function() {
+      let url = `http://220.249.243.51/ifzqgtimg/appstock/app/HsDealinfo/getDadan?code=${
+        this.$route.query.code
+      }`;
+      this.$http.get(url).then(function(res) {
         this.largeVolume = res.body.data;
         // console.log(this.largeVolume);
-      })
-    },
+      });
+    }
   }
 };
 </script>

@@ -26,10 +26,12 @@ export default {
   },
   methods:{
     getNewsDetail:function(){
-      let url=`http://47.91.228.8/api/portfolio/ifzqgtimg/appstock/news/NewsProxy/get?nkey=getQQNewsSimpleHtmlContent&id=${this.$route.query.id}&symbol=${this.$route.query.code}`;
+      let url=`http://47.244.26.175/api/portfolio/ifzqgtimg/appstock/news/NewsProxy/get?nkey=getQQNewsSimpleHtmlContent&id=${this.$route.query.id}&symbol=${this.$route.query.code}`;
       this.$http.get(url).then(function (res) {
-        this.newsdetail = res.body.data.data;
-        // console.log(this.newsdetail);
+        let data = res.body.data.data;
+        if (data && data.ret != -1) {
+          this.newsdetail = data;
+        }
       })
     }
   },

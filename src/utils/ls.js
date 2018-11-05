@@ -9,17 +9,17 @@ function getAllGroupInfo() {
     let groupsData;
     if (!groups) {
         groupsData = [{
-                group: '全部',
-                code: ['sh000001']
-            },
-            {
-                group: '沪市',
-                code: ['sh000001']
-            },
-            {
-                group: '深市',
-                code: ['sz000001']
-            },
+            group: '全部',
+            code: ['sh601988', 'sh601998', 'sh601989', 'sh600000','sz000776', 'sz000002', 'sz300059', 'sz300333'],
+        },
+        {
+            group: '沪市',
+            code: ['sh601988', 'sh601998', 'sh601989', 'sh600000']
+        },
+        {
+            group: '深市',
+            code: ['sz000776', 'sz000002', 'sz300059', 'sz300333']
+        },
         ];
     } else {
         groupsData = JSON.parse(groups);
@@ -42,12 +42,13 @@ function setStockLs() {
 
 // 添加一个分组
 function addGroup(name) {
-    let goupsData = getAllGroupInfo();
-    let groups = [];
-    for (let i = 0; i < goupsData.length; i++) {
-        const e = goupsData[i];
-        groups.push(e.group)
-    }
+    // let goupsData = getAllGroupInfo();
+    // let groups = [];
+    // for (let i = 0; i < goupsData.length; i++) {
+    //     const e = goupsData[i];
+    //     groups.push(e.group)
+    // }
+    let groups = getLsGroup();
     if (groups.indexOf(name) == -1) {
         groups.push(name)
         let setNew = getAllGroupInfo();
@@ -57,55 +58,69 @@ function addGroup(name) {
         alert('命名重复，请重新输入')
     }
     return groups
-        // 检查name在不在groups
-        // 加进去
-        // 马上写到localstorage
+    // 检查name在不在groups
+    // 加进去
+    // 马上写到localstorage
 }
 
 //获取全部分组
 function getLsGroup() {
     let g = getAllGroupInfo();
-    let groups = [];
-    for (let i = 0; i < g.length; i++) {
-        const e = g[i];
-        groups.push(e.group)
-    }
-    return groups;
+    // let groups = [];
+    // for (let i = 0; i < g.length; i++) {
+    //     const e = g[i];
+    //     groups.push(e.group)
+    // }
+    // return groups;
+    return g.map(item=> item.group);
+
     // console.log(groups)
 }
 
 //根据code获取所在分组
 function getGroupsByCode(code) {
     let g = getAllGroupInfo();
-    let group = [];
-    for (let i = 0; i < g.length; i++) {
-        const e = g[i].code;
-        const element = g[i].group;
-        if (e.indexOf(code) != -1) {
-            group.push(element);
-        }
-    }
+    // let group = [];
+    // for (let i = 0; i < g.length; i++) {
+    //     const e = g[i].code;
+    //     const element = g[i].group;
+    //     if (e.indexOf(code) != -1) {
+    //         group.push(element);
+    //     }
+    
+    // }
+    let group = g.filter(item=> item.code.indexOf(code)!=-1).map(item=>item.group);
+
     return group;
 }
 
 //添加单个股票到某个组
 function searchAddtoLS(group, s) {
     let l = getAllGroupInfo();
-    let code = l[0].code;
-    if (code.indexOf(s.code) == -1) {
-        code.push(s.code)
-    }
-    for (let i = 0; i < l.length; i++) {
-        const e = l[i];
-        if (group != []) {
-            for (let j = 0; j < group.length; j++) {
-                const element = group[j];
-                if (e.group == element.group && l[i].code.indexOf(s.code) == -1) {
-                    l[i].code.push(s.code)
-                }
+    // let code = l[0].code;
+    // if (code.indexOf(s.code) == -1) {
+    //     code.push(s.code)
+    // }
+    // for (let i = 0; i < l.length; i++) {
+    //     const e = l[i];
+    //     if (group.length !== 0) {
+    //         for (let j = 0; j < group.length; j++) {
+    //             const element = group[j];
+    //             if (e.group == element.group && l[i].code.indexOf(s.code) == -1) {
+    //                 l[i].code.push(s.code)
+    //             }
+    //         }
+    //     }
+    // }
+
+    l.forEach(e => {
+        group.forEach(element=>{
+            if (e.group == element.group && e.code.indexOf(s.code) == -1) {
+                e.code.push(s.code)
             }
-        }
-    }
+        })
+    })
+
     localStorage.setItem(groupDataKey, JSON.stringify(l))
 }
 

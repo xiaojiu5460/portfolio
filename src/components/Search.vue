@@ -26,7 +26,7 @@
                 <div class="left" @click="goDetail(search)">
                   <p>{{search.name}}</p>
                   <p class="state" v-show="search.state">{{search.code.slice(2)}}.{{search.market.toUpperCase()}}</p>
-                  <p v-show="!search.state">已在'{{search.groups}}'中</p>
+                  <p v-show="!search.state">已在 {{search.groups.join("，")}} 中</p>
                 </div>
                 <div class="right" @click="showDialog(search)">
                   <span>
@@ -100,7 +100,7 @@
           <div class="left" @click="goDetail(history)">
             <p>{{history.name}}</p>
             <p class="state" v-show="history.state">{{history.code.slice(2)}}.{{history.code.slice(0,2).toUpperCase()}}</p>
-            <p v-show="!history.state">已在'{{history.groups}}'中</p>
+            <p v-show="!history.state">已在 {{history.groups.join("，")}} 中</p>
           </div>
           <div class="right" @click="showdialog(history)">
             <span>
@@ -180,7 +180,7 @@ export default {
     this.getHistoryList();
     let url = `http://proxy.finance.qq.com/ifzqgtimg/appstock/app/HotStock/getHotStock`;
     this.$http.get(url).then(function (res) {
-      this.hotStock = res.data.data;
+      this.hotStock = res.data.data.filter(item => item[2] === 'GP-A');
     })
   },
   computed: {
@@ -244,6 +244,7 @@ export default {
       if (this.showWeui) {
         this.showWeui = false;
       }
+      this.getSearchData(); //添加到新分组后重新执行一次搜索，可以马上显示所在分组
     },
     goDetail(stock) {
       this.$router.push({
@@ -454,7 +455,7 @@ export default {
     height: 28px;
     width: 23px;
     position: absolute;
-    left: 90px;
+    left: 20%;
     display: flex;
     align-items: center;
     .iconfont {

@@ -2,12 +2,12 @@
   <div :class="[showfix]">
     <div class="title">
       <ul>
-        <li :class="{showNew:show=='新闻',hideNew:show==!'新闻'}" @click="newsHL">新闻</li>
-        <li :class="{announcement:show==!'公告',notice:show=='公告'}" @click="noticeHL">公告</li>
-        <li>资金</li>
-        <li :class="{brief:show==!'简况',briefing:show=='简况'}" @click="briefHL">简况</li>
-        <li>财务</li>
-        <li :class="{report:show==!'研报',research:show=='研报'}" @click="reportsHL">研报</li>
+        <li :class="{brief:show!=='简况',briefing:show=='简况'}" @click="briefHL">简况</li>
+        <li :class="{showNew:show=='新闻',hideNew:show!=='新闻'}" @click="newsHL">新闻</li>
+        <li :class="{announcement:show!=='公告',notice:show=='公告'}" @click="noticeHL">公告</li>
+        <!-- <li>资金</li> -->
+        <!-- <li>财务</li> -->
+        <li :class="{report:show!=='研报',research:show=='研报'}" @click="reportsHL">研报</li>
       </ul>
     </div>
     <News v-show="show=='新闻'" :news-data="newsData"></News>
@@ -26,7 +26,7 @@ export default {
   props: ["stockcode"],
   data() {
     return {
-      show: '新闻',
+      show: '简况',
       showfix: 'news',
       newsData: null,
       announcement: null,
@@ -48,6 +48,7 @@ export default {
     // this.getBriefVolume();
     // this.getZdf();
     // console.log(this.stockcode)
+    this.briefHL();
     let that = this;
     EventBus.$on("titleFixed", function (data) {
       that.showfix = data;

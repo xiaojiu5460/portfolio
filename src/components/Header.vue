@@ -33,6 +33,7 @@ export default {
           that.blackSkin = false;
           break;
       }
+      that.isShow = false;
     });
   },
   methods: {

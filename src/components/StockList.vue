@@ -79,6 +79,7 @@ export default {
   methods: {
     //获取当前被点击的股票代码
     getStockCode: function(stock) {
+      if(stock.isIndex) return; // 指数不能进详情
       if(!this.isShow){
         this.$router.push({
           path: "detail",
@@ -147,7 +148,8 @@ export default {
             code: item["代码"],
             newPrice: item["当前价格"],
             percent: item["涨跌%"] + "%",
-            code2: item["市场代码"]
+            code2: item["市场代码"],
+            isIndex: item["涨停价"] == "-1", // 涨停价是-1认为是指数
           };
           let per = parseFloat(item["涨跌%"]);
           if (per > 0) {

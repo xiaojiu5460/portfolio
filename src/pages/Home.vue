@@ -12,8 +12,9 @@ import Header from "../components/Header.vue";
 import Navigation from "../components/Navigation.vue";
 import StockList from "../components/StockList.vue";
 import { EventBus } from "../utils/EventBus.js";
-import { getAllGroupInfo, setStockLs, getStocksByGroup } from "../utils/ls.js";
+import { setStockLs, getStocksByGroup } from "../utils/ls.js";
 // <router-link to="/xxx">Go to xxx</router-link>
+
 export default {
   name: "Home",
   components: {
@@ -31,7 +32,7 @@ export default {
     // 先getitem 是否为空 否则给默认值set
     //1. local为空，stocklist=默认给的code列表
     //2. local不为空时，stocklist=local里的code列表
-    getAllGroupInfo();
+    // getAllGroupInfo();
     this.stocksList = getStocksByGroup('全部').code;
     setStockLs();
     let that = this;

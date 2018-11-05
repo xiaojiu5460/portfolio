@@ -199,35 +199,86 @@ export default {
       // let max = (yesterday + parseFloat(a)).toFixed(2)
       for (let i = 0; i < this.timeSharpingData.length; i++) {
         const element = this.timeSharpingData[i];
-        let t = element.split(' ')[0].slice(0, 2);
-        timeData.push(element.split(' ')[0].replace(t, t + ':'));
-        priceData.push(parseFloat(element.split(' ')[1]));
+        // let t = element.split(' ')[0].slice(0, 2);
+        // timeData.push(element.split(' ')[0].replace(t, t + ':'));
+        // priceData.push(parseFloat(element.split(' ')[1]));
+        let [time, price] = element.split(' ');
+        // console.log(time,price,volume)
+        timeData.push(time.substr(0, 2) + ':' + time.substr(-2));
+        priceData.push(price);
       }
       let option = {
         grid: {
           left: '0',
           right: '0',
-          top: '5%',
+          top: '5px',
+          bottom: '25px'
         },
         xAxis: {
           type: 'category',
           axisTick: { show: false },
-          boundaryGap: false,
           data: timeData,
+          axisLine: {
+            lineStyle: {
+              width: 1,
+              color: '#ddd'
+            }
+          },
+          axisLabel: {
+            show: true,
+            interval: 0,
+            align: 'center',
+            color: '#333',
+            formatter: function (value, index) {
+              if (index === 15) return '09:30';
+              if (index === 120) return '11:30/13:00';
+              if (index === 225) return '15:00';
+              return '';
+            }
+          },
+
         },
         yAxis: {
           type: 'value',
           axisTick: { show: false },
           axisLine: { show: false },
           axisLabel: { inside: true },
-          max: Math.max(...priceData) + 0.5,
+          splitLine: {
+            show: false
+          },
+          // max: Math.max(...priceData) + 0.5,
           min: Math.min(...priceData),
           minInterval: Math.max(...priceData),
         },
         series: [{
           data: priceData,
           type: 'line',
-          areaStyle: {}
+          smooth: false,
+          symbolSize: 1,
+          itemStyle: {
+            normal: {
+              color: '#034b9c'
+            }
+          },
+          lineStyle: {
+            color: '#0464d2',
+            width: 1,
+          },
+          areaStyle: {
+            color: {
+              type: 'linear',
+              x: 0,
+              y: 0,
+              x2: 0,
+              y2: 1,
+              colorStops: [{
+                offset: 0, color: '#a2c8f3' // 0% 处的颜色
+              }, {
+                offset: 1, color: '#0c78f3' // 100% 处的颜色
+              }],
+              globalCoord: false // 缺省为 false
+            }
+          }
         }]
       };
       timeSharpChart.setOption(option);
