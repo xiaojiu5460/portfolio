@@ -455,7 +455,7 @@ export default {
     height: 28px;
     width: 23px;
     position: absolute;
-    left: 20%;
+    left: 16%;
     display: flex;
     align-items: center;
     .iconfont {
