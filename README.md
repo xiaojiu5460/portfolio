@@ -23,6 +23,7 @@
         - 包括：新闻、公告、资金、简况、研报 
 
 ![Vue app](/src/assets/img/app.png)
+![Vue QRcode](/src/assets/img/QRcode.png)
 
 ### 功能实现过程 :
 一、行情列表展示
