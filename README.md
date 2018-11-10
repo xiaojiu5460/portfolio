@@ -22,7 +22,8 @@
    -  资讯展示
         - 包括：新闻、公告、资金、简况、研报 
 
-![Vue app](/src/assets/img/app.png)
+![Vue app](/src/assets/img/home.png)
+![Vue app](/src/assets/img/searchPage.png)
 
 ## 体验地址
 ![Vue QRcode](/src/assets/img/QRcode.png)
