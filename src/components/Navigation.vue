@@ -61,7 +61,7 @@ export default {
   ul {
     display: flex;
     align-items: center;
-    overflow-x: scroll;
+    overflow-x: auto;
     overflow-y: hidden;
     padding-left: 12px;
     margin: 0;

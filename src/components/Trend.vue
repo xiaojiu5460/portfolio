@@ -518,7 +518,7 @@ export default {
   .timeView {
     display: flex;
     align-items: center;
-    overflow-x: scroll;
+    overflow-x: auto;
     overflow-y: hidden;
     padding-left: 15px;
     margin: 0;
