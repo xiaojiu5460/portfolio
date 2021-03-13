@@ -198,7 +198,7 @@
 五、资讯展示 (新闻、公告、简况、研报...)
 1. 新闻
 
-     **接口地址**:http://220.249.243.51/ifzqgtimg/appstock/news/info/search?symbol=sh603080&page=1&n=5&type=3;
+     **接口地址**:/proxy/220.249.243.51/ifzqgtimg/appstock/news/info/search?symbol=sh603080&page=1&n=5&type=3;
 
      **请求参数**:symbol=sh603080&page=1&n=5&type=3(symbol查询值格式为字符串，代表需要查询的个股;page=查第几页;n=每页新闻个数;type=固定值)
 
@@ -238,7 +238,7 @@
 
 2. 公告
 
-   **接口地址**：http://220.249.243.51/ifzqgtimg/appstock/news/noticeList/searchByType?symbol=sz300001&page=1&n=20&noticeType=0;
+   **接口地址**：/proxy/220.249.243.51/ifzqgtimg/appstock/news/noticeList/searchByType?symbol=sz300001&page=1&n=20&noticeType=0;
 
    **请求参数**： 参数同新闻模块参数一致
 
@@ -266,7 +266,7 @@
 
 3. 简况
 
-   **接口地址**：http://220.249.243.51/ifzqgtimg/appstock/app/stockinfo/jiankuang?code=sz300001;
+   **接口地址**：/proxy/220.249.243.51/ifzqgtimg/appstock/app/stockinfo/jiankuang?code=sz300001;
 
    **请求参数**：code=sz300001 (备：code查询值格式为字符串，代表需要查询的个股;)
 
@@ -299,7 +299,7 @@
 
 4. 研报
 
-   **接口地址**：`http://220.249.243.51/ifzqgtimg/appstock/app/investRate/getReport?symbol=sz300519&page=0&n=20`
+   **接口地址**：`/proxy/220.249.243.51/ifzqgtimg/appstock/app/investRate/getReport?symbol=sz300519&page=0&n=20`
 
    **请求参数**： symbol=sz300519&page=0&n=20  (备：symbol查询值格式为字符串，代表需要查询的个股;page=查第几页;n=每页新闻个数;type=固定值)
 

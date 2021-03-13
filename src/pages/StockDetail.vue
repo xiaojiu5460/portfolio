@@ -255,7 +255,7 @@ export default {
       });
     },
     getZdf: function() {
-      let url = `http://220.249.243.51/ifzqgtimg/appstock/app/stockinfo/plate?code=${
+      let url = `/proxy/220.249.243.51/ifzqgtimg/appstock/app/stockinfo/plate?code=${
         this.$route.query.code
       }&zdf=1`;
       this.$http.get(url).then(function(res) {
@@ -264,7 +264,7 @@ export default {
       });
     },
     getDetail: function() {
-      let url = `http://220.249.243.51/ifzqgtimg/appstock/app/dealinfo/getMingxi?code=${
+      let url = `/proxy/220.249.243.51/ifzqgtimg/appstock/app/dealinfo/getMingxi?code=${
         this.$route.query.code
       }&limit=70&direction=1&version=2`;
       var that = this;
@@ -279,7 +279,7 @@ export default {
       });
     },
     getLargeVolume: function() {
-      let url = `http://220.249.243.51/ifzqgtimg/appstock/app/HsDealinfo/getDadan?code=${
+      let url = `/proxy/220.249.243.51/ifzqgtimg/appstock/app/HsDealinfo/getDadan?code=${
         this.$route.query.code
       }`;
       this.$http.get(url).then(function(res) {

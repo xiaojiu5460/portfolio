@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     getNews: function () {
-      let url = `http://220.249.243.51/ifzqgtimg/appstock/news/info/search?symbol=${this
+      let url = `/proxy/220.249.243.51/ifzqgtimg/appstock/news/info/search?symbol=${this
         .stockcode}&page=1&n=5&type=3`;
       this.$http.get(url).then(function (res) {
         this.newsData = res.body.data.data;
@@ -66,13 +66,13 @@ export default {
       });
     },
     getAnnounceVolume: function () {
-      let url = `http://220.249.243.51/ifzqgtimg/appstock/news/noticeList/searchByType?symbol=${this.stockcode}&page=1&n=20&noticeType=0`;
+      let url = `/proxy/220.249.243.51/ifzqgtimg/appstock/news/noticeList/searchByType?symbol=${this.stockcode}&page=1&n=20&noticeType=0`;
       this.$http.get(url).then(function (res) {
         this.announcement = res.body.data.data;
       })
     },
     getBriefVolume: function () {
-      let url = `http://220.249.243.51/ifzqgtimg/appstock/app/stockinfo/jiankuang?code=${this
+      let url = `/proxy/220.249.243.51/ifzqgtimg/appstock/app/stockinfo/jiankuang?code=${this
         .$route.query.code}`;
       let briefVolumePromise = this.$http.get(url);
       // console.log(briefVolumePromise, typeof briefVolumePromise);
@@ -124,7 +124,7 @@ export default {
       })
     },
     getReports: function () {
-      let url = `http://220.249.243.51/ifzqgtimg/appstock/app/investRate/getReport?symbol=${this
+      let url = `/proxy/220.249.243.51/ifzqgtimg/appstock/app/investRate/getReport?symbol=${this
         .stockcode}&page=0&n=20`;
       this.$http.get(url).then(function (res) {
         this.reportsVolume = res.body.data.data;
@@ -132,7 +132,7 @@ export default {
       })
     },
     getZdf: function () {
-      let url = `http://220.249.243.51/ifzqgtimg/appstock/app/stockinfo/plate?code=${this
+      let url = `/proxy/220.249.243.51/ifzqgtimg/appstock/app/stockinfo/plate?code=${this
         .stockcode}&zdf=1`;
       return this.$http.get(url).then(function (res) {
         // this.briefZdf = res.body.data[0];

@@ -178,7 +178,7 @@ export default {
   },
   created() {
     this.getHistoryList();
-    let url = `http://proxy.finance.qq.com/ifzqgtimg/appstock/app/HotStock/getHotStock`;
+    let url = `/proxy/proxy.finance.qq.com/ifzqgtimg/appstock/app/HotStock/getHotStock`;
     this.$http.get(url).then(function (res) {
       this.hotStock = res.data.data.filter(item => item[2] === 'GP-A');
     })
@@ -301,7 +301,7 @@ export default {
       if (this.inputNumber == null) {
         return;
       }
-      let url = `http://proxy.finance.qq.com/ifzqgtimg/appstock/smartbox/search/get?q=${this.inputNumber}`;
+      let url = `/proxy/proxy.finance.qq.com/ifzqgtimg/appstock/smartbox/search/get?q=${this.inputNumber}`;
       this.$http.get(url).then(function (res) {
         this.searchList = (res.body.data.stock).filter(market => market[4] == "GP-A")
           .map(v => {
