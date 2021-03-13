@@ -181,7 +181,7 @@ export default {
   methods: {
     getTimeSharpData() {
       // 请求分时图data
-      let url = `http://web.ifzq.gtimg.cn/appstock/app/minute/query?code=${this.detailCode}`;
+      let url = `/proxy/web.ifzq.gtimg.cn/appstock/app/minute/query?code=${this.detailCode}`;
       let that = this;
       this.$http.get(url).then(function (res) {
         let code = that.detailCode;

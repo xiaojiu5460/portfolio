@@ -161,7 +161,7 @@ export default {
       this.getData();
     },
     getData: function() {
-      let url = `http://web.sqt.gtimg.cn/q=${this.detailCode}`;
+      let url = `/proxy/web.sqt.gtimg.cn/q=${this.detailCode}`;
       this.loading = true;
       this.$http.get(url).then(function(res) {
         this.loading = false;
